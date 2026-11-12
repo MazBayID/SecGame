@@ -13,8 +13,8 @@ The `main` branch currently contains:
 - Pure Kotlin graph operations for idempotent evidence creation, annotation, relationship/claim updates, and deterministic filtering
 - JVM unit tests for graph validation, immutable source evidence, mutation behavior, and evidence search
 - Android CI runs Kotlin JVM source validation only; it does not create a debug APK
-- `signed-apk-candidate.yml` builds exactly one signed Release APK, validates it, smoke-tests that same file on an emulator, and uploads the APK with its SHA-256 checksum
-- The signed candidate workflow requires GitHub Actions secrets: `AEGIS_RELEASE_KEYSTORE_BASE64`, `AEGIS_RELEASE_STORE_PASSWORD`, `AEGIS_RELEASE_KEY_ALIAS`, and `AEGIS_RELEASE_KEY_PASSWORD`
+- `unsigned-apk-candidate.yml` builds exactly one unsigned Release APK, validates its package metadata, and uploads it with its SHA-256 checksum
+- No keystore, signing key, signing password, or GitHub signing secret is required. The output is unsigned and cannot be installed on Android until a signing policy is explicitly approved.
 - An emulator-tested candidate is not a final release until the exact same APK passes physical-device acceptance
 
 Planned technical target: Python 3.13 through Chaquopy for local in-game execution; this runtime is not implemented in the current foundation.
@@ -42,7 +42,7 @@ Hacknet is a high-level UX/architecture reference only. Do not copy its decompil
 - JDK 17
 - Gradle 8.13-compatible environment
 
-Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only; they are not signed release candidates and must never be published as the project APK.
+Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only. The release workflow produces an unsigned APK artifact, not an installable release package.
 
 ## Provisional technical identifier
 
