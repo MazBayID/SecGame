@@ -59,9 +59,13 @@ try {
   // Fail closed if Pyodide ever exposes worker globals to Python despite jsglobals.
   pyodide.runPython(`
 import js
-for name in ("self", "globalThis", "postMessage", "fetch", "Worker", "document", "window"):
-    if hasattr(js, name):
-        raise RuntimeError("JavaScript global unexpectedly exposed: " + name)
+import pyodide_js
+for namespace_name, namespace in (("js", js), ("pyodide_js", pyodide_js)):
+    for name in ("self", "globalThis", "postMessage", "fetch", "Worker", "document", "window"):
+        if hasattr(namespace, name):
+            raise RuntimeError(
+                namespace_name + " unexpectedly exposes JavaScript global: " + name
+            )
 `);
 
   self.postMessage({ type: "ready", version: pyodide.version });
