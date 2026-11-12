@@ -259,6 +259,7 @@ exercises), MISSION (applied in the story).
 
 ## 8. Interface and Applications
 
+**Detailed UI implementation blueprint:** see [UI_ARCHITECTURE.md](UI_ARCHITECTURE.md). It translates the approved in-game interface direction and Hacknet reference patterns into Android/Jetpack Compose screen boundaries, navigation, state ownership, reusable components, interaction contracts, and an implementation sequence. GAME_CONCEPT.md remains the product/canon source of truth.
 
 
 **In-game UI architecture reference — Hacknet (research-backed, original implementation required):**
