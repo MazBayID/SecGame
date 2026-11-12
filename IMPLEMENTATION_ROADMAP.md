@@ -41,13 +41,15 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 
 ### Slice 1.3 — Evidence service/use cases
 
-- [ ] Discover evidence without duplicating stable IDs.
-- [ ] Add/remove player annotations.
+- [x] Add evidence records with idempotent stable-ID handling and reject conflicting ID reuse.
+- [x] Add player annotations as separate records without mutating source evidence.
+- [x] Add typed relationships after validating both evidence endpoints.
 - [ ] Add, update, and remove player hypotheses with explicit status.
 - [ ] Promote a hypothesis to confirmed only through an explicit authored rule or player-confirmed action; never silently infer it.
-- [ ] Create and revise claims while retaining their evidence references.
-- [ ] Filter by operation, source, type, time, integrity, and discovery state.
-- [ ] Test authorization, immutability, and idempotency rules.
+- [x] Create and revise claims while retaining their evidence references.
+- [x] Filter evidence in memory by source, type, event time, integrity, and discovery state.
+- [ ] Add repository-backed filtering and persistence tests.
+- [ ] Test authorization, immutability, and idempotency rules across persistence.
 
 ### Slice 1.4 — Evidence Graph interface
 
