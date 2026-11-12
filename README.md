@@ -13,9 +13,9 @@ The `main` branch currently contains:
 - Pure Kotlin graph operations for idempotent evidence creation, annotation, relationship/claim updates, and deterministic filtering
 - JVM unit tests for graph validation, immutable source evidence, mutation behavior, and evidence search
 - Android CI runs Kotlin JVM source validation only; it does not create a debug APK
-- `unsigned-apk-candidate.yml` builds exactly one unsigned Release APK, validates its package metadata, and uploads it with its SHA-256 checksum
-- No keystore, signing key, signing password, or GitHub signing secret is required. The output is unsigned and cannot be installed on Android until a signing policy is explicitly approved.
-- Unsigned APK artifacts cannot be installed or accepted as device-tested releases
+- The approved test-artifact policy is one installable Debug APK signed with the Android Gradle Plugin's automatically generated debug key; no personal/permanent keystore, signing password, or GitHub signing secret is permitted.
+- Debug APKs are development/testing artifacts only, not production releases. Ephemeral CI runners may generate different debug certificates, so a new candidate may require uninstalling the previous build before installation; uninstalling can erase local app data.
+- The existing `unsigned-apk-candidate.yml` workflow has not yet been migrated to this approved Debug APK policy; until that workflow is updated and run successfully, no installable candidate artifact is available.
 
 Planned technical target: Python 3.13 through Chaquopy for local in-game execution; this runtime is not implemented in the current foundation.
 
@@ -42,7 +42,7 @@ Hacknet is a high-level UX/architecture reference only. Do not copy its decompil
 - JDK 17
 - Gradle 8.13-compatible environment
 
-Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only. The release workflow produces an unsigned APK artifact, not an installable release package.
+Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only. The intended CI test artifact is an installable Debug APK signed with an automatically generated debug key; it is not a production release. The current CI candidate workflow still needs migration before it can produce that artifact.
 
 ## Provisional technical identifier
 
