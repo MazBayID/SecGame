@@ -92,6 +92,34 @@ Questions to validate:
 
 A WebView must not expose a privileged JavaScript bridge to player-controlled code.
 
+### Evidence-based candidate notes (research update)
+
+**Chaquopy / CPython**
+- Chaquopy 17.2 currently documents support for Python 3.10–3.15, AGP 7.3–9.5, and Android API 24+.
+- Its FAQ states that Python normally runs in the main app process. It mentions a separate process as an advanced option, but a separate process alone is not equivalent to Android's isolated-process security boundary.
+- Therefore, Chaquopy is a strong compatibility candidate for real CPython, but it is **not approved as the player-code sandbox**. The proof of concept must demonstrate initialization inside a genuinely isolated process and test filesystem, permission, and process boundaries.
+
+**Pyodide / WebAssembly**
+- Pyodide documents running Python in a Web Worker to keep long-running execution off the UI thread.
+- Its WebAssembly environment does not provide working native sockets, threading, or multiprocessing in the same way as desktop CPython. This is a meaningful limitation for the curriculum, but it may be acceptable if networking lessons use explicit game-owned simulation APIs rather than real sockets.
+- Pyodide's interrupt mechanism has additional requirements (including a SharedArrayBuffer setup); the prototype must also test whether terminating and recreating a worker is reliable on Android WebView.
+- WebView must not expose a privileged JavaScript interface to player-controlled Python/JavaScript. Android's security guidance warns that JavaScript interfaces can expose host-app methods to all frames.
+
+**Current assessment (not a final runtime selection)**
+- Chaquopy offers the strongest CPython compatibility, but its process model requires careful validation before it can satisfy the isolation requirement.
+- Pyodide offers a WebAssembly execution boundary and worker model, but has compatibility and interruption constraints.
+- Neither candidate is approved yet. The POC must compare offline startup, package size, Android memory use, bounded execution, worker/process termination, virtual-file integration, and resistance to host access.
+- The game curriculum must not depend on real internet sockets. Simulated networking remains the intended educational interface unless a future safe runtime proves otherwise.
+
+Research references:
+- [Chaquopy version compatibility](https://chaquo.com/chaquopy/doc/current/versions.html)
+- [Chaquopy FAQ — Python process and interruption](https://chaquo.com/chaquopy/doc/current/faq.html)
+- [Pyodide — Web Workers](https://pyodide.org/en/stable/usage/webworker.html)
+- [Pyodide — interrupting execution](https://pyodide.org/en/stable/usage/keyboard-interrupts.html)
+- [Pyodide — WebAssembly constraints](https://pyodide.org/en/stable/usage/wasm-constraints.html)
+- [Android — WebView native bridge security](https://developer.android.com/privacy-and-security/risks/insecure-webview-native-bridges)
+- [Android — application security tips](https://developer.android.com/privacy-and-security/security-tips)
+
 ### Runtime decision gate
 
 Do not select either candidate based on convenience or a successful “hello world” alone. Build a small disposable proof of concept and compare both approaches where practical. Select a runtime only after the tests below pass. If neither candidate provides adequate isolation, stop and propose a safer alternative rather than weakening the security requirement.
