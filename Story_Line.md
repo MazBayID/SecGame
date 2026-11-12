@@ -2,9 +2,9 @@
 
 ## Naskah Cerita dan Garis Besar Naratif
 
-Dokumen ini memuat peristiwa, tokoh, konflik, misteri, dan perkembangan kisah AEGIS-Net. Dokumen ini adalah sumber naratif, bukan spesifikasi gameplay atau panduan implementasi.
+Dokumen ini memuat peristiwa, tokoh, konflik, misteri, dan perkembangan kisah AEGIS-Net. Dokumen ini adalah sumber naratif, bukan spesifikasi gameplay atau panduan implementasi. Gameplay dan keputusan teknis mengikuti dokumen spesialis masing-masing serta hierarki pada `GAME_CONCEPT.md`.
 
-**Aturan kontinuitas:** `GAME_CONCEPT.md` adalah sumber kebenaran untuk identitas produk, aturan game, dan keputusan teknis. Jika naskah ini bertentangan dengannya, naskah ini yang harus diperbaiki. Aturan baru yang disetujui menggantikan aturan lama yang bertentangan; jangan mempertahankan dua versi yang saling meniadakan.
+**Aturan kontinuitas:** `GAME_CONCEPT.md` menetapkan identitas produk, canon inti, keselamatan, dan batas teknis. Dokumen ini menetapkan detail naratif selama tidak bertentangan dengan canon tersebut. `GAMEPLAY_DESIGN.md` mengatur mekanik gameplay dan `UI_ARCHITECTURE.md` mengatur tanggung jawab antarmuka. Jika naskah ini bertentangan dengan canon atau aturan domain terkait, perbaiki naskah ini. Arah terbaru yang disetujui pemilik menggantikan aturan lama yang bertentangan; jangan mempertahankan dua versi yang saling meniadakan.
 
 ---
 
