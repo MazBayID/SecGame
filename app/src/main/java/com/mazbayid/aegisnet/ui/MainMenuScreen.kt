@@ -295,6 +295,13 @@ fun AegisNetApp() {
                             initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
                             onBack = { selected = "OPERATIONS" }
                         )
+                    } else if (selected == "INTRANET") {
+                        IntranetScreen(
+                            onOpenOperations = { selected = "OPERATIONS" },
+                            onOpenDatabase = { selected = "DATABASE" },
+                            onOpenMessenger = { selected = "MESSENGER" },
+                            onBack = { selected = "MAIN MENU" }
+                        )
                     } else if (selected == "MESSENGER") {
                         MessengerScreen(
                             onOpenCampaign = { selected = "CAMPAIGN OVERVIEW" },
