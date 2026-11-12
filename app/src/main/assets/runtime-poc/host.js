@@ -58,6 +58,7 @@ document.querySelector("#restart").addEventListener("click", () => {
 let pythonWorker = null;
 let pythonTimer = null;
 const pythonButton = document.querySelector("#run-python");
+const cancelPythonButton = document.querySelector("#cancel-python");
 
 function finishPythonRun(message) {
   if (pythonTimer !== null) clearTimeout(pythonTimer);
@@ -65,13 +66,21 @@ function finishPythonRun(message) {
   pythonWorker?.terminate();
   pythonWorker = null;
   pythonButton.disabled = false;
+  cancelPythonButton.disabled = true;
   setStatus(message);
 }
+
+cancelPythonButton.addEventListener("click", () => {
+  if (!pythonWorker) return;
+  finishPythonRun("Execution cancelled · worker terminated");
+  write("CANCELLED · The host terminated the Python worker.");
+});
 
 pythonButton.addEventListener("click", () => {
   if (pythonWorker) return;
 
   pythonButton.disabled = true;
+  cancelPythonButton.disabled = false;
   write("Starting a fresh Python worker…");
   setStatus("Loading local Pyodide runtime…");
 
