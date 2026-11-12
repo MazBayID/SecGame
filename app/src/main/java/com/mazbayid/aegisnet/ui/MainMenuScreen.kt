@@ -301,8 +301,9 @@ private fun TelemetryValue(label: String, value: String) {
 
 @Composable
 private fun StatusDot() {
+    val dotColor = MaterialTheme.colorScheme.primary
     Canvas(Modifier.size(8.dp)) {
-        drawCircle(MaterialTheme.colorScheme.primary)
+        drawCircle(dotColor)
     }
 }
 
