@@ -15,7 +15,7 @@ The `main` branch currently contains:
 - The single `android-ci.yml` workflow runs Kotlin JVM tests and applicable Python-test checks; on every successful push to `main`, it then builds and uploads exactly one installable Debug APK
 - Pull requests targeting `main` run the same source checks but do not publish APK artifacts; `workflow_dispatch` can also run the combined workflow manually on `main`
 - The Debug APK is signed by the Android Gradle Plugin's automatically generated debug key; no personal/permanent keystore, signing password, or GitHub signing secret is used
-- The candidate workflow validates the APK archive, package, versionCode, debug certificate, ABI metadata, and SHA-256 checksum before uploading the artifact
+- The combined workflow validates the APK archive, package, versionCode, debug certificate, ABI metadata, and SHA-256 checksum before uploading the artifact
 - Debug APKs are development/testing artifacts only, not production releases. Ephemeral CI runners may generate different debug certificates, so a new candidate may require uninstalling the previous build before installation; uninstalling can erase local app data
 - APK artifacts are produced only after the required checks pass; each successful `main` push uploads one APK and its SHA-256 checksum for 14 days
 
