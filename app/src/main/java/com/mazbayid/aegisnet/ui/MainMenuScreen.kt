@@ -29,6 +29,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import com.mazbayid.aegisnet.data.campaign.SharedPreferencesCampaignMissionProgressRepository
+import com.mazbayid.aegisnet.domain.campaign.CampaignRank
+import com.mazbayid.aegisnet.domain.campaign.CampaignRankProgression
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,8 +66,21 @@ private val appTiles = listOf(
 
 @Composable
 fun AegisNetApp() {
+    val context = LocalContext.current
+    val campaignProgressRepository = remember(context) {
+        SharedPreferencesCampaignMissionProgressRepository(context)
+    }
+    var clearance by remember { mutableStateOf(CampaignRank.APPLICANT) }
     var selected by remember { mutableStateOf("MAIN MENU") }
     var hubOpen by remember { mutableStateOf(false) }
+
+    LaunchedEffect(selected) {
+        if (selected == "MAIN MENU") {
+            clearance = withContext(Dispatchers.IO) {
+                CampaignRankProgression.rank(campaignProgressRepository.load())
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -162,7 +182,7 @@ fun AegisNetApp() {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         TelemetryValue("NETWORK", "OFFLINE")
-                        TelemetryValue("CLEARANCE", "RECRUIT")
+                        TelemetryValue("CLEARANCE", clearance.displayLabel)
                         TelemetryValue("STATUS", "STANDBY")
                     }
                 }

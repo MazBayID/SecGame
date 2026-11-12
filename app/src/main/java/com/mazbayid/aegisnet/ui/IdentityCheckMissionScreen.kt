@@ -269,7 +269,7 @@ fun IdentityCheckMissionScreen(
                     )
                 }
                 if (completed) {
-                    Text("MISSION 02 COMPLETE", color = MaterialTheme.colorScheme.primary)
+                    Text("RECRUIT RANK CONFIRMED", color = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.height(8.dp))
                     Button(onClick = onOpenMissionThree, modifier = Modifier.fillMaxWidth()) {
                         Text("CONTINUE TO MISSION 03 / SYSTEM TRACE AUDIT")
