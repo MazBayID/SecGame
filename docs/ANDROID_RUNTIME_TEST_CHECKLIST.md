@@ -26,7 +26,7 @@ Open **CYBER//TRACE Runtime POC** from the Android app drawer.
 - [ ] Open the POC.
 - [ ] Confirm the page loads without a CDN or network connection.
 - [ ] Confirm status reports Python 3.14.x and Pyodide 314.0.7.
-- [ ] Confirm the startup capability probe reports arithmetic, JSON, datetime, and SQLite.
+- [ ] Confirm the startup capability probe reports arithmetic, JSON, datetime, SQLite, and virtual-filesystem isolation.
 - [ ] If the screen says runtime blocked, record the exact message and stop; do not try to bypass the WebView multi-process gate.
 
 ### B. Real Python execution
@@ -65,7 +65,7 @@ from pathlib import Path
 print(Path("/data/user/0/com.mazbayid.cybertrace").exists())
 ```
 
-Expected: `False`. This is a limited virtual-filesystem probe, not a complete host-file isolation audit.
+Expected: `False`. The startup probe also checks the app-private and shared-storage paths. These are limited virtual-filesystem probes, not a complete host-file isolation audit.
 
 Then run:
 
