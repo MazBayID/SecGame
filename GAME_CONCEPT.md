@@ -501,7 +501,7 @@ The English must read naturally and preserve Freya's voice.
 - The CI runner is ephemeral, so its automatically generated debug certificate may differ between builds. Android may reject an update installed over an APK signed by a previous run; when that happens, uninstall the previous test build before installing the new one. Warn that uninstalling can erase local app data.
 - Installable smoke testing on a physical Android device is expected for a test candidate when a device is available. Report emulator and physical-device results separately and never claim a test that was not actually performed.
 - Any future production/distribution APK, stable signing identity, or Play Store release requires a separate explicit owner-approved signing policy. Do not silently introduce a permanent signing key.
-- Run all applicable source tests before building (Kotlin tests are mandatory; Python tests must be added and executed before APK builds are allowed once Python source/runtime is introduced). A failed or skipped applicable check means no APK artifact.
+- Run all applicable source tests before building (Kotlin tests are mandatory; when Python source/runtime is introduced, provide a Python `unittest` suite under `python/tests`; the combined workflow runs it with Python 3.13 before building). A failed or skipped applicable check means no APK artifact.
 - applicationId stays fixed; versionCode always increases. Any future signed distribution/update policy requires explicit owner approval and tested data migrations.
 ## 15. Development Rules
 
