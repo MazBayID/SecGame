@@ -546,7 +546,7 @@ be deleted.
 ## 16. Current Project Status
 
 - The `feat/android-foundation` branch contains an initial Android application shell built with Kotlin and Jetpack Compose: app entry point, semantic theme, Main Menu prototype, local system-status panel, campaign-entry placeholder, seven-tile App Hub prototype, tactical-grid background, and reusable panel primitive.
-- This is a UI foundation, not a playable game. Campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, Evidence Graph, mission evaluation, and persistent decision consequences are not yet implemented.
+- This is an early foundation, not a playable game. The Evidence Graph currently has domain records, structural validation, in-memory editing/search operations, and JVM unit tests; persistence and player-facing graph/timeline UI are not implemented. Campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, mission evaluation, and persistent decision consequences are also not implemented.
 - The approved gameplay systems are documented in `GAMEPLAY_DESIGN.md`; implementation must be delivered as verified vertical slices rather than empty screen placeholders.
 - Do not infer build, test, or release success from the presence of source files. Report only checks actually run against the relevant commit and APK.
 
