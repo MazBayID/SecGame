@@ -195,7 +195,19 @@ fun AegisNetApp() {
                     } else if (selected == "MISSION_04") {
                         RecordInventoryMissionScreen(
                             onOpenEditor = { selected = "MISSION_04_EDITOR" },
+                            onOpenMissionFive = { selected = "MISSION_05" },
                             onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_05") {
+                        ReferenceTraceMissionScreen(
+                            onOpenEditor = { selected = "MISSION_05_EDITOR" },
+                            onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_05_EDITOR") {
+                        EditorScreen(
+                            initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
+                            initialPath = "scripts/reference_trace.py",
+                            onBack = { selected = "MISSION_05" }
                         )
                     } else if (selected == "MISSION_04_EDITOR") {
                         EditorScreen(

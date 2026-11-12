@@ -98,4 +98,12 @@ class FirstContactMissionCatalogTest {
         assertEquals(setOf("RECORD_COUNT=5"), objective.requiredOutputContains)
         assertTrue(objective.requiresSuccessfulRun)
     }
+
+    @Test
+    fun referenceTraceRequiresCatalogEvidenceAndCorrectSourceIndex() {
+        val objective = FirstContactMissionCatalog.missions[4].definition.objectives.single()
+        assertEquals(setOf("reference_catalog"), objective.requiredEvidenceIds)
+        assertEquals(setOf("SOURCE_INDEX=2|RX-14|RECEIPT"), objective.requiredOutputContains)
+        assertTrue(objective.requiresSuccessfulRun)
+    }
 }

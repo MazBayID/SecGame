@@ -59,6 +59,19 @@ object FirstContactMissionSeed {
                 access = EvidenceAccess.INTERNAL,
                 origin = EvidenceOrigin.ORIGINAL,
                 operationId = FirstContactMissionCatalog.OPERATION_ID
+            ),
+            EvidenceRecord(
+                id = "reference_catalog",
+                title = "Reference Routing Catalog",
+                description = "A read-only catalog preserving the source order of transmission references. RX-14 appears once at a specific zero-based source index.",
+                type = EvidenceType.DATASET,
+                sourceId = "training_reference_catalog_016",
+                sourceLabel = "A.E.G.I.S. Technical Registry",
+                sourceReference = "reference_catalog.txt",
+                integrity = EvidenceIntegrity.UNKNOWN,
+                access = EvidenceAccess.INTERNAL,
+                origin = EvidenceOrigin.ORIGINAL,
+                operationId = FirstContactMissionCatalog.OPERATION_ID
             )
         )
     )
@@ -126,6 +139,18 @@ object FirstContactMissionSeed {
             VfsFile(
                 path = "scripts/inventory_count.py",
                 content = "inventory_text = aegis.read_text('briefing/record_inventory.txt')\nrecords = inventory_text.split('\\n')\nrecord_count = len(records)\nprint('RECORD_COUNT=' + str(record_count))\n",
+                access = VfsAccess.READ_WRITE,
+                origin = VfsOrigin.PLAYER_CREATED
+            ),
+            VfsFile(
+                path = "briefing/reference_catalog.txt",
+                content = "RX-11|ROUTINE\\nRX-12|ROUTINE\\nRX-14|RECEIPT\\nRX-15|ROUTINE\\nRX-16|RECEIPT",
+                access = VfsAccess.READ_ONLY,
+                origin = VfsOrigin.MISSION_SOURCE
+            ),
+            VfsFile(
+                path = "scripts/reference_trace.py",
+                content = "catalog_text = aegis.read_text('briefing/reference_catalog.txt')\\nentries = catalog_text.split('\\\\n')\\nfor source_index, entry in enumerate(entries):\\n    if 'RX-14' in entry:\\n        print('SOURCE_INDEX=' + str(source_index) + '|' + entry)\\n",
                 access = VfsAccess.READ_WRITE,
                 origin = VfsOrigin.PLAYER_CREATED
             )

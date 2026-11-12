@@ -269,6 +269,10 @@ fun RecordInventoryMissionScreen(
                 }
                 if (completed) {
                     Text("MISSION 04 COMPLETE", color = MaterialTheme.colorScheme.primary)
+                    Spacer(Modifier.height(8.dp))
+                    Button(onClick = onOpenMissionFive, modifier = Modifier.fillMaxWidth()) {
+                        Text("CONTINUE TO MISSION 05 / REFERENCE TRACE")
+                    }
                 }
             }
         }

@@ -79,7 +79,9 @@ object FirstContactMissionCatalog {
             objectiveId = "trace_reference",
             objectiveDescription = "Telusuri koleksi dengan indeks sumber dan saring referensi yang dicari.",
             approach = "python_enumerate_and_filter",
-            outcome = "reference_source_index_verified"
+            outcome = "reference_source_index_verified",
+            requiredEvidence = setOf("reference_catalog"),
+            requiredOutput = setOf("SOURCE_INDEX=2|RX-14|RECEIPT")
         ),
         mission(
             number = 6,

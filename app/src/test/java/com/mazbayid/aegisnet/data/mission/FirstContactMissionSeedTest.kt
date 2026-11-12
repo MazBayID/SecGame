@@ -14,7 +14,7 @@ import org.junit.Test
 class FirstContactMissionSeedTest {
 
     @Test
-    fun firstFourMissionsHaveDistinctSourceEvidence() {
+    fun firstFiveMissionsHaveDistinctSourceEvidence() {
         val graph = FirstContactMissionSeed.evidenceGraph()
         val ids = graph.evidence.map { it.id }.toSet()
 
@@ -22,6 +22,7 @@ class FirstContactMissionSeedTest {
         assertTrue(ids.contains("identity_record"))
         assertTrue(ids.contains("system_trace_log"))
         assertTrue(ids.contains("record_inventory"))
+        assertTrue(ids.contains("reference_catalog"))
         assertEquals(
             EvidenceType.SYSTEM_LOG,
             graph.evidence.single { it.id == "system_trace_log" }.type
@@ -81,6 +82,16 @@ class FirstContactMissionSeedTest {
 
         assertEquals(VfsAccess.READ_ONLY, inventory.access)
         assertEquals(5, inventory.content.lineSequence().count())
+    }
+
+
+    @Test
+    fun referenceCatalogPreservesRX14AtZeroBasedIndexTwo() {
+        val catalog = FirstContactMissionSeed.missionWorkspace().files
+            .single { it.path == "briefing/reference_catalog.txt" }
+
+        assertEquals(VfsAccess.READ_ONLY, catalog.access)
+        assertEquals("RX-14|RECEIPT", catalog.content.lineSequence().elementAt(2))
     }
 
 }
