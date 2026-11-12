@@ -84,6 +84,13 @@ cancelPythonButton.addEventListener("click", () => {
 pythonButton.addEventListener("click", () => {
   if (pythonWorker) return;
 
+  const source = document.querySelector("#python-source").value;
+  if (new TextEncoder().encode(source).byteLength > 16 * 1024) {
+    write("RESOURCE_LIMIT · Source exceeds 16 KiB.");
+    setStatus("Source rejected before worker startup");
+    return;
+  }
+
   pythonButton.disabled = true;
   cancelPythonButton.disabled = false;
   write("Starting a fresh Python worker…");
@@ -108,7 +115,7 @@ pythonButton.addEventListener("click", () => {
       setStatus("Python " + data.version + " ready · isolated worker thread");
       pythonWorker.postMessage({
         type: "run",
-        source: document.querySelector("#python-source").value,
+        source,
       });
       return;
     }
