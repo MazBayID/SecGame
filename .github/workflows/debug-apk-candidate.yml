@@ -67,14 +67,14 @@ jobs:
           echo "$BADGING" | grep -F "package: name='com.mazbayid.aegisnet'"
           VERSION_CODE="$(printf '%s' "$BADGING" | sed -n "s/.*versionCode='\\([0-9][0-9]*\\)'.*/\\1/p")"
           test -n "$VERSION_CODE" && test "$VERSION_CODE" -gt 0
-          printf 'Validated Debug APK versionCode=%s\\n' "$VERSION_CODE"
+          printf 'Validated Debug APK versionCode=%s\n' "$VERSION_CODE"
 
           CERT_INFO="$("$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK_PATH")"
           echo "$CERT_INFO"
           printf '%s' "$CERT_INFO" | grep -F "Android Debug"
 
           if printf '%s' "$BADGING" | grep -q "native-code:"; then
-            printf '%s\\n' "$BADGING" | grep "native-code:"
+            printf '%s\n' "$BADGING" | grep "native-code:"
           else
             echo "No native libraries declared; APK is ABI-independent."
           fi
