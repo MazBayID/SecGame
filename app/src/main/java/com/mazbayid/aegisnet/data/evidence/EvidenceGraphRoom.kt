@@ -24,7 +24,7 @@ data class EvidenceRecordEntity(
         entity = EvidenceRecordEntity::class, parentColumns = ["operationId", "id"],
         childColumns = ["operationId", "evidenceId"], onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index("operationId"), Index(value = ["operationId", "evidenceId"])]
+    indices = [Index(value = ["operationId"]), Index(value = ["operationId", "evidenceId"])]
 )
 data class EvidenceAnnotationEntity(
     val operationId: String, val id: String, val evidenceId: String,
@@ -45,7 +45,7 @@ data class EvidenceAnnotationEntity(
         )
     ],
     indices = [
-        Index("operationId"), Index(value = ["operationId", "fromEvidenceId"]),
+        Index(value = ["operationId"]), Index(value = ["operationId", "fromEvidenceId"]),
         Index(value = ["operationId", "toEvidenceId"])
     ]
 )
@@ -57,7 +57,7 @@ data class EvidenceRelationshipEntity(
 @Entity(
     tableName = "evidence_claims",
     primaryKeys = ["operationId", "id"],
-    indices = [Index("operationId")]
+    indices = [Index(value = ["operationId"])]
 )
 data class EvidenceClaimEntity(
     val operationId: String, val id: String, val statement: String,
@@ -78,7 +78,7 @@ data class EvidenceClaimEntity(
         )
     ],
     indices = [
-        Index("operationId"), Index(value = ["operationId", "claimId"]),
+        Index(value = ["operationId"]), Index(value = ["operationId", "claimId"]),
         Index(value = ["operationId", "evidenceId"])
     ]
 )
