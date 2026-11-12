@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "app/**"
+      - "tools/**"
+      - ".gitignore"
       - "*.gradle.kts"
       - "gradle.properties"
       - ".github/workflows/android-build.yml"
@@ -71,6 +73,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "9.6.0"
+
+      - name: Prepare pinned Pyodide core assets
+        run: bash tools/prepare_pyodide_core.sh
 
       - name: Assemble debug APK
         run: gradle --no-daemon assembleDebug
