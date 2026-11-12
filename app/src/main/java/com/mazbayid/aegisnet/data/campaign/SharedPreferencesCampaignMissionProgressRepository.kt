@@ -26,10 +26,30 @@ class SharedPreferencesCampaignMissionProgressRepository(
             .map { it.definition.id }
 
     override fun load(): CampaignMissionProgress {
-        val persisted = preferences.getStringSet(KEY_COMPLETED_MISSIONS, emptySet())
-            .orEmpty()
-            .toList()
+        val hasCurrentSave = preferences.contains(KEY_COMPLETED_MISSIONS)
+        val persisted = if (hasCurrentSave) {
+            preferences.getStringSet(KEY_COMPLETED_MISSIONS, emptySet()).orEmpty().toList()
+        } else {
+            migrateLegacyMissionOneCompletion()
+        }
         return CampaignMissionProgression.restore(persisted, orderedMissionIds)
+    }
+
+    /**
+     * Preserve Mission 01 completion from the earlier boolean-only save format.
+     * The migration writes the new snapshot before returning it; if the write
+     * fails, the in-memory result still reflects the legacy completion.
+     */
+    private fun migrateLegacyMissionOneCompletion(): List<String> {
+        val legacyPreferences = preferences
+        val legacyCompleted = legacyPreferences.getBoolean(LEGACY_MISSION_ONE_KEY, false)
+        if (!legacyCompleted) return emptyList()
+
+        val firstMissionId = orderedMissionIds.firstOrNull() ?: return emptyList()
+        legacyPreferences.edit()
+            .putStringSet(KEY_COMPLETED_MISSIONS, setOf(firstMissionId))
+            .commit()
+        return listOf(firstMissionId)
     }
 
     override fun save(progress: CampaignMissionProgress): Boolean {
@@ -45,5 +65,6 @@ class SharedPreferencesCampaignMissionProgressRepository(
     private companion object {
         const val PREFERENCES_NAME = "aegis_campaign_mission_progress"
         const val KEY_COMPLETED_MISSIONS = "first_contact_completed_missions"
+        const val LEGACY_MISSION_ONE_KEY = "completed_fc_m01_first_signal"
     }
 }
