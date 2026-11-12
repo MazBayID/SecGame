@@ -302,6 +302,8 @@ fun AegisNetApp() {
                             onOpenMessenger = { selected = "MESSENGER" },
                             onBack = { selected = "MAIN MENU" }
                         )
+                    } else if (selected == "ANALYSIS") {
+                        AnalysisScreen(onBack = { selected = "MAIN MENU" })
                     } else if (selected == "MESSENGER") {
                         MessengerScreen(
                             onOpenCampaign = { selected = "CAMPAIGN OVERVIEW" },
