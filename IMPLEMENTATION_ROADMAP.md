@@ -71,7 +71,7 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [ ] Separate mission definition/content from runtime player state.
 - [ ] Implement deterministic mission evaluation against semantic outcomes and evidence provenance.
 - [ ] Keep RUN and SUBMIT separate; a successful RUN alone never completes an operation.
-- [ ] Add debrief output with Intelligence, Evidence, Technical, Stealt​​h / Exposure, and Judgment dimensions only when active for that mission.
+- [ ] Add debrief output with Intelligence, Evidence, Technical, Stealth / Exposure, and Judgment dimensions only when active for that mission.
 - [ ] Test multiple valid approaches, incomplete evidence, responsible uncertainty, and repeat submission idempotency.
 
 ## Phase 3 — First Contact vertical slice
