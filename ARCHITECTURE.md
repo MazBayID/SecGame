@@ -1,8 +1,8 @@
 # CYBER//TRACE — Architecture & Technical Direction
 
-> Status: Phase 0 assessment / Phase 1 foundation started  
-> Decision state: Android direction accepted as the working target; Python sandbox implementation remains **unapproved until a proof of concept passes security and compatibility tests**.  
-> Scope: This document describes the new CYBER//TRACE implementation in this repository only.
+> Status: Phase 1 foundation started; Android CI build verified.  \
+> Decision state: Android direction accepted as the working target; Python sandbox implementation remains **unapproved until a proof of concept passes security and compatibility tests**.  \
+> Scope: This document describes the CYBER//TRACE implementation in this repository only.
 
 ## 1. Repository boundary
 
@@ -10,6 +10,7 @@
 - This repository owns CYBER//TRACE source code, documentation, tests, and build configuration.
 - No source code, assets, story material, or implementation from any other game repository is required.
 - Preserve the existing concept and story documents as the creative source of truth.
+- Do not inspect, modify, copy, or depend on the separate `firstGame` project. It is outside this repository's scope.
 
 ## 2. Platform direction
 
@@ -21,8 +22,8 @@ The working target is an Android phone application.
 |---|---|---|
 | Application language | Kotlin | Native Android integration |
 | UI | Jetpack Compose | Screen-based terminal, editor, panels, dialogue, and responsive layouts |
-| Android Gradle Plugin | 9.4.0 | Current build configuration |
-| Gradle | 9.6.0 | Used by the CI workflow |
+| Android Gradle Plugin | 9.4.0 | Current build configuration; CI build verified |
+| Gradle | 9.6.0 | Used by the CI workflow; CI build verified |
 | JDK | 17 | Used by the CI workflow |
 | Kotlin support | AGP built-in Kotlin | Avoids the obsolete separate Android Kotlin plugin |
 | Compose compiler plugin | 2.4.21 | Matches the selected Kotlin toolchain |
@@ -33,7 +34,7 @@ The working target is an Android phone application.
 | Local persistence | Not yet implemented | Room and DataStore remain candidates |
 | Python execution | Not yet implemented | Must be isolated behind a narrow IPC interface |
 
-The Android project scaffold and initial terminal screen have been committed. Their successful compilation has **not yet been verified**. The GitHub Actions workflow is configured to run unit tests and assemble a debug APK.
+The Android project scaffold and initial terminal screen compile successfully in GitHub Actions. The current CI pipeline also compiles and executes the unit-test source set, assembles a debug APK, and uploads it as an artifact. Physical-device installation and runtime behavior have not yet been verified.
 
 Version references:
 - [Android Gradle Plugin 9.4.0 release notes](https://developer.android.com/build/releases/agp-9-4-0-release-notes)
@@ -210,10 +211,14 @@ This is a target structure, not a claim that every listed module already exists.
 - The concept requires real Python execution and controlled fictional systems.
 - Android is the working platform direction.
 - A native Kotlin/Compose application scaffold and an initial terminal-themed launch screen have been added.
-- A GitHub Actions workflow has been added to run unit tests and assemble a debug APK.
-- Build and test results remain **unverified** until the workflow completes successfully.
+- GitHub Actions run **#43259419839** completed successfully for commit `046feb3c0d8ce59fb001162863c107037087a31f`.
+- The workflow successfully compiled the app, compiled and executed the unit-test source set, assembled a debug APK, and uploaded the `cyber-trace-debug` artifact.
+- Three unit tests currently cover the lesson prerequisite access policy: an initial lesson is unlocked, a lesson remains locked when a prerequisite is incomplete, and it unlocks when all prerequisites are complete.
+- This CI result does **not** verify installation, launch, or behavior on a physical Android device. Those checks remain outstanding.
 - Python runtime isolation is the main technical risk and must be validated before it becomes a dependency of the game.
 - The first runtime proof of concept must compare Android isolated-service execution with a WebAssembly-based option before a final runtime decision.
+
+CI evidence: [GitHub Actions run #43259419839](https://github.com/MazBayID/SecGame/actions/runs/43259419839).
 
 ## 9. References
 
@@ -226,4 +231,4 @@ This is a target structure, not a claim that every listed module already exists.
 
 ---
 
-**Next engineering milestone:** verify the Android build, then build the Python-runtime isolation proof of concept as separate, testable work. Do not integrate player-code execution into the main game process.
+**Next engineering milestone:** verify the app on a physical Android device, then build the Python-runtime isolation proof of concept as separate, testable work. Do not integrate player-code execution into the main game process.
