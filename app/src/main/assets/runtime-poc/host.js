@@ -125,7 +125,7 @@ pythonButton.addEventListener("click", () => {
 
   pythonWorker.onerror = (event) => {
     finishPythonRun("Python worker failed · worker discarded");
-    write("Worker failed to load. Run tools/prepare_pyodide_core.sh, then rebuild the debug APK.\\n" +
+    write("Worker failed to load. Run tools/prepare_pyodide_core.sh, then rebuild the debug APK.\n" +
       (event.message || "No additional browser error details."));
   };
 });
