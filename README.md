@@ -12,12 +12,12 @@ The `main` branch currently contains:
 - Initial Evidence Graph domain contract: typed evidence records, provenance metadata, separate player annotations, relationship states, and claims
 - Pure Kotlin graph operations for idempotent evidence creation, annotation, relationship/claim updates, and deterministic filtering
 - JVM unit tests for graph validation, immutable source evidence, mutation behavior, and evidence search
-- Android CI runs Kotlin JVM source validation only; it does not create an APK artifact
-- `debug-apk-candidate.yml` is the manual, main-only workflow for building one installable Debug APK after Kotlin tests and applicable Python-test checks pass
+- The single `android-ci.yml` workflow runs Kotlin JVM tests and applicable Python-test checks; on every successful push to `main`, it then builds and uploads exactly one installable Debug APK
+- Pull requests targeting `main` run the same source checks but do not publish APK artifacts; `workflow_dispatch` can also run the combined workflow manually on `main`
 - The Debug APK is signed by the Android Gradle Plugin's automatically generated debug key; no personal/permanent keystore, signing password, or GitHub signing secret is used
 - The candidate workflow validates the APK archive, package, versionCode, debug certificate, ABI metadata, and SHA-256 checksum before uploading the artifact
 - Debug APKs are development/testing artifacts only, not production releases. Ephemeral CI runners may generate different debug certificates, so a new candidate may require uninstalling the previous build before installation; uninstalling can erase local app data
-- The candidate workflow has been added but has not yet been run successfully; no installable artifact is available until a successful workflow run
+- APK artifacts are produced only after the required checks pass; each successful `main` push uploads one APK and its SHA-256 checksum for 14 days
 
 Planned technical target: Python 3.13 through Chaquopy for local in-game execution; this runtime is not implemented in the current foundation.
 
@@ -44,7 +44,7 @@ Hacknet is a high-level UX/architecture reference only. Do not copy its decompil
 - JDK 17
 - Gradle 8.13-compatible environment
 
-Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only. The intended CI test artifact is an installable Debug APK signed with an automatically generated debug key; it is not a production release. Run the `Installable Debug APK Candidate` workflow manually from the Actions tab on the `main` branch to create it.
+Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only. The combined Android CI workflow automatically builds an installable Debug APK after all required checks pass on each push to `main`. Pull requests run tests without publishing an APK. A manual run is also available through the `Android CI and Installable Debug APK` workflow on `main`.
 
 ## Provisional technical identifier
 
