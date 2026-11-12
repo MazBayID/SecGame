@@ -163,6 +163,18 @@ The core archive is much smaller but does not contain the vendored wheel collect
 7. Build the first mission around concepts already taught in Lesson 00.01.
 
 
+## Memory-limit feasibility note
+
+The pinned 314.0.7 release does not expose a per-instance WebAssembly heap cap. Upstream has merged the implementation for the unreleased 314.1.0 development line: the public option is `maxMemoryBytes`, implemented by supplying an imported `WebAssembly.Memory` with an explicit maximum. The upstream change modifies Emscripten build flags to use `IMPORTED_MEMORY`, so this is not a safe one-line configuration change for the already-built 314.0.7 archive. Do not pass an unsupported option and assume it is enforced, and do not patch generated loader text without a reproducible, digest-pinned build and regression suite.
+
+Current decision:
+- Keep 314.0.7 as the reproducible baseline for interpreter/API and worker experiments only.
+- Do not claim or advertise a memory cap for this baseline.
+- Re-evaluate the feature when a stable Pyodide release includes it, or create a fully reproducible custom Pyodide build that enables imported memory and carries the exact upstream implementation.
+- Before adopting it, test that allocations above the cap raise Python `MemoryError`, allocations below the cap still work, and the interpreter remains usable after the failed allocation. Then repeat those tests in the Android WebView worker and measure renderer recovery.
+
+Upstream references: [Pyodide 314.1.0 development changelog](https://pyodide.org/en/latest/project/changelog.html), [implementation PR #6483](https://github.com/pyodide/pyodide/pull/6483), and [feature issue #6482](https://github.com/pyodide/pyodide/issues/6482).
+
 ## Source notes
 
 - [Pyodide v314.0.7 — Web Worker guide](https://pyodide.org/en/314.0.7/usage/webworker.html): Pyodide uses a module-type worker and documents message-based execution outside the UI thread.
