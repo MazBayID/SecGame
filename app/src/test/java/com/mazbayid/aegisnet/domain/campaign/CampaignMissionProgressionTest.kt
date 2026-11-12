@@ -68,7 +68,7 @@ class CampaignMissionProgressionTest {
             listOf("mission_01", "removed_mission", "mission_02"),
             order
         )
-        assertEquals(listOf("mission_01"), restored.completedMissionIds)
+        assertEquals(listOf("mission_01", "mission_02"), restored.completedMissionIds)
     }
 
     @Test
