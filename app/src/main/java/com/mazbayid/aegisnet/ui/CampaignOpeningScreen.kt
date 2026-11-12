@@ -79,7 +79,7 @@ fun CampaignOpeningScreen(onBack: () -> Unit) {
                 eyebrow = "MISSION SEQUENCE",
                 title = "FIRST CONTACT",
                 body = "Rangkaian misi Campaign 01 telah dibuka.",
-                detail = "Aktifkan misi pertama untuk melanjutkan proses perekrutan. Konten operasional misi akan hadir pada slice berikutnya."
+                detail = "Aktifkan misi pertama untuk melanjutkan proses perekrutan. Mission 01 sekarang tersedia di Operations."
             )
             CampaignStep.FREYA_MESSAGE_OPENED -> StoryBeat(
                 eyebrow = "NEW MESSAGE NOTIFICATION",
@@ -97,13 +97,13 @@ fun CampaignOpeningScreen(onBack: () -> Unit) {
                 eyebrow = "CONTACT UNLOCKED",
                 title = "NEXUS / KANAL SISTEM",
                 body = "Kontak NEXUS sekarang tersedia di inbox.",
-                detail = "NEXUS adalah sistem pendukung teknis berbasis teks, bukan mentor utama. Pembukaan kanal ini tersimpan di perangkat."
+                detail = "NEXUS adalah sistem pendukung teknis berbasis teks, bukan mentor utama. Akses kanal sistem ini tersimpan di perangkat."
             )
             null -> StoryBeat(
                 eyebrow = "OPENING SEQUENCE COMPLETE",
                 title = "NEXUS ONLINE",
                 body = "Seluruh interaksi pembukaan First Contact yang tersedia pada build ini telah diselesaikan.",
-                detail = "Orientasi teknis, Intranet, dan operasi pertama belum dibuka pada build ini. Progresmu aman tersimpan."
+                detail = "Rangkaian pembukaan selesai. Buka Operations untuk memulai First Contact. Progresmu aman tersimpan."
             )
         }
 

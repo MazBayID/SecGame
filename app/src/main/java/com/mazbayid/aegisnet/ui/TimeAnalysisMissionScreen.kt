@@ -265,7 +265,10 @@ fun TimeAnalysisMissionScreen(
                     if (onNext != null) {
                         Spacer(Modifier.height(8.dp))
                         Button(onClick = onNext, modifier = Modifier.fillMaxWidth()) {
-                            Text("CONTINUE TO MISSION 08 / DELTA VALIDATION")
+                            Text(
+                                if (isFinalMission) "VIEW CHAPTER 01 FINAL REPORT"
+                                else "CONTINUE TO MISSION 08 / DELTA VALIDATION"
+                            )
                         }
                     }
                 }

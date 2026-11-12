@@ -262,6 +262,10 @@ fun AegisNetApp() {
                             initialPath = "scripts/delta_validation.py",
                             onBack = { selected = "MISSION_08" }
                         )
+                    } else if (selected == "CHAPTER_REPORT") {
+                        FirstContactChapterReportScreen(
+                            onBack = { selected = "OPERATIONS" }
+                        )
                     } else if (selected == "MISSION_05_EDITOR") {
                         EditorScreen(
                             initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
