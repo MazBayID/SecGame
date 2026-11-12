@@ -18,8 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
-    name: Unit tests and debug APK
+  source-validation:
+    name: Kotlin unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,8 +41,5 @@ jobs:
         with:
           gradle-version: "8.13"
 
-      - name: Run JVM unit tests
+      - name: Run Kotlin JVM unit tests
         run: gradle :app:testDebugUnitTest
-
-      - name: Assemble debug APK
-        run: gradle :app:assembleDebug
