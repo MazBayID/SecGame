@@ -2,7 +2,7 @@ import { loadPyodide } from "./pyodide/pyodide.mjs";
 
 const MAX_SOURCE_BYTES = 16 * 1024;
 const MAX_OUTPUT_BYTES = 16 * 1024;
-const MAX_DIAGNOSTIC_CHARS = 4096;
+const MAX_DIAGNOSTIC_CHARS = 1024;
 const outputDecoder = new TextDecoder("utf-8");
 
 let pyodide;
