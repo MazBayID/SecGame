@@ -492,20 +492,15 @@ The English must read naturally and preserve Freya's voice.
   imply a beginner is breaking modern cryptography.
 - Code execution must use validation and resource limits. Chaquopy runs in the application process; these controls are defense-in-depth only, not process isolation or a hardened sandbox. This is the same limitation stated in section 12.
 
-## 14. Build and Release (Single APK)
+## 14. Build and APK Artifact (Unsigned)
 
-- One candidate commit produces ONE APK: build once -> test that
-  exact APK -> release that same APK (verify SHA-256). No separate
-  debug APK, and no rebuilding after testing.
-- Order: run all applicable source tests for technologies present in the candidate (Kotlin tests are mandatory; Python tests must be added and executed before candidate builds are allowed once Python source/runtime is introduced) -> build the single signed Release APK -> validate signature, package, versionCode, and ABI metadata -> smoke-test that exact APK on an emulator -> physical-device acceptance using the same APK -> publish. A failed or skipped applicable check means no release. A test suite that does not yet apply must be explicitly reported as not applicable, never reported as passed.
-- One permanent keystore for all releases, kept only in GitHub
-  Secrets and the owner's offline backup. Never committed or printed
-  to logs.
-- applicationId stays fixed; versionCode always increases. Updates
-  must install over the old version without uninstalling and must
-  not reset local data. Save migrations must be explicit and tested.
-- main is the only long-lived branch. Final acceptance is still done
-  on a physical device with the same APK.
+- Build exactly one Release APK artifact from a candidate commit. Do not create a separate debug APK as a release artifact, and do not rebuild after artifact validation.
+- The Release APK must be built WITHOUT a keystore, signing key, signing password, or GitHub signing secret. The expected artifact is the Gradle unsigned output, normally `app-release-unsigned.apk`.
+- Validate that the unsigned APK exists, is a valid APK archive, and has the expected applicationId, versionCode, and ABI metadata. Record its SHA-256 checksum.
+- An unsigned APK is not installable on Android. Therefore emulator and physical-device installation/smoke testing cannot be claimed for this artifact. If installable testing or distribution is later required, the owner must explicitly approve a separate signing policy; do not silently introduce a key or sign with a debug key.
+- Run all applicable source tests before building (Kotlin tests are mandatory; Python tests must be added and executed before candidate builds are allowed once Python source/runtime is introduced). A failed or skipped applicable check means no candidate artifact.
+- applicationId stays fixed; versionCode always increases. Any future signed distribution/update policy requires explicit owner approval and tested data migrations.
+- main is the only long-lived branch.
 
 ## 15. Development Rules
 
