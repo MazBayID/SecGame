@@ -99,7 +99,7 @@ If neither candidate passes, do not enable Run. Rework the architecture or narro
 
 ## Worker lifecycle harness (implemented in debug source set)
 
-A disposable WebView harness now lives under `app/src/main/assets/runtime-poc/` and is launched by the debug-only `RuntimePocActivity`. It loads through `WebViewAssetLoader` at the app-assets HTTPS origin, uses a module worker, exposes no JavaScript-to-Android bridge, disables file/content access, rejects navigation outside the app-assets origin, and applies a restrictive CSP with `connect-src 'none'`. It has controls to ping the worker, start a deliberately non-terminating synchronous task, terminate the worker from the host, and create a fresh worker. The harness includes a separate real-Python test panel. The pinned Pyodide core archive is downloaded and checksum-verified by `tools/prepare_pyodide_core.sh`, then extracted into ignored debug assets; the manual APK workflow runs this script before packaging. For a local build, run the script before `gradle --no-daemon assembleDebug`. The Python panel creates a fresh module worker, initializes Pyodide from the local app-assets origin, rejects source larger than 16 KiB, captures combined stdout/stderr up to 16 KiB, and uses a 3-second host timer to terminate the worker. Initialization has a separate 20-second ceiling. The worker intentionally does not call `loadPackagesFromImports` or `micropip.install`; only the standard library included in the core archive is available, and missing packages must fail rather than download from a CDN. The harness is debug-only and is not connected to the production lesson flow. Launch it on a connected device with `adb shell am start -n com.mazbayid.cybertrace/.execution.poc.RuntimePocActivity` after installing a debug APK.
+A disposable WebView harness now lives under `app/src/main/assets/runtime-poc/` and is launched by the debug-only `RuntimePocActivity`. It loads through `WebViewAssetLoader` at the app-assets HTTPS origin, uses a module worker, exposes no JavaScript-to-Android bridge, disables file/content access, rejects navigation outside the app-assets origin, and applies a restrictive CSP with `connect-src 'self'` (local app-assets only). It has controls to ping the worker, start a deliberately non-terminating synchronous task, terminate the worker from the host, and create a fresh worker. The harness includes a separate real-Python test panel. The pinned Pyodide core archive is downloaded and checksum-verified by `tools/prepare_pyodide_core.sh`, then extracted into ignored debug assets; the manual APK workflow runs this script before packaging. For a local build, run the script before `gradle --no-daemon assembleDebug`. The Python panel creates a fresh module worker, initializes Pyodide from the local app-assets origin, rejects source larger than 16 KiB, captures combined stdout/stderr up to 16 KiB, and uses a 3-second host timer to terminate the worker. Initialization has a separate 20-second ceiling. The worker intentionally does not call `loadPackagesFromImports` or `micropip.install`; only the standard library included in the core archive is available, and missing packages must fail rather than download from a CDN. The harness is debug-only and is not connected to the production lesson flow. Launch it on a connected device with `adb shell am start -n com.mazbayid.cybertrace/.execution.poc.RuntimePocActivity` after installing a debug APK.
 
 This harness uses AndroidX WebKit 1.18.0 and is an early platform experiment, not a sandbox certification. It still requires physical-device testing for module-worker support, offline Python initialization, hard-stop responsiveness, worker recreation, renderer recovery, and memory release. The 3-second deadline and output cap are host-enforced for this POC; there is no enforceable memory cap yet. A worker shares the WebView renderer security context and must not be described as an Android isolated process.
 
@@ -124,19 +124,19 @@ The core archive is much smaller but does not contain the vendored wheel collect
 
 ## Implementation order after POC
 
-1. Pin and bundle the candidate runtime.
-2. Build a disposable worker/service harness outside the main lesson UI.
-3. Automate protocol, timeout, cancellation, and output tests.
-4. Test on physical Android hardware, including a low-memory device.
-5. Implement the production adapter for `PythonExecutionEngine`.
-6. Connect the editor Run/Stop controls only after the security gate passes.
+1. Test the existing Pyodide worker on physical Android hardware, including offline startup and low-memory behavior.
+2. Add tests for memory pressure, nested worker attempts, malformed messages, and repeated worker recreation.
+3. Decide whether WebView worker termination and renderer behavior meet the project's isolation requirements; compare against CPython in an Android isolated-process service if not.
+4. Implement and enforce a real memory/resource boundary or document why the candidate cannot safely meet it.
+5. Implement the production adapter for `PythonExecutionEngine` only after the security decision gate passes.
+6. Connect the editor Run/Stop controls only after the production adapter and security gate pass.
 7. Build the first mission around concepts already taught in Lesson 00.01.
 
 
 ## Source notes
 
-- [Pyodide v314.0.7 — Web Worker guide](https://pyodide.org/en/314.0.0/usage/webworker.html): Pyodide uses a module-type worker and documents message-based execution outside the UI thread.
-- [Pyodide v314.0.7 — downloading and deploying](https://pyodide.org/en/314.0.0/usage/downloading-and-deploying.html): the full distribution is documented as 200+ MB; the core archive contains the runtime loader, WASM binary, Python standard library, and lockfile.
+- [Pyodide v314.0.7 — Web Worker guide](https://pyodide.org/en/314.0.7/usage/webworker.html): Pyodide uses a module-type worker and documents message-based execution outside the UI thread.
+- [Pyodide v314.0.7 — downloading and deploying](https://pyodide.org/en/314.0.7/usage/downloading-and-deploying.html): the full distribution is documented as 200+ MB; the core archive contains the runtime loader, WASM binary, Python standard library, and lockfile.
 - [Pyodide — interrupting execution](https://pyodide.org/en/stable/usage/keyboard-interrupts.html): cooperative interruption requires a Web Worker, SharedArrayBuffer, and appropriate cross-origin isolation headers.
 - [MDN — Worker.terminate()](https://developer.mozilla.org/en-US/docs/Web/API/Worker/terminate): termination immediately stops a worker without waiting for its code to finish.
 - [Android — security tips](https://developer.android.com/privacy-and-security/security-tips): Android recommends minimizing permissions and protecting app-private data and IPC boundaries.
