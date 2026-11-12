@@ -137,4 +137,36 @@ class VirtualFileSystemTest {
 
         assertEquals("keep this", success(vfs.cat("draft.txt")))
     }
+    @Test
+    fun snapshotsRestoreBothWorkspacesWithoutMixingTheirFiles() {
+        val original = fileSystem()
+        success(original.writeFile("personal.txt", "saved personal"))
+        original.switchWorkspace(VfsWorkspace.MISSION)
+        success(original.mkdir("analysis"))
+        success(original.writeFile("analysis/result.txt", "saved mission"))
+
+        val restored = VirtualFileSystem.fromSnapshots(
+            operationId = "first_contact_01",
+            personal = original.snapshot(VfsWorkspace.PERSONAL),
+            mission = original.snapshot(VfsWorkspace.MISSION)
+        )
+
+        assertEquals("saved personal", success(restored.cat("personal.txt")))
+        restored.switchWorkspace(VfsWorkspace.MISSION)
+        assertEquals("saved mission", success(restored.cat("analysis/result.txt")))
+        assertEquals("09:41:12 RX-14 received", success(restored.cat("logs/system.log")))
+    }
+
+    @Test
+    fun snapshotIsDeterministicAndDoesNotChangeActiveDirectory() {
+        val vfs = fileSystem()
+        success(vfs.cd("notes"))
+        val first = vfs.snapshot(VfsWorkspace.PERSONAL)
+        val second = vfs.snapshot(VfsWorkspace.PERSONAL)
+
+        assertEquals(first, second)
+        assertEquals("/personal/notes", vfs.pwd())
+    }
+
 }
+

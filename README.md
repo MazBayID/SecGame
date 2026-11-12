@@ -11,7 +11,7 @@ The `main` branch currently contains:
 - First Contact opening vertical slice: sequential official recruitment, mission activation, Freya message, and player-triggered NEXUS contact unlock
 - Pure Kotlin campaign progression rules with idempotent actions, out-of-order protection, corrupted-save prefix recovery, and JVM unit tests
 - Pure Kotlin mission/objective contracts and deterministic SUBMIT evaluation for accepted approaches/outcomes, evidence availability, successful operation-bound RUN receipts, and exact source-hash integrity; JVM tests cover valid and invalid submissions
-- In-memory game-controlled VFS core with isolated personal and per-operation mission workspaces, validated paths, immutable read-only mission sources, and writable player-created files; it does not access Android storage and is not yet persisted
+- Game-controlled VFS with isolated personal and per-operation mission workspaces, validated paths, immutable read-only mission sources, and writable player-created files; deterministic snapshots/codec and an offline SharedPreferences adapter are added, but terminal/editor UI is not wired to it yet
 - Offline campaign milestone persistence through a dedicated SharedPreferences adapter; campaign domain remains Android-independent
 - Code-drawn tactical grid background and reusable panel primitive
 - Initial Evidence Graph domain contract: typed evidence records, provenance metadata, separate player annotations, relationship states, and claims

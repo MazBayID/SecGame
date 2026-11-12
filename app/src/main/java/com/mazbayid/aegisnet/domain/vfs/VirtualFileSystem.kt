@@ -31,6 +31,12 @@ data class VfsEntryInfo(
     val access: VfsAccess?
 )
 
+/** Serializable workspace data; paths remain relative to the virtual root. */
+data class VfsWorkspaceSnapshot(
+    val files: List<VfsFile> = emptyList(),
+    val directories: Set<String> = emptySet()
+)
+
 sealed interface VfsResult<out T> {
     data class Success<T>(val value: T) : VfsResult<T>
     data class Failure(val code: String, val message: String) : VfsResult<Nothing>
@@ -70,6 +76,36 @@ class VirtualFileSystem(
     }
 
     fun pwd(): String = absolutePath(currentDirectory)
+
+    /** Exports a deterministic snapshot without changing the active workspace. */
+    fun snapshot(workspace: VfsWorkspace): VfsWorkspaceSnapshot {
+        val fileMap = when (workspace) {
+            VfsWorkspace.PERSONAL -> personalFileMap
+            VfsWorkspace.MISSION -> missionFileMap
+        }
+        val directorySet = when (workspace) {
+            VfsWorkspace.PERSONAL -> personalDirectorySet
+            VfsWorkspace.MISSION -> missionDirectorySet
+        }
+        return VfsWorkspaceSnapshot(
+            files = fileMap.values.sortedBy { it.path },
+            directories = directorySet.filter { it.isNotEmpty() }.toSortedSet()
+        )
+    }
+
+    companion object {
+        fun fromSnapshots(
+            operationId: String,
+            personal: VfsWorkspaceSnapshot,
+            mission: VfsWorkspaceSnapshot
+        ): VirtualFileSystem = VirtualFileSystem(
+            operationId = operationId,
+            personalFiles = personal.files,
+            missionFiles = mission.files,
+            personalDirectories = personal.directories,
+            missionDirectories = mission.directories
+        )
+    }
 
     /** Workspace changes are explicit; paths cannot switch mounts implicitly. */
     fun switchWorkspace(workspace: VfsWorkspace): String {

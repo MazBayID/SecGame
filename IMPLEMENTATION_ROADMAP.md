@@ -94,7 +94,9 @@ Preserve all eight approved learning missions and their existing learning order.
 ## Phase 4 — Technical workstation
 
 - [x] Implement an in-memory game-controlled VFS core with isolated personal/mission workspaces, path validation, read-only source evidence, and player-owned writable files.
-- [ ] Persist personal workspace data and archive mission workspace snapshots by operation.
+- [x] Add deterministic workspace snapshots and a versioned, validated codec with round-trip JVM tests.
+- [x] Add an offline SharedPreferences adapter with a global personal workspace key and per-operation mission snapshot keys.
+- [ ] Add corruption recovery/diagnostics and size/resource limits before exposing persistence to player UI.
 - [ ] Implement a real in-game terminal parser/dispatcher; never expose the Android shell.
 - [ ] Implement editor state and exact script-version/hash tracking.
 - [ ] Integrate the controlled Python runtime only after operation and VFS boundaries are tested.
