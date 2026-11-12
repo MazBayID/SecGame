@@ -19,10 +19,19 @@ class IsolatedPythonServiceProbe : Service() {
         override fun handleMessage(message: Message) {
             if (message.what != MSG_PROBE) return
 
+            val packagedAssetReadable = try {
+                assets.open(ASSET_NAME).bufferedReader().use {
+                    it.readText().trim() == EXPECTED_ASSET_CONTENT
+                }
+            } catch (_: Exception) {
+                false
+            }
+
             val reply = Message.obtain(null, MSG_PROBE_RESULT).apply {
                 data = Bundle().apply {
                     putInt(KEY_UID, Process.myUid())
                     putInt(KEY_PID, Process.myPid())
+                    putBoolean(KEY_ASSET_READABLE, packagedAssetReadable)
                 }
             }
 
@@ -41,5 +50,8 @@ class IsolatedPythonServiceProbe : Service() {
         const val MSG_PROBE_RESULT = 2
         const val KEY_UID = "uid"
         const val KEY_PID = "pid"
+        const val KEY_ASSET_READABLE = "asset_readable"
+        const val ASSET_NAME = "isolated-process-probe.txt"
+        const val EXPECTED_ASSET_CONTENT = "CYBER_TRACE_ISOLATED_ASSET_V1"
     }
 }
