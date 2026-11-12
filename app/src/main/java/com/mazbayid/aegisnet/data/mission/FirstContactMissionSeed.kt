@@ -38,7 +38,7 @@ object FirstContactMissionSeed {
                 id = "system_trace_log",
                 title = "Training System Trace Log",
                 description = "A read-only diagnostic log from the training transmission gateway. It contains informational entries, a warning, and error records; the original lines must remain unchanged.",
-                type = EvidenceType.LOG,
+                type = EvidenceType.SYSTEM_LOG,
                 sourceId = "training_gateway_trace_014",
                 sourceLabel = "A.E.G.I.S. Technical Operations",
                 sourceReference = "system_trace.log",
