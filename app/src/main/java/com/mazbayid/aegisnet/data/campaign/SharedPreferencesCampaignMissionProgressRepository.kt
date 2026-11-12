@@ -50,7 +50,7 @@ class SharedPreferencesCampaignMissionProgressRepository(
         if (!legacyCompleted) return emptyList()
 
         val firstMissionId = orderedMissionIds.firstOrNull() ?: return emptyList()
-        legacyPreferences.edit()
+        preferences.edit()
             .putStringSet(KEY_COMPLETED_MISSIONS, setOf(firstMissionId))
             .commit()
         return listOf(firstMissionId)
