@@ -15,11 +15,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +36,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mazbayid.cybertrace.domain.learning.LearningLesson
+import com.mazbayid.cybertrace.domain.learning.PythonCurriculum
 
 private val Background = Color(0xFF070B12)
 private val Panel = Color(0xFF0D1420)
@@ -44,14 +55,25 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                CyberTraceStartScreen()
+                CyberTraceApp()
             }
         }
     }
 }
 
 @Composable
-private fun CyberTraceStartScreen() {
+private fun CyberTraceApp() {
+    var showingFirstLesson by remember { mutableStateOf(false) }
+
+    if (showingFirstLesson) {
+        FirstLessonScreen(onBack = { showingFirstLesson = false })
+    } else {
+        CyberTraceStartScreen(onStartLesson = { showingFirstLesson = true })
+    }
+}
+
+@Composable
+private fun CyberTraceStartScreen(onStartLesson: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Background
@@ -59,85 +81,311 @@ private fun CyberTraceStartScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 22.dp, vertical = 28.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 22.dp, vertical = 28.dp)
         ) {
-            Column {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column {
-                        Text(
-                            text = "CYBER//TRACE",
-                            color = MainText,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Black,
-                            letterSpacing = 1.5.sp
-                        )
-                        Text(
-                            text = "NEXUS CITY  /  2089",
-                            color = Muted,
-                            fontSize = 10.sp,
-                            letterSpacing = 2.sp
-                        )
-                    }
-
-                    StatusIndicator()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column {
+                    Text(
+                        text = "CYBER//TRACE",
+                        color = MainText,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 1.5.sp
+                    )
+                    Text(
+                        text = "NEXUS CITY  /  2089",
+                        color = Muted,
+                        fontSize = 10.sp,
+                        letterSpacing = 2.sp
+                    )
                 }
-
-                Spacer(modifier = Modifier.height(34.dp))
-
-                Text(
-                    text = "INCOMING TRANSMISSION",
-                    color = Neon,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.sp
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "The network\nis not what it seems.",
-                    color = MainText,
-                    fontSize = 32.sp,
-                    lineHeight = 39.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                Text(
-                    text = "A signal has appeared in the noise. Someone is trying to reach you.",
-                    color = Muted,
-                    fontSize = 15.sp,
-                    lineHeight = 23.sp
-                )
-
-                Spacer(modifier = Modifier.height(28.dp))
-
-                TransmissionPanel()
+                StatusIndicator()
             }
 
-            Column {
+            Spacer(modifier = Modifier.height(34.dp))
+
+            Text(
+                text = "INCOMING TRANSMISSION",
+                color = Neon,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 2.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "The network\nis not what it seems.",
+                color = MainText,
+                fontSize = 32.sp,
+                lineHeight = 39.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(14.dp))
+            Text(
+                text = "A signal has appeared in the noise. Someone is trying to reach you.",
+                color = Muted,
+                fontSize = 15.sp,
+                lineHeight = 23.sp
+            )
+
+            Spacer(modifier = Modifier.height(28.dp))
+            TransmissionPanel()
+
+            Spacer(modifier = Modifier.height(22.dp))
+            Button(
+                onClick = onStartLesson,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Neon,
+                    contentColor = Background
+                ),
+                shape = RoundedCornerShape(8.dp)
+            ) {
                 Text(
-                    text = "PHASE 01  /  SYSTEM INITIALIZATION",
-                    color = Muted,
-                    fontSize = 10.sp,
-                    letterSpacing = 1.4.sp
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "FOUNDATION BUILD  •  0.1.0",
-                    color = Neon,
-                    fontSize = 10.sp,
-                    fontFamily = FontFamily.Monospace,
+                    text = "OPEN FIRST TRANSMISSION",
+                    fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp
                 )
             }
+
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = "PHASE 01  /  SYSTEM INITIALIZATION",
+                color = Muted,
+                fontSize = 10.sp,
+                letterSpacing = 1.4.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "FOUNDATION BUILD  •  0.2.0",
+                color = Neon,
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace,
+                letterSpacing = 1.sp
+            )
         }
+    }
+}
+
+@Composable
+private fun FirstLessonScreen(onBack: () -> Unit) {
+    val lesson = PythonCurriculum.firstLesson
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Background
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 20.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "CYBER//TRACE  /  TRAINING",
+                    color = Neon,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.2.sp
+                )
+                TextButton(onClick = onBack) {
+                    Text("BACK", color = Muted)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+            Text(
+                text = "CHAPTER ${lesson.chapterId}  •  LESSON ${lesson.id}",
+                color = Neon,
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace,
+                letterSpacing = 1.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = lesson.title,
+                color = MainText,
+                fontSize = 27.sp,
+                lineHeight = 33.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+            StoryPanel(lesson.storyIntroduction)
+
+            Spacer(modifier = Modifier.height(22.dp))
+            lesson.steps.forEachIndexed { index, step ->
+                LessonStepPanel(
+                    number = index + 1,
+                    heading = step.heading,
+                    explanation = step.explanation,
+                    exampleCode = step.exampleCode,
+                    expectedOutput = step.expectedOutput
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "GUIDED PRACTICE",
+                color = Neon,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.5.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = lesson.practicePrompt,
+                color = MainText,
+                fontSize = 15.sp,
+                lineHeight = 22.sp
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            CodePanel(lesson.starterCode)
+
+            Spacer(modifier = Modifier.height(14.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, Border, RoundedCornerShape(8.dp))
+                    .background(Panel, RoundedCornerShape(8.dp))
+                    .padding(14.dp)
+            ) {
+                Text(
+                    text = "WORKSPACE STATUS",
+                    color = Muted,
+                    fontSize = 10.sp,
+                    letterSpacing = 1.sp
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = "Python runtime integration is in progress.",
+                    color = MainText,
+                    fontSize = 13.sp
+                )
+                Text(
+                    text = "This lesson is currently a readable preview. Code execution will be enabled only after the isolated interpreter passes its safety checks.",
+                    color = Muted,
+                    fontSize = 12.sp,
+                    lineHeight = 18.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
+
+@Composable
+private fun LessonStepPanel(
+    number: Int,
+    heading: String,
+    explanation: String,
+    exampleCode: String?,
+    expectedOutput: String?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Border, RoundedCornerShape(8.dp))
+            .background(Panel, RoundedCornerShape(8.dp))
+            .padding(14.dp)
+    ) {
+        Text(
+            text = "STEP ${number.toString().padStart(2, '0')}",
+            color = Neon,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = heading,
+            color = MainText,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = explanation,
+            color = Muted,
+            fontSize = 13.sp,
+            lineHeight = 20.sp
+        )
+        if (exampleCode != null) {
+            Spacer(modifier = Modifier.height(10.dp))
+            CodePanel(exampleCode)
+        }
+        if (expectedOutput != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "OUTPUT  >  $expectedOutput",
+                color = Neon,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Monospace
+            )
+        }
+    }
+}
+
+@Composable
+private fun StoryPanel(message: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Border, RoundedCornerShape(8.dp))
+            .background(Panel, RoundedCornerShape(8.dp))
+            .padding(14.dp)
+    ) {
+        Text(
+            text = "ARIA  /  INCOMING MESSAGE",
+            color = Neon,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = message,
+            color = MainText,
+            fontSize = 14.sp,
+            lineHeight = 21.sp
+        )
+    }
+}
+
+@Composable
+private fun CodePanel(code: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Border, RoundedCornerShape(6.dp))
+            .background(Color(0xFF05090F), RoundedCornerShape(6.dp))
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = ">>>",
+            color = Neon,
+            fontSize = 12.sp,
+            fontFamily = FontFamily.Monospace
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text = code,
+            color = MainText,
+            fontSize = 13.sp,
+            fontFamily = FontFamily.Monospace
+        )
     }
 }
 
