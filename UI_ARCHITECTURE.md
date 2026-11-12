@@ -192,6 +192,26 @@ SUBMIT is enabled only when the exact current source has completed a successful 
 
 These are separate application surfaces with their own ViewModels and presentation state. Their data access is permission-aware and story-aware. The precise feature scope and screen layouts are still subject to detailed feature design; do not invent operational capabilities merely to fill a screen.
 
+### 4.10 Investigation and Evidence Graph
+
+The investigation UI must support the evidence and claim model defined in `GAMEPLAY_DESIGN.md`.
+
+- Evidence cards expose source, provenance, time context, integrity, access classification, and whether an item is original or derived when that metadata exists.
+- Provide focused compare and timeline views for operations that require them. Do not force every operation into a graph.
+- The Analysis app may visualize relationships between evidence, entities, events, and player-authored claims.
+- Visually distinguish verified relationships, source-backed claims, player hypotheses, contradictions, and unresolved links. Never style speculation as confirmed fact.
+- Player annotations and selected evidence must persist outside transient composable state.
+- Large graphs must remain usable on a phone: support focused subgraphs, search, filtering, and a detail view rather than shrinking the entire graph until unreadable.
+
+### 4.11 Decisions, risk, and debrief presentation
+
+- When an operation offers a consequential choice, present the known context and relevant risk in plain language before confirmation when the operative could reasonably know it.
+- Do not expose hidden story facts merely to explain every uncertainty. The UI may communicate that an outcome is uncertain.
+- Mission Control must support submission of the required report, selected evidence, claims, and technical artifacts—not only a script execution result.
+- Debrief screens present the mission's relevant evaluation dimensions (Intelligence, Evidence, Technical, Stealth/Exposure, Judgment) and explain the outcome. Do not show irrelevant dimensions or a single opaque score as the whole evaluation.
+- Separate recoverable technical errors from persistent story/operational consequences. Technical retry must preserve work and must not display as a punitive campaign failure.
+- Character responses and later opportunity changes are rendered from persisted authored campaign state; UI code does not invent relationship or consequence logic.
+
 ## 5. Shared visual system
 
 ### 5.1 Approved palette
