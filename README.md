@@ -45,7 +45,7 @@ GitHub Actions menjalankan unit test otomatis saat kode aplikasi atau konfiguras
 - Workflow build/test baseline yang berhasil: [GitHub Actions run #43261479549](https://github.com/MazBayID/SecGame/actions/runs/43261479549). Workflow baru memisahkan unit test otomatis dari build APK milestone.
 - Instalasi, peluncuran, dan pengujian pada perangkat Android fisik **belum diverifikasi**.
 - Kontrak API runtime Python kini tersedia, mencakup batas ukuran source, batas resource, workspace virtual, status eksekusi, diagnostik terstruktur, dan pembatalan asinkron. Evaluator latihan juga dapat memeriksa output dari hasil interpreter sungguhan. Ini **belum menjalankan Python** dan bukan sandbox.
-- Runtime Python **belum diintegrasikan**. Pemilihan runtime menunggu proof of concept yang membuktikan isolasi dan batas sumber daya. Lesson pertama sudah memiliki navigasi langkah demi langkah, tetapi masih berupa preview materi.
+- Runtime Python **belum diintegrasikan**. Pemilihan runtime menunggu proof of concept yang membuktikan isolasi dan batas sumber daya. Lesson pertama sudah memiliki navigasi langkah demi langkah, tetapi masih berupa preview materi. Lesson pertama sudah memiliki navigasi langkah demi langkah, tetapi masih berupa preview materi.
 
 Hasil CI yang berhasil bukan bukti bahwa seluruh game telah selesai atau bahwa sandbox Python sudah aman. Status implementasi setiap fitur harus tetap dibedakan dari target desainnya.
 
