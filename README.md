@@ -11,7 +11,7 @@ Game ini berpusat pada terminal interaktif, code editor, eksekusi Python sungguh
 - **[GAMECONCEPT.md](GAMECONCEPT.md)** — konsep game, identitas desain, gameplay loop, sistem hacking simulator, kurikulum Python, sistem bantuan NLAS, misi, progresi, antarmuka, dan arah pengembangan.
 - **[STORYLINE.md](STORYLINE.md)** — latar dunia NEXUS CITY, karakter utama, konflik HELIX CORPORATION, perjalanan cerita lima Act, lima belas chapter, misteri NEXUS, dan rancangan ending.
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** — rancangan arsitektur Android, fondasi build, kandidat runtime Python terisolasi, risiko keamanan, dan gerbang pengujian teknis.
-- **[docs/PYTHON_RUNTIME_POC.md](docs/PYTHON_RUNTIME_POC.md)** — rencana proof of concept runtime Python, rancangan Web Worker, hardening WebView, batas resource, dan matriks uji keamanan.
+- **[docs/PYTHON_RUNTIME_POC.md](docs/PYTHON_RUNTIME_POC.md)** — proof of concept runtime Python, harness Web Worker debug, hardening WebView, batas resource, dan matriks uji keamanan.
 - **[PROMPT.md](PROMPT.md)** — arahan eksekusi proyek, tanggung jawab, prinsip desain, standar engineering, dan tahapan produksi.
 
 ## Identitas Game
@@ -47,7 +47,9 @@ GitHub Actions menjalankan unit test otomatis saat kode aplikasi atau konfiguras
 - Instalasi, peluncuran, dan pengujian pada perangkat Android fisik **belum diverifikasi**.
 - Kontrak API runtime Python kini tersedia, mencakup batas ukuran source, batas resource, workspace virtual, status eksekusi, diagnostik terstruktur, dan pembatalan asinkron. Evaluator latihan dapat memeriksa output dari hasil interpreter sungguhan. Ini **belum menjalankan Python** dan bukan sandbox.
 - Langkah latihan pertama menyediakan editor draft yang dapat diubah. Tombol Run tetap nonaktif sampai runtime Python terisolasi tersedia; draft ini belum disimpan dan belum dieksekusi. Model progres lesson kini mengatur langkah yang sudah dilihat, jumlah percobaan, status latihan lulus, dan syarat penyelesaian lesson.
-- Runtime Python **belum diintegrasikan**. Rencana proof of concept dan matriks keamanan tersedia di [docs/PYTHON_RUNTIME_POC.md](docs/PYTHON_RUNTIME_POC.md). Eksperimen pertama akan memakai Pyodide dalam Web Worker lokal/offline; CPython pada Android isolated-process service tetap menjadi pembanding. Belum ada kandidat yang disetujui sebelum seluruh pengujian keamanan lulus. Lesson pertama memiliki navigasi langkah demi langkah dan editor draft, tetapi belum menjadi lesson yang dapat dieksekusi.
+- Runtime Python **belum diintegrasikan**. Harness WebView/Web Worker khusus debug kini tersedia untuk menguji ping, tugas sinkron yang tidak berhenti, terminasi worker dari host, dan pembuatan worker baru. Harness ini **belum menjalankan Python** dan belum diuji pada perangkat fisik. Eksperimen berikutnya adalah mengemas Pyodide secara lokal/offline (versi kandidat 314.0.7) dan mengujinya di worker tersebut; CPython pada Android isolated-process service tetap menjadi pembanding. Belum ada kandidat sandbox yang disetujui sebelum seluruh pengujian keamanan lulus. Lesson pertama memiliki navigasi langkah demi langkah dan editor draft, tetapi belum menjadi lesson yang dapat dieksekusi.
+
+Untuk membuka harness debug setelah memasang debug APK, gunakan `adb shell am start -n com.mazbayid.cybertrace/.execution.poc.RuntimePocActivity`. Detail prosedur dan batas pengujiannya ada di [docs/PYTHON_RUNTIME_POC.md](docs/PYTHON_RUNTIME_POC.md).
 
 Hasil CI yang berhasil bukan bukti bahwa seluruh game telah selesai atau bahwa sandbox Python sudah aman. Status implementasi setiap fitur harus tetap dibedakan dari target desainnya.
 
