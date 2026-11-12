@@ -10,7 +10,6 @@
 - This repository owns CYBER//TRACE source code, documentation, tests, and build configuration.
 - No source code, assets, story material, or implementation from any other game repository is required.
 - Preserve the existing concept and story documents as the creative source of truth.
-- Do not inspect, modify, copy, or depend on the separate `firstGame` project. It is outside this repository's scope.
 
 ## 2. Platform direction
 
