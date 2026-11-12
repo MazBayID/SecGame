@@ -103,6 +103,22 @@ A disposable WebView harness now lives under `app/src/main/assets/runtime-poc/` 
 
 This harness uses AndroidX WebKit 1.18.0 and is an early platform experiment, not a sandbox certification. It still requires physical-device testing for module-worker support, offline Python initialization, hard-stop responsiveness, worker recreation, renderer recovery, and memory release. The 3-second deadline and output cap are host-enforced for this POC; there is no enforceable memory cap yet. A worker shares the WebView renderer security context and must not be described as an Android isolated process.
 
+## Manual smoke-test snippets
+
+Run each snippet separately in the debug Python panel:
+
+| Purpose | Python source | Expected behavior |
+|---|---|---|
+| Basic execution | `print("NEXUS connection ready")` | Prints the exact message |
+| Variables and arithmetic | `signal = 7\nprint(signal * 6)` | Prints `42` |
+| Syntax diagnostic | `if True print("broken")` | Returns a syntax error |
+| Runtime diagnostic | `print(1 / 0)` | Returns a runtime error |
+| Host timeout | `while True: pass` | Host terminates the worker at the 3-second deadline |
+| Output cap | `print("X" * 20000)` | Captured output remains capped at 16 KiB and is marked truncated |
+| Offline package behavior | `import numpy` | Fails if the wheel is not locally bundled; must not attempt a CDN download |
+
+The smoke tests validate basic runtime behavior only. They do not replace the host-access, memory-pressure, renderer-recovery, or physical-device tests in the full matrix.
+
 ## Pyodide artifact facts
 
 The official `pyodide/pyodide` 314.0.7 GitHub release exposes these archives:
