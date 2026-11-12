@@ -80,7 +80,7 @@ Questions the proof of concept must answer:
 - Can execution be stopped reliably after a deadline or output limit?
 - Can memory and output limits be enforced and tested on supported Android versions?
 
-Chaquopy is a candidate for packaging CPython in an Android application, but its compatibility with this isolated-service design must be demonstrated. Do not initialize untrusted player code inside the main application process.
+Chaquopy is a candidate for packaging CPython in an Android application, but its compatibility with this isolated-service design must be demonstrated. Its FAQ points to a separate-process Jupyter example which declares `android:process=":kernel"`; that is not the same as `android:isolatedProcess="true"` and does not prove isolated-UID compatibility. Do not initialize untrusted player code inside the main application process. Reference: [Chaquopy FAQ](https://www.chaquo.com/chaquopy/doc/current/faq.html) and [Jupyter service manifest](https://github.com/chaquo/chaquopy-jupyter/blob/main/app/src/main/AndroidManifest.xml).
 
 ### Candidate B — WebAssembly Python runtime
 
