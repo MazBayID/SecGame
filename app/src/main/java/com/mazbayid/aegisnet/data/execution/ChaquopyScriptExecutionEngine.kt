@@ -63,17 +63,19 @@ class ChaquopyScriptExecutionEngine(
     ): ScriptExecutionResult {
         return try {
             ensurePythonStarted()
-            val result = Python.getInstance()
-                .getModule("aegis_runtime")
-                .callAttr("run_script", snapshot.source, AegisVfsBridge(fileSystem))
-                .toJava(String::class.java)
-            val payload = JSONObject(result)
-            ScriptExecutionResult(
-                exitCode = payload.getInt("exit_code"),
-                stdout = payload.optString("stdout"),
-                stderr = payload.optString("stderr"),
-                timedOut = payload.optBoolean("timed_out")
-            )
+            synchronized(PYTHON_EXECUTION_LOCK) {
+                val result = Python.getInstance()
+                    .getModule("aegis_runtime")
+                    .callAttr("run_script", snapshot.source, AegisVfsBridge(fileSystem))
+                    .toJava(String::class.java)
+                val payload = JSONObject(result)
+                ScriptExecutionResult(
+                    exitCode = payload.getInt("exit_code"),
+                    stdout = payload.optString("stdout"),
+                    stderr = payload.optString("stderr"),
+                    timedOut = payload.optBoolean("timed_out")
+                )
+            }
         } catch (error: Exception) {
             ScriptExecutionResult(
                 exitCode = -1,
@@ -93,5 +95,6 @@ class ChaquopyScriptExecutionEngine(
 
     private companion object {
         val PYTHON_START_LOCK = Any()
+        val PYTHON_EXECUTION_LOCK = Any()
     }
 }

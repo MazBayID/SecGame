@@ -17,6 +17,7 @@ MAX_COLLECTION_ITEMS = 10_000
 MAX_EXECUTION_STEPS = 30_000
 MAX_OUTPUT_CHARS = 16_000
 VFS_METHODS = {"read_text", "write_text", "list_files"}
+SAFE_STRING_METHODS = {"split", "strip", "lower", "upper", "count", "startswith", "endswith", "find", "index", "replace"}
 
 class ExecutionLimitExceeded(Exception):
     pass
@@ -82,11 +83,13 @@ def _validate(tree):
         if isinstance(node, ast.Name) and node.id.startswith("_"):
             raise ValueError("Names beginning with '_' are not available.")
         if isinstance(node, ast.Attribute):
-            allowed = (
+            allowed_vfs = (
                 isinstance(node.value, ast.Name)
                 and node.value.id == "aegis"
                 and node.attr in VFS_METHODS
             )
+            allowed_string_method = node.attr in SAFE_STRING_METHODS
+            allowed = allowed_vfs or allowed_string_method
             if not allowed:
                 raise ValueError("Only the documented aegis VFS methods are available.")
         if isinstance(node, ast.Call):
@@ -94,11 +97,13 @@ def _validate(tree):
                 if node.func.id not in SAFE_BUILTINS:
                     raise ValueError("This function is not available in the training runtime.")
             elif isinstance(node.func, ast.Attribute):
-                if not (
+                allowed_vfs = (
                     isinstance(node.func.value, ast.Name)
                     and node.func.value.id == "aegis"
                     and node.func.attr in VFS_METHODS
-                ):
+                )
+                allowed_string_method = node.func.attr in SAFE_STRING_METHODS
+                if not (allowed_vfs or allowed_string_method):
                     raise ValueError("Only the documented aegis VFS methods may be called.")
             else:
                 raise ValueError("Dynamic function calls are not available.")
