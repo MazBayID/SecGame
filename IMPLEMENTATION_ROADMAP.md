@@ -107,9 +107,9 @@ Preserve all eight approved learning missions and their existing learning order.
 
 - [ ] Complete Android portrait usability, IME, touch-target, text-scaling, TalkBack, and reduced-motion checks.
 - [ ] Add regression tests for process death, rotation/configuration change, and offline behavior.
-- [ ] Run applicable automated source tests, then build exactly one signed Release APK candidate from `main`; do not produce or publish a separate debug APK as a release candidate.
-- [ ] Validate signature and APK metadata, then smoke-test the exact candidate APK on an emulator without rebuilding it.
-- [ ] Complete physical-device acceptance using that same APK and its recorded SHA-256.
+- [ ] Run applicable automated source tests, then build exactly one unsigned Release APK artifact from `main`; do not produce a separate debug APK artifact.
+- [ ] Validate APK archive integrity, package, versionCode, and ABI metadata; record the SHA-256 checksum.
+- [ ] Do not claim emulator or physical-device installation tests for the unsigned artifact. Installable testing requires a separately approved signing policy.
 - [ ] Review original art/audio/license provenance and app permissions.
 - [ ] Update project status and release notes from verified implementation only.
 
