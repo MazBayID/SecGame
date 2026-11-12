@@ -2,6 +2,7 @@ package com.mazbayid.cybertrace.execution.poc
 
 import android.app.Activity
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
@@ -131,7 +132,7 @@ class IsolatedProcessPocActivity : Activity() {
 
         status.text = "Starting isolated service…"
         val intent = Intent(this, IsolatedPythonServiceProbe::class.java)
-        isBound = bindService(intent, connection, BIND_AUTO_CREATE)
+        isBound = bindService(intent, connection, Context.BIND_AUTO_CREATE)
         if (!isBound) {
             status.text = "FAIL · Android refused to bind the isolated service."
         }
