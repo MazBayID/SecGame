@@ -74,7 +74,7 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [ ] Define the remaining mission constraints, risk dimensions, decision/recovery routes, and debrief criteria.
 - [ ] Implement an operation context shared by Mission Control, Evidence, Editor, and Terminal.
 - [x] Separate authored mission/objective definitions from player submission state.
-- [x] Integrate the deterministic domain evaluator with the Room evidence repository and Mission Control for First Contact Missions 01 and 02; the second operation has its own evidence requirement, output requirements, exact-source RUN receipt check, and separate SUBMIT. Generalize the same flow to missions 03–08.
+- [x] Integrate the deterministic domain evaluator with the Room evidence repository and Mission Control for First Contact Missions 01–03; the second operation has its own evidence requirement, output requirements, exact-source RUN receipt check, and separate SUBMIT. Generalize the same flow to missions 03–08.
 - [ ] Keep RUN and SUBMIT separate; a successful RUN alone never completes an operation.
 - [ ] Add debrief output with Intelligence, Evidence, Technical, Stealth / Exposure, and Judgment dimensions only when active for that mission.
 - [ ] Test multiple valid approaches, incomplete evidence, responsible uncertainty, and repeat submission idempotency.
@@ -87,7 +87,8 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Author the canonical eight-mission First Contact sequence with stable IDs, briefings, learning concepts, semantic outcomes, and explicit uncertainty in the final report.
 - [x] Add the first playable First Contact mission slice: seeded read-only message fragment, Room discovery state, mission workspace starter script, Editor RUN, source-hash receipt check, deterministic SUBMIT evaluation, and saved completion.
 - [x] Add the second playable mission, Identity Check: official Recruitment Office record, distinct read-only evidence, named-variable extraction starter script, preselected mission editor path, output/evidence requirements, and persisted campaign completion.
-- [ ] Expand the remaining six mission data packages, full evidence graph investigation UI, debrief, and campaign continuity.
+- [x] Add the third playable mission, System Trace Audit: read-only gateway log, two authored ERROR entries, a `for`/`if` starter script, exact `ERROR_COUNT=2` output requirement, evidence attachment, and ordered campaign completion.
+- [ ] Expand the remaining five mission data packages, full evidence graph investigation UI, debrief, and campaign continuity.
 - [x] Add the opening Freya notification interaction and unlock NEXUS only after the player taps its link.
 - [ ] Build the full Messenger inbox and conversation history; the current opening interaction is a focused vertical slice, not the complete Messenger app.
 - [ ] Add only the tools needed by each mission; no forced app-hopping.
@@ -138,7 +139,7 @@ Preserve all eight approved learning missions and their existing learning order.
 
 ## Current implementation boundary
 
-The Android app has a persisted campaign-opening sequence (official recruitment → mission activation → Freya → player-triggered NEXUS unlock), a canonical eight-mission catalog, and two playable First Contact operations (Missions 01–02). Both operations seed read-only source records in Room-backed evidence storage and the mission VFS, support Python 3.13 execution through Chaquopy, record an operation-bound exact-source-hash RUN receipt, and evaluate a separate SUBMIT against authored criteria before persisting ordered campaign completion. The mission progress adapter migrates the previous Mission 01 boolean save format. The Terminal is a bounded VFS-only interface; the Editor supports personal/mission workspaces, exact-buffer saves, and RUN. The Database route now exposes discovered evidence with provenance and separately persisted private notes. The Evidence Graph relationship/claim domain and Room persistence exist, but the full graph/timeline/comparison UI and relationship editor remain pending. Missions 03–08 are cataloged but not yet playable; full Messenger/Intranet, campaign continuity, security hardening, UI/instrumentation coverage, and physical-device testing remain incomplete.
+The Android app has a persisted campaign-opening sequence (official recruitment → mission activation → Freya → player-triggered NEXUS unlock), a canonical eight-mission catalog, and three playable First Contact operations (Missions 01–03). Both operations seed read-only source records in Room-backed evidence storage and the mission VFS, support Python 3.13 execution through Chaquopy, record an operation-bound exact-source-hash RUN receipt, and evaluate a separate SUBMIT against authored criteria before persisting ordered campaign completion. The mission progress adapter migrates the previous Mission 01 boolean save format. The Terminal is a bounded VFS-only interface; the Editor supports personal/mission workspaces, exact-buffer saves, and RUN. The Database route now exposes discovered evidence with provenance and separately persisted private notes. The Evidence Graph relationship/claim domain and Room persistence exist, but the full graph/timeline/comparison UI and relationship editor remain pending. Missions 04–08 are cataloged but not yet playable; full Messenger/Intranet, campaign continuity, security hardening, UI/instrumentation coverage, and physical-device testing remain incomplete.
 
 ## Engineering rules
 
