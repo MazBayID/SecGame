@@ -78,6 +78,98 @@ class EvidenceGraphEditorTest {
     }
 
     @Test
+    fun hypothesisRequiresExplicitConfirmation() {
+        val graph = EvidenceGraph(
+            "op-001",
+            evidence = listOf(evidence("ev-1"), evidence("ev-2")),
+            relationships = listOf(
+                EvidenceRelationship(
+                    id = "rel-1",
+                    fromEvidenceId = "ev-1",
+                    toEvidenceId = "ev-2",
+                    type = EvidenceRelationType.SUPPORTS,
+                    status = EvidenceLinkStatus.PLAYER_HYPOTHESIS
+                )
+            )
+        )
+
+        val result = EvidenceGraphEditor.confirmHypothesis(graph, "rel-1")
+            as EvidenceGraphMutation.Accepted
+
+        assertEquals(EvidenceLinkStatus.PLAYER_HYPOTHESIS, graph.relationships.single().status)
+        assertEquals(EvidenceLinkStatus.CONFIRMED, result.graph.relationships.single().status)
+        assertTrue(result.changed)
+    }
+
+    @Test
+    fun confirmingUnresolvedRelationshipIsRejected() {
+        val graph = EvidenceGraph(
+            "op-001",
+            evidence = listOf(evidence("ev-1"), evidence("ev-2")),
+            relationships = listOf(
+                EvidenceRelationship(
+                    id = "rel-1",
+                    fromEvidenceId = "ev-1",
+                    toEvidenceId = "ev-2",
+                    type = EvidenceRelationType.SUPPORTS,
+                    status = EvidenceLinkStatus.UNRESOLVED
+                )
+            )
+        )
+
+        val result = EvidenceGraphEditor.confirmHypothesis(graph, "rel-1")
+
+        assertTrue(result is EvidenceGraphMutation.Rejected)
+        assertEquals(EvidenceLinkStatus.UNRESOLVED, graph.relationships.single().status)
+    }
+
+    @Test
+    fun removingHypothesisPreservesOriginalGraphAndConfirmedLinks() {
+        val graph = EvidenceGraph(
+            "op-001",
+            evidence = listOf(evidence("ev-1"), evidence("ev-2")),
+            relationships = listOf(
+                EvidenceRelationship(
+                    id = "rel-hypothesis",
+                    fromEvidenceId = "ev-1",
+                    toEvidenceId = "ev-2",
+                    type = EvidenceRelationType.SUPPORTS,
+                    status = EvidenceLinkStatus.PLAYER_HYPOTHESIS
+                )
+            )
+        )
+
+        val result = EvidenceGraphEditor.removeHypothesis(graph, "rel-hypothesis")
+            as EvidenceGraphMutation.Accepted
+
+        assertEquals(1, graph.relationships.size)
+        assertTrue(result.graph.relationships.isEmpty())
+        assertTrue(result.changed)
+    }
+
+    @Test
+    fun confirmedRelationshipCannotBeRemovedAsHypothesis() {
+        val graph = EvidenceGraph(
+            "op-001",
+            evidence = listOf(evidence("ev-1"), evidence("ev-2")),
+            relationships = listOf(
+                EvidenceRelationship(
+                    id = "rel-1",
+                    fromEvidenceId = "ev-1",
+                    toEvidenceId = "ev-2",
+                    type = EvidenceRelationType.SUPPORTS,
+                    status = EvidenceLinkStatus.CONFIRMED
+                )
+            )
+        )
+
+        val result = EvidenceGraphEditor.removeHypothesis(graph, "rel-1")
+
+        assertTrue(result is EvidenceGraphMutation.Rejected)
+        assertEquals(1, graph.relationships.size)
+    }
+
+    @Test
     fun searchFiltersAndOrdersEvidenceDeterministically() {
         val graph = EvidenceGraph(
             operationId = "op-001",
