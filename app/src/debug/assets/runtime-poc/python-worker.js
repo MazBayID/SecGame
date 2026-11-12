@@ -66,6 +66,19 @@ for namespace_name, namespace in (("js", js), ("pyodide_js", pyodide_js)):
             raise RuntimeError(
                 namespace_name + " unexpectedly exposes JavaScript global: " + name
             )
+
+# The public Pyodide API exposes JavaScript functions. CSP must block the
+# Function-constructor escape route from one of those functions to globalThis.
+if not hasattr(pyodide_js, "runPython"):
+    raise RuntimeError("Pyodide JavaScript API shape changed; escape probe unavailable")
+try:
+    pyodide_js.runPython.constructor("return globalThis")()
+except Exception as error:
+    error_text = str(error)
+    if "unsafe-eval" not in error_text and "EvalError" not in type(error).__name__:
+        raise RuntimeError("Could not verify CSP blocks JavaScript Function constructor")
+else:
+    raise RuntimeError("CSP allowed JavaScript Function constructor access")
 `);
 
   self.postMessage({ type: "ready", version: pyodide.version });
