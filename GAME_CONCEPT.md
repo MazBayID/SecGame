@@ -1,7 +1,7 @@
 # AEGIS-NET — GAME CONCEPT
 
 > Primary design reference for AEGIS-Net. Migrated and revised from the earlier project concept · Prepared: November 12, 2026.  
-> The narrative outline lives in [Story_Line.md](Story_Line.md). This file is the single source of truth for product and technical decisions. Owner's latest approved direction overrides conflicting older rules.  
+> The narrative outline lives in [Story_Line.md](Story_Line.md). This file is the product and technical canon. The repository's Markdown documents are a coordinated specification set: this file governs product identity, canon, safety, and technical constraints; `GAMEPLAY_DESIGN.md` governs gameplay systems; `UI_ARCHITECTURE.md` governs interface boundaries and behavior; `Story_Line.md` governs narrative details within canon; `IMPLEMENTATION_ROADMAP.md` governs delivery order and verified status; `README.md` is an entry point and status summary, not an independent source of requirements. Owner's latest explicitly approved direction overrides older conflicting rules, and affected documents must then be reconciled.  
 > **[OPEN]** = not yet decided, not canon. In-game strings that are canon in Indonesian are kept in Indonesian with an English gloss.
 
 ## 1. Short Summary
@@ -474,9 +474,7 @@ The English must read naturally and preserve Freya's voice.
 - Saving: campaign progress autosaves at meaningful checkpoints
   (beat completed, mission-stage change, successful submit, debrief,
   XP/rank/unlock changes). Player code is NOT saved on every
-  keystroke; use an explicit Save action and mission checkpoints, and
-  show when it was last saved. Everything resumes after the app is
-  reopened.
+  keystroke. The explicit Save action persists the current editor buffer; RUN also atomically saves an immutable snapshot of the exact buffer it executes, so unsaved edits cannot be silently omitted from execution. Mission checkpoints persist operation progress and the last saved script state. Show saved/unsaved state and the last saved time. Everything resumes after the app is reopened.
 - Initial Python execution limits: 3-second wall-clock budget and
   50,000 line-event budget, plus limits on source/AST/input/output/
   collections/file writes; all configurable and covered by automated
@@ -503,10 +501,7 @@ The English must read naturally and preserve Freya's voice.
 - One candidate commit produces ONE APK: build once -> test that
   exact APK -> release that same APK (verify SHA-256). No separate
   debug APK, and no rebuilding after testing.
-- Order: source validation (Python + Kotlin tests) -> build the
-  signed Release APK -> APK validation (signature, package,
-  versionCode, ABI, emulator smoke test) -> publish. A failed or
-  skipped check means no release.
+- Order: run all applicable source tests for technologies present in the candidate (Kotlin tests are mandatory; Python tests become mandatory when Python source/runtime is introduced) -> build the single signed Release APK -> validate signature, package, versionCode, and ABI metadata -> smoke-test that exact APK on an emulator -> physical-device acceptance using the same APK -> publish. A failed or skipped applicable check means no release. A test suite that does not yet apply must be explicitly reported as not applicable, never reported as passed.
 - One permanent keystore for all releases, kept only in GitHub
   Secrets and the owner's offline backup. Never committed or printed
   to logs.
@@ -518,9 +513,7 @@ The English must read naturally and preserve Freya's voice.
 
 ## 15. Development Rules
 
-Before any significant task: read GAME_CONCEPT.md and Story_Line.md,
-inspect the current repository, and make sure the change serves the
-first-person RPG + tactical simulator vision.
+Before any significant task: inspect the current repository and read all relevant Markdown specifications, not only one named document. Reconcile product canon, gameplay, UI, narrative, roadmap, and README status before changing implementation. A code change must follow the currently approved specification; do not retroactively change requirements merely to justify existing code.
 
 - No generic dashboards; no visible player avatar or agent face
   portraits; NEXUS stays text with a neutral silhouette.
@@ -536,9 +529,17 @@ first-person RPG + tactical simulator vision.
 **Decision hierarchy when requirements conflict:**
 
 ```
- 1 Owner's latest approved direction  2 Core product promise and canon
- 3 Existing tested behavior  4 Technical convenience
+1. Owner's latest explicitly approved direction
+2. GAME_CONCEPT.md: product identity, canon, safety, and technical constraints
+3. The relevant specialist document within its domain:
+   - GAMEPLAY_DESIGN.md: gameplay rules and evaluation
+   - UI_ARCHITECTURE.md: UI responsibilities and interaction contracts
+   - Story_Line.md: narrative events and character continuity
+4. IMPLEMENTATION_ROADMAP.md: delivery order/status; it cannot weaken requirements
+5. README.md: project entry point/status only; it cannot create competing rules
+6. Existing tested behavior, then technical convenience
 ```
+If two specialist documents conflict, the relevant domain owner above decides; update the other document in the same documentation change. Existing code or tests do not override an approved requirement.
 Approved strategy: Full Rebuild. Authoritative documents
 (GAME_CONCEPT, README, Story_Line) and owner-supplied assets must not
 be deleted.
