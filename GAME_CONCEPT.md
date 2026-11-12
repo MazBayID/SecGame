@@ -106,11 +106,13 @@ specialist helps temporarily; Freya stays the primary mentor.
 Specialist names and details [OPEN].
 
 Dialogue: a chat interface (not a visual-novel dialogue box), no face
-portraits. Player replies are predefined written options. In the
-initial version these choices are COSMETIC: they do not change
-relationships, access, or story. No relationship meter and no free
-text. Optional AI-assisted dialogue through an API is allowed in the
-future but must never be required.
+portraits. Player replies are predefined written options; selected
+responses may update authored character knowledge, trust conditions,
+access, or later scenes when the choice is explicitly meaningful.
+Do not add choices that pretend to matter but have no consequence.
+No free-text dialogue in the initial version. Core dialogue and
+continuity are deterministic and offline; optional AI-assisted
+dialogue through an API may be added later but must never be required.
 
 ## 5. Campaign 01 — The Recruitment / Chapter 001 — First Contact
 
@@ -162,59 +164,113 @@ The final report records a 4-second difference between the A.E.G.I.S. and ARCHIV
 
 ## 6. Core Gameplay
 
-Hybrid structure: guided, but with real player agency (inspect
-evidence, experiment, compare, decide what to submit; not just
-pressing Continue). Neither a rigid tutorial sequence nor a free
-sandbox.
+AEGIS-Net is an **Intelligence Operations RPG**: Adventure RPG,
+Investigation Simulator, and Technical Operations work as one
+connected experience. The player should feel like an operative
+solving consequential problems—not a student completing detached
+coding exercises and not a user navigating a decorative dashboard.
 
-**Operation cycle:**
+The detailed, approved gameplay systems are specified in
+[GAMEPLAY_DESIGN.md](GAMEPLAY_DESIGN.md). That document defines the
+Intelligence Cycle, Evidence Graph, multiple solution paths, risk
+and consequences, persistent world state, mission evaluation,
+adaptive learning, mission design requirements, and delivery
+priorities. This section summarizes the binding product rules.
+
+**Core operation cycle — The Intelligence Cycle:**
 
 ```
- 1 Story event / recruitment communication
- 2 Freya's guidance (explanation for new tools/concepts)
- 3 Briefing through the Intranet
- 4 Supporting files delivered/downloaded
- 5 Investigation (dossiers, evidence, database)
- 6 Technical work: edit a Python script, run it in the Terminal
- 7 Freya / NEXUS support (graduated hints, diagnostics)
- 8 Submission through the proper interface
- 9 Evaluation and debrief
- 10 Progression: XP, rank, clearance, next operation
+ QUESTION
+    ↓
+ OBSERVE → INVESTIGATE → ANALYZE
+                          ↓
+                     PLAN APPROACH
+                          ↓
+                  EXECUTE / INTERACT
+                          ↓
+                   DECIDE / REPORT
+                          ↓
+                   DEBRIEF / CONSEQUENCE
+                          ↓
+                  WORLD & SKILL UPDATE
 ```
+
+This is a flexible cycle, not a rigid checklist. Short operations
+may combine stages; complex cases may return to investigation after
+new evidence appears. Each operation begins with a meaningful
+uncertainty or objective. Tools and apps appear only when they serve
+that operation.
+
+**Three connected gameplay layers:**
+
+- **Adventure RPG:** first-person story, characters, dialogue,
+  campaign progression, rank, clearance, and meaningful decisions.
+- **Investigation Simulator:** discovery, provenance, source
+  comparison, timelines, evidence relationships, hypotheses, and
+  defensible conclusions.
+- **Technical Operations:** in-world Terminal, controlled VFS,
+  Python editor/runtime, and other authorized simulated tools.
+
+**Binding gameplay rules:**
+
+- Evidence is more than a checklist. Sources have provenance and
+  reliability; observations, inferences, hypotheses, and confirmed
+  facts must remain distinguishable. The Evidence Graph visualizes
+  relationships without inventing or automatically solving them.
+- Missions define objectives, constraints, and acceptable proof,
+  not one mandatory click or command sequence. Multiple deliberately
+  authored and tested approaches may be accepted. Python is required
+  only when it is a meaningful mission objective or tool.
+- Important decisions may change later opportunities, evidence,
+  character knowledge/trust conditions, or story scenes. Choices
+  must not pretend to matter when they do not. The world state is
+  persistent, deterministic, testable, and works offline.
+- Consequences are signposted when reasonably knowable. A failed
+  RUN, syntax error, or unmet submission criterion is a learning
+  failure: it does not remove XP, rank, clearance, or story progress.
+  Preserve working context and provide actionable recovery. Story
+  decisions may have consequences, but must not create arbitrary
+  unwinnable dead ends.
+- Mission evaluation can assess Intelligence, Evidence, Technical,
+  Stealth/Exposure, and Judgment where relevant. Each mission defines
+  its active dimensions and deterministic criteria; no universal
+  score formula is required. Technical correctness and investigative
+  reasoning are evaluated separately.
+- Responsible uncertainty is rewarded. A cautious conclusion
+  supported by evidence is better than an unsupported accusation.
+  Multiple defensible conclusions may be accepted.
+- Difficulty adapts through authored explanations, optional
+  graduated hints, practice, and reduced scaffolding after mastery.
+  It must not unpredictably change mission rules or rely on a live
+  AI model.
 
 **RUN and SUBMIT always stay separate:**
 
-- RUN: saves the code to the mission script, opens the Terminal, runs
-  `python <script>.py`, and shows real output/errors.
-- SUBMIT: done in Mission Control (Browser), enabled only after that
-  exact code has completed a successful RUN. The evaluator checks the
-  mission requirements.
-- RUN alone never completes a mission.
+- RUN saves and executes the exact current script through the
+  controlled runtime and VFS, then displays actual output/errors in
+  Terminal. A successful run record is tied to the operation and
+  exact source version/hash.
+- SUBMIT occurs through Mission Control. The domain layer rechecks
+  that the submitted source matches a successful RUN, then evaluates
+  the authored mission criteria and any required evidence/report.
+- RUN alone never completes a mission. A successful script does not
+  automatically mean the intelligence conclusion is correct.
 
-**Hybrid evaluation:**
-
-- Technical: behavior, concept use, execution results. Many
-  implementations are accepted; identical code is not required.
-- Investigative: the conclusion must be supported by evidence and
-  uncertainty stated responsibly. Different defensible conclusions
-  are accepted.
-- Combined: the two dimensions are judged separately.
-- Criteria are explicit per mission; an AI model is never the
-  authority.
-- Hard-coded answers fail missions that teach variables, loops,
-  conditions, or indexing. Multiple fixtures are used.
-
-**Failure and retry (retry-first):**
+**Failure, retry, and support:**
 
 - Explain which requirement was not met and why.
-- The player fixes it and submits again. No penalty: XP, rank, access,
-  and story progress are not reduced. Working context is preserved.
+- The player can correct the work and submit again. Technical retry
+  does not reduce XP, rank, access, or story progress; preserve
+  working context.
 - Graduated hints: concept reminder -> syntax cue -> more specific
   direction. A complete solution is not the default.
+- Consequences from deliberate story/operational decisions are
+  distinct from technical retry penalties and follow the authored
+  mission state rules.
 
-Mission-to-mission clues: each mission carries a short code/syntax
-clue toward the next (surfaced in the debrief), matched to the
-player's level and never a blocker.
+Mission-to-mission clues: each mission may carry a short code/syntax
+or investigative clue toward the next (surfaced in the debrief),
+matched to the player's level and never a blocker.
 
 Campaign navigation: menu -> A.E.G.I.S. secure-connection transition
 -> campaign title, status, progress. Continue and New Campaign are
