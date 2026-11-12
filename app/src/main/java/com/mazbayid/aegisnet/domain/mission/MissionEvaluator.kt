@@ -95,11 +95,12 @@ object MissionEvaluator {
 
         definition.objectives.forEach { objective ->
             val approachId = submission.objectiveApproachIds[objective.id]
+            val approachAccepted = approachId != null && approachId in objective.acceptedApproachIds
             results += criterion(
                 objectiveId = objective.id,
                 code = "accepted_approach",
-                passed = approachId in objective.acceptedApproachIds,
-                message = if (approachId in objective.acceptedApproachIds) {
+                passed = approachAccepted,
+                message = if (approachAccepted) {
                     "The selected approach is accepted."
                 } else {
                     "Choose one of the authored approaches for this objective."
@@ -107,11 +108,12 @@ object MissionEvaluator {
             )
 
             val outcomeId = submission.objectiveOutcomeIds[objective.id]
+            val outcomeAccepted = outcomeId != null && outcomeId in objective.acceptedOutcomeIds
             results += criterion(
                 objectiveId = objective.id,
                 code = "accepted_outcome",
-                passed = outcomeId in objective.acceptedOutcomeIds,
-                message = if (outcomeId in objective.acceptedOutcomeIds) {
+                passed = outcomeAccepted,
+                message = if (outcomeAccepted) {
                     "The submitted outcome satisfies an accepted result."
                 } else {
                     "The submitted outcome does not satisfy an accepted result."
