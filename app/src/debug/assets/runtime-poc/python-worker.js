@@ -55,6 +55,15 @@ try {
     jsglobals: Object.freeze(Object.create(null)),
   });
   pyodide.setStdin({ error: true });
+
+  // Fail closed if Pyodide ever exposes worker globals to Python despite jsglobals.
+  pyodide.runPython(`
+import js
+for name in ("self", "globalThis", "postMessage", "fetch", "Worker", "document", "window"):
+    if hasattr(js, name):
+        raise RuntimeError("JavaScript global unexpectedly exposed: " + name)
+`);
+
   self.postMessage({ type: "ready", version: pyodide.version });
 } catch (error) {
   sendInitializationError(error);
