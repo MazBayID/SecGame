@@ -11,9 +11,30 @@ const indexURL = PYODIDE_DIR + sep;
 const loaderURL = pathToFileURL(resolve(PYODIDE_DIR, "pyodide.mjs")).href;
 
 const { loadPyodide } = await import(loaderURL);
-const pyodide = await loadPyodide({ indexURL });
+const pyodide = await loadPyodide({
+  indexURL,
+  jsglobals: Object.freeze(Object.create(null)),
+});
 
 assert.equal(pyodide.version, "314.0.7", "Unexpected Pyodide release");
+
+const namespaceProbe = pyodide.runPython(`
+import js
+import pyodide_js
+
+for namespace_name, namespace in (("js", js), ("pyodide_js", pyodide_js)):
+    for name in ("self", "globalThis", "postMessage", "fetch", "Worker", "document", "window"):
+        if hasattr(namespace, name):
+            raise RuntimeError(
+                namespace_name + " unexpectedly exposes JavaScript global: " + name
+            )
+"restricted-js-namespace"
+`);
+assert.equal(
+  namespaceProbe,
+  "restricted-js-namespace",
+  "The player-facing Python JS namespace must not expose worker/browser globals"
+);
 
 const pythonVersion = pyodide.runPython(
   "import sys\nsys.version.split()[0]"
@@ -149,6 +170,7 @@ assert.match(runtimeError ?? "", /runtime-probe/);
 
 console.log("PASS · Pyodide " + pyodide.version);
 console.log("PASS · Python " + pythonVersion);
+console.log("PASS · restricted Python JS namespace (no worker/browser globals)");
 console.log("PASS · arithmetic, JSON, datetime, and SQLite");
 console.log("PASS · beginner variables, conditions, loops, functions, and collections");
 console.log("PASS · in-memory virtual filesystem read/write");
