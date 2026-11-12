@@ -9,8 +9,9 @@ The `feat/android-foundation` branch currently contains:
 - Kotlin + Jetpack Compose application entry point and black-green A.E.G.I.S. theme
 - Main menu prototype, local secure-system status panel, and seven-tile App Hub prototype
 - Code-drawn tactical grid background and reusable panel primitive
-- Initial Evidence Graph domain contract: typed evidence records, provenance metadata, relationship states, claims, and deterministic structural validation
-- JVM unit tests for core Evidence Graph validation cases
+- Initial Evidence Graph domain contract: typed evidence records, provenance metadata, separate player annotations, relationship states, and claims
+- Pure Kotlin graph operations for idempotent evidence creation, annotation, relationship/claim updates, and deterministic filtering
+- JVM unit tests for graph validation, immutable source evidence, mutation behavior, and evidence search
 - Android CI configured to run JVM unit tests and assemble a debug APK
 
 The Evidence Graph is currently a domain foundation only. Evidence persistence, repository operations, graph/timeline UI, mission integration, campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, and mission evaluation are not implemented yet. The app is not a playable game.
