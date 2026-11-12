@@ -455,8 +455,7 @@ The English must read naturally and preserve Freya's voice.
 
 ## 12. Technical
 
-- Android-first, Kotlin + Jetpack Compose. Python 3.13 through
-  Chaquopy (per README), running locally on the device.
+- Android-first, Kotlin + Jetpack Compose. Planned local Python runtime: Python 3.13 through Chaquopy. This is a target architecture, not an implemented feature; implementation must follow the VFS, execution-limit, and in-process security constraints below.
 - Offline-first: menu, story, dialogue, missions, evaluation,
   progression, code execution, and saving all work without internet,
   an account, or an API key. Online features (optional AI, cloud
@@ -537,9 +536,7 @@ Before any significant task: inspect the current repository and read all relevan
 6. Existing tested behavior, then technical convenience
 ```
 If two specialist documents conflict, the relevant domain owner above decides; update the other document in the same documentation change. Existing code or tests do not override an approved requirement.
-Approved strategy: Full Rebuild. Authoritative documents
-(GAME_CONCEPT, README, Story_Line) and owner-supplied assets must not
-be deleted.
+Approved strategy: Full Rebuild. The six coordinated specification documents (`GAME_CONCEPT.md`, `GAMEPLAY_DESIGN.md`, `UI_ARCHITECTURE.md`, `Story_Line.md`, `IMPLEMENTATION_ROADMAP.md`, and `README.md`) and owner-supplied assets must not be deleted. Their distinct authority is defined by the hierarchy above.
 
 ## 16. Current Project Status
 
