@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.os.Messenger
-import android.os.Process
 import android.os.IBinder
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -81,7 +80,7 @@ class IsolatedProcessPocInstrumentedTest {
             val serviceUid = result!!.getInt(KEY_UID, -1)
             assertNotEquals(
                 "Service must run under an isolated UID",
-                Process.myUid(),
+                context.applicationInfo.uid,
                 serviceUid
             )
             assertTrue(
