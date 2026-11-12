@@ -35,6 +35,28 @@ Hacknet is a reference for interaction patterns and separation of responsibiliti
 
 **Important:** the inspected Hacknet repositories contain decompiled C# / XNA code. Do not copy their source, proprietary assets, exact layouts, or distinctive artwork. Implement original Kotlin and Compose code based on high-level UX principles only. The Android rendering and lifecycle model is not a literal port of XNA.
 
+### 2.1 Workstation visual direction (binding implementation rule)
+
+The active-operation interface must communicate the feeling of a dedicated intelligence workstation, using Hacknet as a high-level UX reference while retaining AEGIS-Net's own identity.
+
+- **Workstation, not dashboard:** do not present the operation workspace as a stack of generic rounded Material cards. Prefer a coherent application frame, restrained separators, compact technical metadata, clear panel hierarchy, and purposeful negative space.
+- **Terminal-forward hierarchy:** when an operation involves technical work, the terminal and code/evidence context must be visually prominent. The terminal is a real interaction surface, not a decorative green text panel.
+- **Distinct application surfaces:** Messenger, Intranet, Terminal, Database, Dossier, Analysis, and Operations should feel like tools inside one fictional system. Each may have its own content layout, but shares the same shell, typography rules, status language, and navigation behavior.
+- **Original AEGIS visual language:** use the approved black-green palette, original typography choices, original iconography, and original panel geometry. Do not reproduce Hacknet screenshots, exact window arrangements, distinctive graphics, or proprietary assets.
+- **Functional density:** technical screens may show compact logs, paths, timestamps, file metadata, and status indicators where useful. Never add fake telemetry or decorative data that implies functionality that does not exist.
+- **Visual effects serve information:** grid lines, scanlines, glow, cursor blink, and transitions are restrained accents. They must not reduce text contrast, conceal state, or run continuously at high cost behind dense content.
+
+### 2.2 Mobile adaptation — preserve the workstation, not desktop limitations
+
+AEGIS-Net is Android-first. The Hacknet reference does not require copying a desktop multi-window interaction model onto a phone.
+
+- On portrait phones, show one primary application surface at a time inside a persistent AEGIS shell. Use tabs, a compact app switcher, contextual drawers, or stacked navigation to move between tools.
+- Keep essential operation context visible or one deliberate action away: operation title/status, current file/evidence context, and unsaved editor state.
+- Do not shrink several desktop-style windows until they become unreadable. A secondary panel should become a sheet, tab, or dedicated view on narrow screens.
+- On tablets and sufficiently wide screens, allow a main work surface plus one supporting panel, or a carefully constrained multi-panel layout, when it improves investigation.
+- Switching applications must preserve operation state and restore each app's relevant scroll/selection state where feasible.
+- Touch targets, keyboard/IME behavior, system insets, text scaling, TalkBack, and reduced-motion behavior remain first-class requirements.
+
 ## 3. Application and navigation model
 
 ### 3.1 Top-level flow
@@ -169,6 +191,26 @@ SUBMIT is enabled only when the exact current source has completed a successful 
 ### 4.9 Intelligence Database, Dossier, Analysis, Operations
 
 These are separate application surfaces with their own ViewModels and presentation state. Their data access is permission-aware and story-aware. The precise feature scope and screen layouts are still subject to detailed feature design; do not invent operational capabilities merely to fill a screen.
+
+### 4.10 Investigation and Evidence Graph
+
+The investigation UI must support the evidence and claim model defined in `GAMEPLAY_DESIGN.md`.
+
+- Evidence cards expose source, provenance, time context, integrity, access classification, and whether an item is original or derived when that metadata exists.
+- Provide focused compare and timeline views for operations that require them. Do not force every operation into a graph.
+- The Analysis app may visualize relationships between evidence, entities, events, and player-authored claims.
+- Visually distinguish verified relationships, source-backed claims, player hypotheses, contradictions, and unresolved links. Never style speculation as confirmed fact.
+- Player annotations and selected evidence must persist outside transient composable state.
+- Large graphs must remain usable on a phone: support focused subgraphs, search, filtering, and a detail view rather than shrinking the entire graph until unreadable.
+
+### 4.11 Decisions, risk, and debrief presentation
+
+- When an operation offers a consequential choice, present the known context and relevant risk in plain language before confirmation when the operative could reasonably know it.
+- Do not expose hidden story facts merely to explain every uncertainty. The UI may communicate that an outcome is uncertain.
+- Mission Control must support submission of the required report, selected evidence, claims, and technical artifacts—not only a script execution result.
+- Debrief screens present the mission's relevant evaluation dimensions (Intelligence, Evidence, Technical, Stealth/Exposure, Judgment) and explain the outcome. Do not show irrelevant dimensions or a single opaque score as the whole evaluation.
+- Separate recoverable technical errors from persistent story/operational consequences. Technical retry must preserve work and must not display as a punitive campaign failure.
+- Character responses and later opportunity changes are rendered from persisted authored campaign state; UI code does not invent relationship or consequence logic.
 
 ## 5. Shared visual system
 
