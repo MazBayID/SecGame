@@ -52,6 +52,7 @@ import datetime
 import json
 import math
 import sqlite3
+from pathlib import Path
 
 assert math.isclose(6 * 7, 42)
 
@@ -66,6 +67,13 @@ with sqlite3.connect(":memory:") as database:
     assert database.execute(
         "SELECT value FROM runtime_probe"
     ).fetchone() == (42,)
+
+for host_path in (
+    "/data/data/com.mazbayid.cybertrace",
+    "/data/user/0/com.mazbayid.cybertrace",
+    "/storage/emulated/0",
+):
+    assert not Path(host_path).exists(), f"Host path unexpectedly visible: {host_path}"
 "startup-ok"
 `);
 assert.equal(startupProbe, "startup-ok");
@@ -178,6 +186,7 @@ console.log("PASS · Pyodide " + pyodide.version);
 console.log("PASS · Python " + pythonVersion);
 console.log("PASS · restricted Python JS namespace (no worker/browser globals)");
 console.log("PASS · arithmetic, JSON, datetime, and SQLite");
+console.log("PASS · app-private and shared-storage paths absent from virtual filesystem");
 console.log("PASS · beginner variables, conditions, loops, functions, and collections");
 console.log("PASS · in-memory virtual filesystem read/write");
 console.log("PASS · missing packages fail closed");
