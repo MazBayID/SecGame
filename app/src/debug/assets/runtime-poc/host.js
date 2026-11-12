@@ -176,7 +176,7 @@ pythonButton.addEventListener("click", () => {
     if (data?.type === "result" && pythonRunState === "running" &&
         data.runId === thisRunId) {
       const validStatuses = new Set([
-        "COMPLETED", "SYNTAX_ERROR", "RUNTIME_ERROR", "RESOURCE_LIMIT", "OUTPUT_LIMIT",
+        "COMPLETED", "SYNTAX_ERROR", "RUNTIME_ERROR", "OUTPUT_LIMIT", "RESOURCE_LIMIT", "OUTPUT_LIMIT",
       ]);
       if (!validStatuses.has(data.status) ||
           typeof data.stdout !== "string" ||
