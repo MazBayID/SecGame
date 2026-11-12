@@ -12,10 +12,12 @@ The `main` branch currently contains:
 - Initial Evidence Graph domain contract: typed evidence records, provenance metadata, separate player annotations, relationship states, and claims
 - Pure Kotlin graph operations for idempotent evidence creation, annotation, relationship/claim updates, and deterministic filtering
 - JVM unit tests for graph validation, immutable source evidence, mutation behavior, and evidence search
-- Android CI runs Kotlin JVM source validation only; it does not create a debug APK
-- The approved test-artifact policy is one installable Debug APK signed with the Android Gradle Plugin's automatically generated debug key; no personal/permanent keystore, signing password, or GitHub signing secret is permitted.
-- Debug APKs are development/testing artifacts only, not production releases. Ephemeral CI runners may generate different debug certificates, so a new candidate may require uninstalling the previous build before installation; uninstalling can erase local app data.
-- The existing `unsigned-apk-candidate.yml` workflow has not yet been migrated to this approved Debug APK policy; until that workflow is updated and run successfully, no installable candidate artifact is available.
+- Android CI runs Kotlin JVM source validation only; it does not create an APK artifact
+- `debug-apk-candidate.yml` is the manual, main-only workflow for building one installable Debug APK after Kotlin tests and applicable Python-test checks pass
+- The Debug APK is signed by the Android Gradle Plugin's automatically generated debug key; no personal/permanent keystore, signing password, or GitHub signing secret is used
+- The candidate workflow validates the APK archive, package, versionCode, debug certificate, ABI metadata, and SHA-256 checksum before uploading the artifact
+- Debug APKs are development/testing artifacts only, not production releases. Ephemeral CI runners may generate different debug certificates, so a new candidate may require uninstalling the previous build before installation; uninstalling can erase local app data
+- The candidate workflow has been added but has not yet been run successfully; no installable artifact is available until a successful workflow run
 
 Planned technical target: Python 3.13 through Chaquopy for local in-game execution; this runtime is not implemented in the current foundation.
 
@@ -42,7 +44,7 @@ Hacknet is a high-level UX/architecture reference only. Do not copy its decompil
 - JDK 17
 - Gradle 8.13-compatible environment
 
-Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only. The intended CI test artifact is an installable Debug APK signed with an automatically generated debug key; it is not a production release. The current CI candidate workflow still needs migration before it can produce that artifact.
+Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only. The intended CI test artifact is an installable Debug APK signed with an automatically generated debug key; it is not a production release. Run the `Installable Debug APK Candidate` workflow manually from the Actions tab on the `main` branch to create it.
 
 ## Provisional technical identifier
 
