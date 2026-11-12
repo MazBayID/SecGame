@@ -1,7 +1,7 @@
 # AEGIS-Net — GAMEPLAY DESIGN
 
 > Status: approved gameplay direction · 12 November 2026  
-> Product identity and technical canon remain in `GAME_CONCEPT.md`. This document defines the gameplay systems that implement that direction. If wording conflicts, the latest owner-approved direction and `GAME_CONCEPT.md` take precedence.
+> `GAME_CONCEPT.md` governs product identity, canon, safety, and technical constraints. This document governs gameplay systems and evaluation within that canon. `UI_ARCHITECTURE.md` governs UI responsibilities; `Story_Line.md` governs narrative continuity; `IMPLEMENTATION_ROADMAP.md` governs delivery order/status only. If wording conflicts, apply the decision hierarchy in `GAME_CONCEPT.md` and reconcile the affected documents.
 
 ## 1. Gameplay identity
 
@@ -224,8 +224,8 @@ Progress is measured by demonstrated understanding and successful use, not typin
 
 The existing RUN/SUBMIT contract remains mandatory:
 
-- RUN saves and executes the exact current script through the controlled runtime and VFS. The Terminal displays actual output or errors.
-- A successful execution record is tied to the operation and exact source version/hash.
+- RUN atomically saves an immutable snapshot of the exact current editor buffer, then executes that same snapshot through the controlled runtime and VFS. This includes unsaved edits; RUN must never execute a different or stale saved version. The Terminal displays actual output or errors. The editor's explicit Save action remains separately available for manual persistence without execution.
+- A successful execution record is tied to the operation and exact source version/hash of the RUN snapshot. The editor and execution coordinator expose that identity so SUBMIT can verify it.
 - SUBMIT occurs through Mission Control. The domain layer revalidates that the submitted source matches a successful RUN and then evaluates the mission's authored requirements.
 - RUN alone never completes a mission.
 - Investigative claims, evidence provenance, and player decisions may also be required submission artifacts; a successful script is not automatically a correct intelligence report.
