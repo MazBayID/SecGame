@@ -172,7 +172,7 @@ pythonButton.addEventListener("click", () => {
     if (data?.type === "ready" && pythonRunState === "initializing" &&
         typeof data.version === "string" && data.version.length <= 64 &&
         typeof data.pythonVersion === "string" &&
-        /^3\\.14\\.\\d+$/.test(data.pythonVersion) &&
+        /^3\.14\.\d+$/.test(data.pythonVersion) &&
         Array.isArray(data.capabilities) &&
         data.capabilities.length === 4 &&
         data.capabilities.every((item) =>
