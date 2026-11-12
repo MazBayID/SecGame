@@ -122,6 +122,8 @@ self.onmessage = ({ data }) => {
     status = diagnostic.kind === "SYNTAX" ? "SYNTAX_ERROR" : "RUNTIME_ERROR";
   }
 
+  if (shared.truncated && status === "COMPLETED") status = "OUTPUT_LIMIT";
+
   self.postMessage({
     type: "result",
     runId: activeRunId,
