@@ -115,7 +115,7 @@ This harness uses AndroidX WebKit 1.18.0 and is an early platform experiment, no
 
 ## Android WebView emulator test
 
-The debug source now includes `RuntimePocInstrumentedTest`, which drives the actual debug WebView through `evaluateJavascript` and verifies startup with Pyodide 314.0.7/Python 3.14.x, basic Python output, syntax and runtime diagnostics, host timeout, explicit cancellation, a fresh worker after cancellation, and the separate worker lifecycle controls (ping, synchronous hang, host termination, and recreation). The test compiles in the normal CI validation job. It runs on an API 35 Google APIs emulator only when the workflow is manually dispatched with `build_apk=true`; this keeps routine commits fast while making the milestone APK path exercise the real Android WebView candidate. Emulator success is still not a substitute for testing the target physical device.
+The debug source includes `RuntimePocInstrumentedTest`, which drives the actual debug WebView through `evaluateJavascript` and verifies startup with Pyodide 314.0.7/Python 3.14.x, basic Python output, syntax and runtime diagnostics, the combined output cap, fail-closed behavior for an unbundled package, host timeout, explicit cancellation, a fresh worker after cancellation, and the separate worker lifecycle controls (ping, synchronous hang, host termination, and recreation). A separate `IsolatedProcessPocInstrumentedTest` binds to the debug-only service declared with `android:isolatedProcess="true"`, checks that its UID differs from the target application's UID, and verifies that it can read the small probe asset packaged in the APK. These Android instrumentation tests compile in the normal CI validation job. They run on an API 35 Google APIs emulator only when the workflow is manually dispatched with `build_apk=true`; this keeps routine commits fast while making the milestone path exercise both runtime and isolated-process candidates. Emulator success is still not a substitute for testing the target physical device.
 
 ## Physical Android test procedure
 
@@ -137,7 +137,7 @@ Run each snippet separately in the debug Python panel:
 
 The debug page also provides quick preset buttons for basic output, beginner arithmetic, syntax error, runtime error, timeout, output-limit, and missing-package checks. These controls are included in the latest source validation and runtime CI run [#43279006972](https://github.com/MazBayID/SecGame/actions/runs/43279006972), where both CI jobs completed successfully. A preset only fills the editor; tap **RUN PYTHON** to execute it. This avoids manually typing the test snippets on a phone and makes the device checklist easier to repeat.
 
-The smoke tests validate basic runtime behavior only. They do not replace the host-access, memory-pressure, renderer-recovery, or physical-device tests in the full matrix.
+The smoke tests validate basic runtime behavior only. They do not replace the host-access, memory-pressure, renderer-recovery, or physical-device tests in the full matrix. Workflow run [#43288498693](https://github.com/MazBayID/SecGame/actions/runs/43288498693) passed source validation, Android unit tests, real Pyodide 314.0.7 runtime smoke tests, and compilation of both Android instrumentation test classes. The emulator tests were skipped because this was a push-triggered run, not a manual milestone dispatch.
 
 ## Pyodide artifact facts
 
