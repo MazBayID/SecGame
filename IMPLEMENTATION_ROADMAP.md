@@ -68,7 +68,9 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 
 ## Phase 2 — Mission and operation foundation
 
-- [ ] Define typed mission objectives, constraints, proof requirements, accepted approaches, risk dimensions, and recovery routes.
+- [x] Define pure Kotlin mission/objective contracts with authored accepted approaches, outcomes, evidence requirements, and optional successful-RUN requirements.
+- [x] Add deterministic SUBMIT evaluation for objective outcomes, evidence existence/proof, operation-bound RUN receipts, and exact source-hash matching.
+- [ ] Define the remaining mission constraints, risk dimensions, decision/recovery routes, and debrief criteria.
 - [ ] Implement an operation context shared by Mission Control, Evidence, Editor, and Terminal.
 - [ ] Separate mission definition/content from runtime player state.
 - [ ] Implement deterministic mission evaluation against semantic outcomes and evidence provenance.
@@ -119,7 +121,7 @@ Preserve all eight approved learning missions and their existing learning order.
 
 ## Current implementation boundary
 
-The Android app now has an initial campaign-opening vertical slice with a pure Kotlin progression state machine, interruption-safe local milestone persistence, and a player-driven official-message → mission-sequence → Freya → NEXUS unlock flow. The Evidence Graph remains a domain foundation only. Structured evidence persistence, graph UI, mission evaluation, the playable first operation, full Messenger/Intranet, terminal, VFS, Python runtime, and later campaign continuity remain unimplemented until their corresponding checklist items are completed and verified.
+The Android app now has an initial campaign-opening vertical slice with a pure Kotlin progression state machine, interruption-safe local milestone persistence, and a player-driven official-message → mission-sequence → Freya → NEXUS unlock flow. A pure Kotlin mission contract and deterministic SUBMIT evaluator now enforce authored approaches/outcomes, evidence availability, operation-bound successful RUN records, and exact source-hash matching. The Evidence Graph remains a domain foundation only. Structured evidence persistence, graph UI, mission evaluation, the playable first operation, full Messenger/Intranet, terminal, VFS, Python runtime, and later campaign continuity remain unimplemented until their corresponding checklist items are completed and verified.
 
 ## Engineering rules
 
