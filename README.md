@@ -17,6 +17,8 @@ The `main` branch currently contains:
 - The signed candidate workflow requires GitHub Actions secrets: `AEGIS_RELEASE_KEYSTORE_BASE64`, `AEGIS_RELEASE_STORE_PASSWORD`, `AEGIS_RELEASE_KEY_ALIAS`, and `AEGIS_RELEASE_KEY_PASSWORD`
 - An emulator-tested candidate is not a final release until the exact same APK passes physical-device acceptance
 
+Planned technical target: Python 3.13 through Chaquopy for local in-game execution; this runtime is not implemented in the current foundation.
+
 The Evidence Graph is currently a domain foundation only. Evidence persistence, repository operations, graph/timeline UI, mission integration, campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, and mission evaluation are not implemented yet. The app is not a playable game.
 
 ## Implementation plan
