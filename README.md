@@ -12,13 +12,16 @@ The `feat/android-foundation` branch currently contains:
 - Initial Evidence Graph domain contract: typed evidence records, provenance metadata, separate player annotations, relationship states, and claims
 - Pure Kotlin graph operations for idempotent evidence creation, annotation, relationship/claim updates, and deterministic filtering
 - JVM unit tests for graph validation, immutable source evidence, mutation behavior, and evidence search
-- Android CI configured for Kotlin JVM source validation; APK candidates follow the single signed-Release-APK pipeline in `GAME_CONCEPT.md`
+- Android CI runs Kotlin JVM source validation only; it does not create a debug APK
+- `signed-apk-candidate.yml` builds exactly one signed Release APK, validates it, smoke-tests that same file on an emulator, and uploads the APK with its SHA-256 checksum
+- The signed candidate workflow requires GitHub Actions secrets: `AEGIS_RELEASE_KEYSTORE_BASE64`, `AEGIS_RELEASE_STORE_PASSWORD`, `AEGIS_RELEASE_KEY_ALIAS`, and `AEGIS_RELEASE_KEY_PASSWORD`
+- An emulator-tested candidate is not a final release until the exact same APK passes physical-device acceptance
 
 The Evidence Graph is currently a domain foundation only. Evidence persistence, repository operations, graph/timeline UI, mission integration, campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, and mission evaluation are not implemented yet. The app is not a playable game.
 
 ## Implementation plan
 
-See [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) for the phased delivery plan and completion criteria.
+See [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) for the phased delivery plan and completion criteria. The binding single-APK build/release rules are in section 14 of [GAME_CONCEPT.md](GAME_CONCEPT.md); there is no separate `peraturan.md` in the repository, to avoid maintaining duplicate rule sources.
 
 ## Design references
 
