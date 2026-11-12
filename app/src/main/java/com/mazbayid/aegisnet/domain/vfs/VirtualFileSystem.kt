@@ -166,7 +166,7 @@ class VirtualFileSystem(
         return VfsResult.Success(pwd())
     }
 
-    fun cat(path: String): VfsResult<String> {
+    fun readFile(path: String): VfsResult<VfsFile> {
         val resolved = resolve(path)
         if (resolved is VfsResult.Failure) return resolved
         val filePath = (resolved as VfsResult.Success).value
@@ -177,8 +177,14 @@ class VirtualFileSystem(
 
         val file = files()[filePath]
             ?: return failure("file_not_found", "The requested file does not exist.")
-        return VfsResult.Success(file.content)
+        return VfsResult.Success(file)
     }
+
+    fun cat(path: String): VfsResult<String> =
+        when (val result = readFile(path)) {
+            is VfsResult.Success -> VfsResult.Success(result.value.content)
+            is VfsResult.Failure -> result
+        }
 
     /** Creates a new, player-owned, writable file. Repeated touch is idempotent. */
     fun touch(path: String): VfsResult<VfsFile> {

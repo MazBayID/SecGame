@@ -100,8 +100,9 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Implement a bounded in-game terminal parser/dispatcher for VFS commands; reject shell chaining, pipes, expansion, and redirection, and never expose the Android shell.
 - [x] Add a Compose Terminal screen connected to the bounded dispatcher and offline workspace repository.
 - [ ] Add automated Compose UI tests, persistent terminal history/session restoration, and richer output/keyboard behavior.
-- [ ] Implement editor state and exact script-version/hash tracking.
-- [ ] Integrate the controlled Python runtime only after operation and VFS boundaries are tested.
+- [x] Add editor document state with dirty tracking, exact-buffer save, read-only source protection, and immutable SHA-256 RUN snapshot preparation.
+- [ ] Add the Compose Editor screen, version history, and durable snapshot archive.
+- [ ] Integrate a controlled Python runtime only after operation and VFS boundaries are tested; current RUN preparation is not code execution.
 - [ ] Add RUN feedback and SUBMIT evaluation as separate flows.
 - [ ] Enforce authorization and resource limits; document that in-process Python is not a hardened security sandbox.
 
