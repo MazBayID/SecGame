@@ -17,15 +17,21 @@ private class SecureRuntimeAssetsHandler(context: Context) :
 
     override fun handle(path: String): WebResourceResponse? {
         val response = assetsHandler.handle(path) ?: return null
+        val isWorkerScript = path.endsWith("/worker.js") ||
+            path.endsWith("/python-worker.js")
+        val policy = if (isWorkerScript) WORKER_CONTENT_SECURITY_POLICY
+            else DOCUMENT_CONTENT_SECURITY_POLICY
         val mimeType = if (path.endsWith(".wasm")) {
             "application/wasm"
         } else {
             response.mimeType
         }
         val headers = (response.responseHeaders ?: emptyMap()).toMutableMap().apply {
-            put("Content-Security-Policy", CONTENT_SECURITY_POLICY)
+            put("Content-Security-Policy", policy)
             put("X-Content-Type-Options", "nosniff")
             put("Cache-Control", "no-store")
+            put("Referrer-Policy", "no-referrer")
+            put("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
         }
 
         return WebResourceResponse(
@@ -39,14 +45,23 @@ private class SecureRuntimeAssetsHandler(context: Context) :
     }
 
     private companion object {
-        const val CONTENT_SECURITY_POLICY =
+        const val DOCUMENT_CONTENT_SECURITY_POLICY =
             "default-src 'self'; " +
                 "script-src 'self' 'wasm-unsafe-eval'; " +
                 "worker-src 'self'; " +
                 "style-src 'self' 'unsafe-inline'; " +
                 "connect-src 'self'; " +
                 "base-uri 'none'; object-src 'none'; frame-src 'none'; " +
-                "form-action 'none'; img-src 'self' data:"
+                "form-action 'none'; img-src 'self' data:; " +
+                "frame-ancestors 'none'"
+
+        const val WORKER_CONTENT_SECURITY_POLICY =
+            "default-src 'self'; " +
+                "script-src 'self' 'wasm-unsafe-eval'; " +
+                "worker-src 'none'; " +
+                "connect-src 'self'; " +
+                "object-src 'none'; base-uri 'none'; " +
+                "form-action 'none';"
     }
 }
 
