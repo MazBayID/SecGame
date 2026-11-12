@@ -21,10 +21,15 @@ private class SecureRuntimeAssetsHandler(context: Context) :
             path.endsWith("/python-worker.js")
         val policy = if (isWorkerScript) WORKER_CONTENT_SECURITY_POLICY
             else DOCUMENT_CONTENT_SECURITY_POLICY
+        val statusCode = response.statusCode.takeIf {
+            it in 100..299 || it in 400..599
+        } ?: if (response.data == null) 404 else 200
+        val reasonPhrase = response.reasonPhrase?.takeIf(String::isNotBlank)
+            ?: if (statusCode == 404) "Not Found" else "OK"
         val mimeType = if (path.endsWith(".wasm")) {
             "application/wasm"
         } else {
-            response.mimeType
+            response.mimeType ?: "application/octet-stream"
         }
         val headers = (response.responseHeaders ?: emptyMap()).toMutableMap().apply {
             put("Content-Security-Policy", policy)
@@ -37,8 +42,8 @@ private class SecureRuntimeAssetsHandler(context: Context) :
         return WebResourceResponse(
             mimeType,
             response.encoding,
-            response.statusCode,
-            response.reasonPhrase,
+            statusCode,
+            reasonPhrase,
             headers,
             response.data
         )
