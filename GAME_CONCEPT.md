@@ -497,7 +497,7 @@ The English must read naturally and preserve Freya's voice.
 - One candidate commit produces ONE APK: build once -> test that
   exact APK -> release that same APK (verify SHA-256). No separate
   debug APK, and no rebuilding after testing.
-- Order: run all applicable source tests for technologies present in the candidate (Kotlin tests are mandatory; Python tests become mandatory when Python source/runtime is introduced) -> build the single signed Release APK -> validate signature, package, versionCode, and ABI metadata -> smoke-test that exact APK on an emulator -> physical-device acceptance using the same APK -> publish. A failed or skipped applicable check means no release. A test suite that does not yet apply must be explicitly reported as not applicable, never reported as passed.
+- Order: run all applicable source tests for technologies present in the candidate (Kotlin tests are mandatory; Python tests must be added and executed before candidate builds are allowed once Python source/runtime is introduced) -> build the single signed Release APK -> validate signature, package, versionCode, and ABI metadata -> smoke-test that exact APK on an emulator -> physical-device acceptance using the same APK -> publish. A failed or skipped applicable check means no release. A test suite that does not yet apply must be explicitly reported as not applicable, never reported as passed.
 - One permanent keystore for all releases, kept only in GitHub
   Secrets and the owner's offline backup. Never committed or printed
   to logs.
