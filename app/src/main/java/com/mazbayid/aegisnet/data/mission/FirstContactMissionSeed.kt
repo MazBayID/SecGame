@@ -144,13 +144,13 @@ object FirstContactMissionSeed {
             ),
             VfsFile(
                 path = "briefing/reference_catalog.txt",
-                content = "RX-11|ROUTINE\\nRX-12|ROUTINE\\nRX-14|RECEIPT\\nRX-15|ROUTINE\\nRX-16|RECEIPT",
+                content = "RX-11|ROUTINE\nRX-12|ROUTINE\nRX-14|RECEIPT\nRX-15|ROUTINE\nRX-16|RECEIPT",
                 access = VfsAccess.READ_ONLY,
                 origin = VfsOrigin.MISSION_SOURCE
             ),
             VfsFile(
                 path = "scripts/reference_trace.py",
-                content = "catalog_text = aegis.read_text('briefing/reference_catalog.txt')\\nentries = catalog_text.split('\\\\n')\\nfor source_index, entry in enumerate(entries):\\n    if 'RX-14' in entry:\\n        print('SOURCE_INDEX=' + str(source_index) + '|' + entry)\\n",
+                content = "catalog_text = aegis.read_text('briefing/reference_catalog.txt')\nentries = catalog_text.split('\\n')\nfor source_index, entry in enumerate(entries):\n    if 'RX-14' in entry:\n        print('SOURCE_INDEX=' + str(source_index) + '|' + entry)\n",
                 access = VfsAccess.READ_WRITE,
                 origin = VfsOrigin.PLAYER_CREATED
             )
