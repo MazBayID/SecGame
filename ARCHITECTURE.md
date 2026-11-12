@@ -32,7 +32,7 @@ The working target is an Android phone application.
 | minSdk | 26 | Initial baseline; may change after device testing |
 | Application ID | `com.mazbayid.cybertrace` | New identity for this project |
 | Local persistence | Not yet implemented | Room and DataStore remain candidates |
-| Python execution | Not yet implemented | Must be isolated behind a narrow IPC interface |
+| Python execution | Runtime contract only | No interpreter is integrated; execution must remain outside the main app process |
 
 The Android project scaffold and initial terminal screen compile successfully in GitHub Actions. The current CI pipeline also compiles and executes the unit-test source set, assembles a debug APK, and uploads it as an artifact. Physical-device installation and runtime behavior have not yet been verified.
 
@@ -53,7 +53,7 @@ The application should be separated into the following boundaries:
 6. **Python execution boundary** — a separate execution component receiving bounded requests and returning bounded results.
 7. **Content** — story chapters, dialogue, mission definitions, lesson definitions, and localization.
 
-The game domain must not directly access Android storage, network sockets, or the Python interpreter. Those capabilities must be provided through explicit interfaces.
+The game domain must not directly access Android storage, network sockets, or the Python interpreter. Those capabilities must be provided through explicit interfaces.\n\nThe first execution-boundary contract now exists at `execution/api/PythonExecutionContract.kt`. It defines bounded source requests, a game-owned workspace identifier, resource-limit fields, structured terminal statuses and diagnostics, and an asynchronous engine/cancellation interface. This is an API contract only: there is no Python interpreter implementation behind it yet. The current limit values are conservative defaults and validation bounds, not proof that a runtime enforces CPU or memory limits.
 
 ## 4. Python runtime: critical proof of concept
 
@@ -203,7 +203,7 @@ docs/
   testing/
 ```
 
-This is a target structure, not a claim that every listed module already exists.
+This is a target structure, not a claim that every listed module already exists. The `execution/api/PythonExecutionContract.kt` contract and its unit tests have now been added; the Android runtime adapter and interpreter remain unimplemented.
 
 ## 8. Phase 0 findings and current progress
 
@@ -213,10 +213,10 @@ This is a target structure, not a claim that every listed module already exists.
 - A native Kotlin/Compose application scaffold and an initial terminal-themed launch screen have been added.
 - GitHub Actions run **#43259419839** completed successfully for commit `046feb3c0d8ce59fb001162863c107037087a31f`.
 - The workflow successfully compiled the app, compiled and executed the unit-test source set, assembled a debug APK, and uploaded the `cyber-trace-debug` artifact.
-- Three unit tests currently cover the lesson prerequisite access policy: an initial lesson is unlocked, a lesson remains locked when a prerequisite is incomplete, and it unlocks when all prerequisites are complete.
+- Nine unit tests currently cover two areas: lesson prerequisite access (three tests) and the Python execution API contract (six tests covering configured bounds, blank workspace rejection, UTF-8 source-size enforcement, diagnostic locations, and non-negative duration).
 - This CI result does **not** verify installation, launch, or behavior on a physical Android device. Those checks remain outstanding.
 - Python runtime isolation is the main technical risk and must be validated before it becomes a dependency of the game.
-- The first runtime proof of concept must compare Android isolated-service execution with a WebAssembly-based option before a final runtime decision.
+- A runtime-neutral execution API contract has been added, but no interpreter or execution adapter is present. The first runtime proof of concept must compare Android isolated-service execution with a WebAssembly-based option before a final runtime decision.
 
 CI evidence: [GitHub Actions run #43259419839](https://github.com/MazBayID/SecGame/actions/runs/43259419839).
 
@@ -231,4 +231,4 @@ CI evidence: [GitHub Actions run #43259419839](https://github.com/MazBayID/SecGa
 
 ---
 
-**Next engineering milestone:** verify the app on a physical Android device, then build the Python-runtime isolation proof of concept as separate, testable work. Do not integrate player-code execution into the main game process.
+**Next engineering milestone:** verify the app on a physical Android device, then implement and test a disposable Python-runtime isolation proof of concept against the execution API contract. Do not integrate player-code execution into the main game process.
