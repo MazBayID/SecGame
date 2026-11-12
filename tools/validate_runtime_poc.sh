@@ -9,6 +9,7 @@ INDEX="${ROOT}/app/src/debug/assets/runtime-poc/index.html"
 HOST="${ROOT}/app/src/debug/assets/runtime-poc/host.js"
 PYTHON_WORKER="${ROOT}/app/src/debug/assets/runtime-poc/python-worker.js"
 RUNTIME_TEST="${ROOT}/tools/test_pyodide_runtime.mjs"
+ANDROID_TEST="${ROOT}/app/src/androidTest/java/com/mazbayid/cybertrace/execution/poc/RuntimePocInstrumentedTest.kt"
 ISOLATED_SERVICE="${ROOT}/app/src/debug/java/com/mazbayid/cybertrace/execution/poc/IsolatedPythonServiceProbe.kt"
 ISOLATED_ACTIVITY="${ROOT}/app/src/debug/java/com/mazbayid/cybertrace/execution/poc/IsolatedProcessPocActivity.kt"
 
@@ -33,6 +34,11 @@ reject_text() {
 # Player code must never run in the app process when WebView multiprocess
 # support is absent, and the app must not grant direct network access.
 require_text "WebViewFeature.MULTI_PROCESS" "$ACTIVITY"
+require_text "runtimeWebViewForTests" "$ACTIVITY"
+require_text "ActivityScenario.launch(RuntimePocActivity::class.java)" "$ANDROID_TEST"
+require_text "Pyodide 314.0.7" "$ANDROID_TEST"
+require_text "CANCELLED" "$ANDROID_TEST"
+require_text "Worker ready" "$ANDROID_TEST"
 require_text "WebViewCompat.isMultiProcessEnabled()" "$ACTIVITY"
 reject_text "android.permission.INTERNET" "$MAIN_MANIFEST"
 reject_text "android.permission.INTERNET" "$DEBUG_MANIFEST"
