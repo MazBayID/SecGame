@@ -189,7 +189,19 @@ fun AegisNetApp() {
                     } else if (selected == "MISSION_03") {
                         SystemTraceAuditMissionScreen(
                             onOpenEditor = { selected = "MISSION_03_EDITOR" },
+                            onOpenMissionFour = { selected = "MISSION_04" },
                             onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_04") {
+                        RecordInventoryMissionScreen(
+                            onOpenEditor = { selected = "MISSION_04_EDITOR" },
+                            onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_04_EDITOR") {
+                        EditorScreen(
+                            initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
+                            initialPath = "scripts/inventory_count.py",
+                            onBack = { selected = "MISSION_04" }
                         )
                     } else if (selected == "MISSION_03_EDITOR") {
                         EditorScreen(

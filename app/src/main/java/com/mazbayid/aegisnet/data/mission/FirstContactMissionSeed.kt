@@ -46,6 +46,19 @@ object FirstContactMissionSeed {
                 access = EvidenceAccess.INTERNAL,
                 origin = EvidenceOrigin.ORIGINAL,
                 operationId = FirstContactMissionCatalog.OPERATION_ID
+            ),
+            EvidenceRecord(
+                id = "record_inventory",
+                title = "Training Record Inventory",
+                description = "A source export containing five distinct training record references. The player must report the collection size, not infer additional records.",
+                type = EvidenceType.DATASET,
+                sourceId = "training_archive_inventory_015",
+                sourceLabel = "A.E.G.I.S. Records Office",
+                sourceReference = "record_inventory.txt",
+                integrity = EvidenceIntegrity.UNKNOWN,
+                access = EvidenceAccess.INTERNAL,
+                origin = EvidenceOrigin.ORIGINAL,
+                operationId = FirstContactMissionCatalog.OPERATION_ID
             )
         )
     )
@@ -101,6 +114,18 @@ object FirstContactMissionSeed {
             VfsFile(
                 path = "scripts/trace_audit.py",
                 content = "log_text = aegis.read_text('briefing/system_trace.log')\nlines = log_text.split('\\n')\nerror_count = 0\nfor line in lines:\n    if 'ERROR' in line:\n        error_count = error_count + 1\nprint('ERROR_COUNT=' + str(error_count))\n",
+                access = VfsAccess.READ_WRITE,
+                origin = VfsOrigin.PLAYER_CREATED
+            ),
+            VfsFile(
+                path = "briefing/record_inventory.txt",
+                content = "RX-11\nRX-12\nRX-13\nRX-14\nRX-15",
+                access = VfsAccess.READ_ONLY,
+                origin = VfsOrigin.MISSION_SOURCE
+            ),
+            VfsFile(
+                path = "scripts/inventory_count.py",
+                content = "inventory_text = aegis.read_text('briefing/record_inventory.txt')\nrecords = inventory_text.split('\\n')\nrecord_count = len(records)\nprint('RECORD_COUNT=' + str(record_count))\n",
                 access = VfsAccess.READ_WRITE,
                 origin = VfsOrigin.PLAYER_CREATED
             )

@@ -41,6 +41,7 @@ private const val TRACE_AUDIT_MISSION_ID = "fc_m03_system_trace_audit"
 @Composable
 fun SystemTraceAuditMissionScreen(
     onOpenEditor: () -> Unit,
+    onOpenMissionFour: () -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -269,6 +270,10 @@ fun SystemTraceAuditMissionScreen(
                 }
                 if (completed) {
                     Text("MISSION 03 COMPLETE", color = MaterialTheme.colorScheme.primary)
+                    Spacer(Modifier.height(8.dp))
+                    Button(onClick = onOpenMissionFour, modifier = Modifier.fillMaxWidth()) {
+                        Text("CONTINUE TO MISSION 04 / RECORD INVENTORY")
+                    }
                 }
             }
         }

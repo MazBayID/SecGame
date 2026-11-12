@@ -66,7 +66,9 @@ object FirstContactMissionCatalog {
             objectiveId = "count_records",
             objectiveDescription = "Hitung jumlah rekaman dari koleksi yang diberikan.",
             approach = "python_len_collection",
-            outcome = "record_count_reported"
+            outcome = "record_count_reported",
+            requiredEvidence = setOf("record_inventory"),
+            requiredOutput = setOf("RECORD_COUNT=5")
         ),
         mission(
             number = 5,

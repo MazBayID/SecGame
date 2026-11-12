@@ -90,4 +90,12 @@ class FirstContactMissionCatalogTest {
         assertEquals(setOf("ERROR_COUNT=2"), objective.requiredOutputContains)
         assertTrue(objective.requiresSuccessfulRun)
     }
+
+    @Test
+    fun recordInventoryRequiresDatasetEvidenceAndExactCollectionSize() {
+        val objective = FirstContactMissionCatalog.missions[3].definition.objectives.single()
+        assertEquals(setOf("record_inventory"), objective.requiredEvidenceIds)
+        assertEquals(setOf("RECORD_COUNT=5"), objective.requiredOutputContains)
+        assertTrue(objective.requiresSuccessfulRun)
+    }
 }
