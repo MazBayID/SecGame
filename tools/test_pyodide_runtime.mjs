@@ -7,7 +7,7 @@ const PYODIDE_DIR = resolve(
   ROOT,
   "app/src/debug/assets/runtime-poc/pyodide"
 );
-const indexURL = pathToFileURL(PYODIDE_DIR + sep).href;
+const indexURL = PYODIDE_DIR + sep;
 const loaderURL = pathToFileURL(resolve(PYODIDE_DIR, "pyodide.mjs")).href;
 
 const { loadPyodide } = await import(loaderURL);
