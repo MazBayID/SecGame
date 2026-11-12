@@ -45,8 +45,9 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [x] Add evidence records with idempotent stable-ID handling and reject conflicting ID reuse.
 - [x] Add player annotations as separate records without mutating source evidence.
 - [x] Add typed relationships after validating both evidence endpoints.
-- [ ] Add, update, and remove player hypotheses with explicit status.
-- [ ] Promote a hypothesis to confirmed only through an explicit authored rule or player-confirmed action; never silently infer it.
+- [x] Explicitly confirm a player hypothesis only through a dedicated operation invoked after a player-confirmed action or authored mission rule; never silently infer confirmation.
+- [x] Remove unconfirmed player hypotheses while protecting confirmed relationships.
+- [ ] Add editing of hypothesis notes and confidence without changing their status.
 - [x] Create and revise claims while retaining their evidence references.
 - [x] Filter evidence in memory by source, type, event time, integrity, and discovery state.
 - [ ] Add repository-backed filtering and persistence tests.
