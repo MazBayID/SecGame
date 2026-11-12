@@ -48,6 +48,8 @@ require_text "settings.allowContentAccess = false" "$ACTIVITY"
 require_text "worker-src 'none'" "$ACTIVITY"
 require_text "wasm-unsafe-eval" "$ACTIVITY"
 require_text "wasm-unsafe-eval" "$INDEX"
+require_text "Memory safety warning" "$INDEX"
+require_text "memory allocation is not" "$INDEX"
 if grep -Eq "['\"]unsafe-eval['\"]" "$ACTIVITY" "$INDEX"; then
   echo "Forbidden CSP directive unsafe-eval found." >&2
   exit 1
