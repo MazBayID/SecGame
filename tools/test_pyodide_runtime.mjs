@@ -18,7 +18,7 @@ assert.equal(pyodide.version, "314.0.7", "Unexpected Pyodide release");
 const pythonVersion = pyodide.runPython(
   "import sys\nsys.version.split()[0]"
 );
-assert.match(pythonVersion, /^3\\.14\\.\\d+$/, "Expected Python 3.14.x");
+assert.match(pythonVersion, /^3\.14\.\d+$/, "Expected Python 3.14.x");
 
 const startupProbe = pyodide.runPython(`
 import datetime
