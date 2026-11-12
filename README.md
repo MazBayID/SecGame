@@ -40,12 +40,12 @@ GitHub Actions menjalankan unit test otomatis saat kode aplikasi atau konfiguras
 <badge color="success">CI berhasil</badge>
 
 - Android project berhasil dikompilasi pada GitHub Actions.
-- Dua puluh satu unit test telah ditambahkan: tiga untuk kebijakan akses lesson, enam untuk kontrak API eksekusi Python, enam untuk validasi kurikulum serta lesson pertama, dan enam untuk evaluasi output latihan. Workflow #43264668199 untuk perubahan sebelumnya telah selesai dengan sukses; perubahan editor draft terbaru sedang menunggu CI.
+- Dua puluh sembilan unit test telah ditambahkan: tiga untuk kebijakan akses lesson, enam untuk kontrak API eksekusi Python, enam untuk validasi kurikulum serta lesson pertama, enam untuk evaluasi output latihan, dan delapan untuk aturan progres serta mastery lesson. Workflow #43264668199 untuk perubahan sebelumnya telah selesai dengan sukses; perubahan editor draft dan model progres lesson terbaru sedang menunggu CI.
 - Debug APK berhasil dibuat dan diunggah sebagai artifact.
 - Workflow build/test baseline yang berhasil: [GitHub Actions run #43261479549](https://github.com/MazBayID/SecGame/actions/runs/43261479549). Workflow baru memisahkan unit test otomatis dari build APK milestone.
 - Instalasi, peluncuran, dan pengujian pada perangkat Android fisik **belum diverifikasi**.
 - Kontrak API runtime Python kini tersedia, mencakup batas ukuran source, batas resource, workspace virtual, status eksekusi, diagnostik terstruktur, dan pembatalan asinkron. Evaluator latihan dapat memeriksa output dari hasil interpreter sungguhan. Ini **belum menjalankan Python** dan bukan sandbox.
-- Langkah latihan pertama menyediakan editor draft yang dapat diubah. Tombol Run tetap nonaktif sampai runtime Python terisolasi tersedia; draft ini belum disimpan dan belum dieksekusi.
+- Langkah latihan pertama menyediakan editor draft yang dapat diubah. Tombol Run tetap nonaktif sampai runtime Python terisolasi tersedia; draft ini belum disimpan dan belum dieksekusi. Model progres lesson kini mengatur langkah yang sudah dilihat, jumlah percobaan, status latihan lulus, dan syarat penyelesaian lesson.
 - Runtime Python **belum diintegrasikan**. Pemilihan runtime menunggu proof of concept yang membuktikan isolasi dan batas sumber daya. Lesson pertama memiliki navigasi langkah demi langkah dan editor draft, tetapi belum menjadi lesson yang dapat dieksekusi.
 
 Hasil CI yang berhasil bukan bukti bahwa seluruh game telah selesai atau bahwa sandbox Python sudah aman. Status implementasi setiap fitur harus tetap dibedakan dari target desainnya.
