@@ -302,6 +302,12 @@ fun AegisNetApp() {
                             onOpenMessenger = { selected = "MESSENGER" },
                             onBack = { selected = "MAIN MENU" }
                         )
+                    } else if (selected == "DOSSIER") {
+                        DossierScreen(
+                            onOpenAnalysis = { selected = "ANALYSIS" },
+                            onOpenDatabase = { selected = "DATABASE" },
+                            onBack = { selected = "MAIN MENU" }
+                        )
                     } else if (selected == "ANALYSIS") {
                         AnalysisScreen(onBack = { selected = "MAIN MENU" })
                     } else if (selected == "MESSENGER") {
