@@ -253,7 +253,7 @@ fun AegisNetApp() {
                         TimeAnalysisMissionScreen(
                             missionNumber = 8,
                             onOpenEditor = { selected = "MISSION_08_EDITOR" },
-                            onNext = null,
+                            onNext = { selected = "CHAPTER_REPORT" },
                             onBack = { selected = "OPERATIONS" }
                         )
                     } else if (selected == "MISSION_08_EDITOR") {
