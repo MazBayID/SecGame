@@ -169,7 +169,7 @@ pythonButton.addEventListener("click", () => {
         finishPythonRun("Execution deadline reached · worker terminated.");
         write("TIMEOUT · The host terminated the worker after 3 seconds.");
       }, 3000);
-      setStatus("Python " + data.version + " ready · Web Worker (not an OS-isolated process)");
+      setStatus("Python " + data.version + " ready · sandboxed WebView renderer");
       activeWorker.postMessage({
         type: "run",
         runId: thisRunId,
