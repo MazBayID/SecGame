@@ -50,7 +50,7 @@ fi
 # Keep Python's JS namespace empty and require the constructor-escape probe.
 require_text "jsglobals: Object.freeze(Object.create(null))" "$PYTHON_WORKER"
 require_text "pyodide_js.runPython.constructor" "$PYTHON_WORKER"
-require_text "Worker.terminate()" "$HOST"
+require_text "finishedWorker?.terminate()" "$HOST"
 require_text "crypto.randomUUID()" "$HOST"
 reject_text "loadPackagesFromImports" "$PYTHON_WORKER"
 reject_text "micropip.install" "$PYTHON_WORKER"
