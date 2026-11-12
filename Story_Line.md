@@ -197,7 +197,10 @@ Pemain kelak dapat bertemu anggota dari divisi Intelligence, Cyber Ops, Investig
 - Pengungkapan baru boleh mengubah pemahaman terhadap peristiwa lama, tetapi tidak boleh membatalkan fakta yang sudah ditetapkan tanpa alasan cerita yang kuat.
 - Misteri berkembang melalui banyak petunjuk dan sudut pandang, bukan penjelasan instan.
 - Kesalahan dan ketidaktahuan pemain pada awal perjalanan adalah bagian wajar dari pertumbuhan.
-- Pada versi awal, pilihan dialog pemain menggambarkan nada atau respons sesaat; pilihan tersebut tidak mengubah hubungan, akses, atau cabang utama cerita.
+- Pilihan dialog yang ditandai bermakna dapat mengubah pengetahuan karakter, kondisi kepercayaan, akses, peluang investigasi, atau adegan berikutnya. Pilihan kosmetik boleh digunakan untuk variasi nada, tetapi tidak boleh disajikan seolah-olah memiliki konsekuensi.
+- Konsekuensi harus konsisten dengan informasi yang diketahui karakter pada saat itu, disimpan secara deterministik, dan tidak boleh membuat campaign buntu tanpa jalur pemulihan yang dirancang.
+- Kegagalan teknis (misalnya syntax error, RUN gagal, atau kriteria SUBMIT belum terpenuhi) adalah bagian proses belajar dan tidak mengurangi rank, XP, clearance, atau progres cerita. Ini berbeda dari keputusan operasional yang memang dapat mengubah keadaan dunia.
+- Investigasi harus membedakan fakta terverifikasi, observasi, dugaan, dan informasi yang belum diketahui. Pemain tidak boleh dituduh atau diberi kesimpulan yang tidak didukung bukti.
 - Rahasia bahwa Freya memulai perintah perekrutan tetap tersembunyi sampai momen pengungkapan yang sengaja ditulis.
 - Kasus, organisasi, perusahaan, individu, dan tuduhan utama dalam cerita adalah fiktif.
 - Urutan peristiwa, milestone rank, jumlah misi, dan mekanik harus konsisten dengan `GAME_CONCEPT.md`.
