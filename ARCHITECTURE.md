@@ -34,7 +34,7 @@ The working target is an Android phone application.
 | Local persistence | Not yet implemented | Room and DataStore remain candidates |
 | Python execution | Runtime contract only | No interpreter is integrated; execution must remain outside the main app process |
 
-The Android project scaffold and initial terminal screen compile successfully in GitHub Actions. The current CI pipeline also compiles and executes the unit-test source set, assembles a debug APK, and uploads it as an artifact. Physical-device installation and runtime behavior have not yet been verified.
+The Android project scaffold and initial terminal screen compile successfully in GitHub Actions. The CI pipeline runs unit tests for relevant source/build changes. Debug APK assembly and artifact upload are a separate manual milestone action, so routine commits do not spend time packaging an APK. Physical-device installation and runtime behavior have not yet been verified.
 
 Version references:
 - [Android Gradle Plugin 9.4.0 release notes](https://developer.android.com/build/releases/agp-9-4-0-release-notes)
@@ -211,14 +211,15 @@ This is a target structure, not a claim that every listed module already exists.
 - The concept requires real Python execution and controlled fictional systems.
 - Android is the working platform direction.
 - A native Kotlin/Compose application scaffold and an initial terminal-themed launch screen have been added.
+- The canonical 15-chapter Python curriculum metadata and a structured first lesson are now represented in the domain layer at `domain/learning/PythonCurriculum.kt`. The first lesson introduces programs, Python/interpreters, `print()`, syntax, and a small output task. This is content data, not yet a playable lesson screen.
 - GitHub Actions run **#43259419839** completed successfully for commit `046feb3c0d8ce59fb001162863c107037087a31f`.
 - The workflow successfully compiled the app, compiled and executed the unit-test source set, assembled a debug APK, and uploaded the `cyber-trace-debug` artifact.
-- Nine unit tests currently cover two areas: lesson prerequisite access (three tests) and the Python execution API contract (six tests covering configured bounds, blank workspace rejection, UTF-8 source-size enforcement, diagnostic locations, and non-negative duration).
+- Fifteen unit tests currently cover three areas: lesson prerequisite access (three tests), the Python execution API contract (six tests), and curriculum/first-lesson integrity (six tests).
 - This CI result does **not** verify installation, launch, or behavior on a physical Android device. Those checks remain outstanding.
 - Python runtime isolation is the main technical risk and must be validated before it becomes a dependency of the game.
 - A runtime-neutral execution API contract has been added, but no interpreter or execution adapter is present. The first runtime proof of concept must compare Android isolated-service execution with a WebAssembly-based option before a final runtime decision.
 
-CI evidence: [GitHub Actions run #43259419839](https://github.com/MazBayID/SecGame/actions/runs/43259419839).
+CI evidence: [GitHub Actions run #43261479549](https://github.com/MazBayID/SecGame/actions/runs/43261479549) verified the previous test and APK pipeline. The newer curriculum test run and split workflow are being verified separately.
 
 ## 9. References
 
