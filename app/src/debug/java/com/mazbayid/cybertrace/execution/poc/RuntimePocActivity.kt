@@ -76,7 +76,7 @@ private class SecureRuntimeAssetsHandler(context: Context) :
 }
 
 class RuntimePocActivity : Activity() {
-    private lateinit var webView: WebView
+    private var webView: WebView? = null
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +103,7 @@ class RuntimePocActivity : Activity() {
             )
             .build()
 
-        webView = WebView(this).apply {
+        val runtimeWebView = WebView(this).apply {
             settings.javaScriptEnabled = true
             settings.javaScriptCanOpenWindowsAutomatically = false
             settings.setSupportMultipleWindows(false)
@@ -138,15 +138,19 @@ class RuntimePocActivity : Activity() {
             }
         }
 
-        setContentView(webView)
-        webView.loadUrl(
+        webView = runtimeWebView
+        setContentView(runtimeWebView)
+        runtimeWebView.loadUrl(
             "https://appassets.androidplatform.net/assets/runtime-poc/index.html"
         )
     }
 
     override fun onDestroy() {
-        webView.stopLoading()
-        webView.destroy()
+        webView?.apply {
+            stopLoading()
+            destroy()
+        }
+        webView = null
         super.onDestroy()
     }
 }
