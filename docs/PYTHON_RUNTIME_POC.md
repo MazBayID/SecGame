@@ -155,6 +155,7 @@ The core archive is much smaller but does not contain the vendored wheel collect
 ## Source notes
 
 - [Pyodide v314.0.7 — Web Worker guide](https://pyodide.org/en/314.0.7/usage/webworker.html): Pyodide uses a module-type worker and documents message-based execution outside the UI thread.
+- [Pyodide v314.0.7 — JavaScript API](https://pyodide.org/en/314.0.7/usage/api/js-api.html#pyodideconfig-jsglobals): `jsglobals` selects the object exposed through Python's `js` module; the default is `globalThis`.
 - [Pyodide v314.0.7 — downloading and deploying](https://pyodide.org/en/314.0.7/usage/downloading-and-deploying.html): the full distribution is documented as 200+ MB; the core archive contains the runtime loader, WASM binary, Python standard library, and lockfile.
 - [Pyodide — interrupting execution](https://pyodide.org/en/stable/usage/keyboard-interrupts.html): cooperative interruption requires a Web Worker, SharedArrayBuffer, and appropriate cross-origin isolation headers.
 - [MDN — Worker.terminate()](https://developer.mozilla.org/en-US/docs/Web/API/Worker/terminate): termination immediately stops a worker without waiting for its code to finish.
