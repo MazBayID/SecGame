@@ -240,6 +240,7 @@ fun EvidenceScreen(onBack: () -> Unit) {
                     ) { Text("SAVE PRIVATE NOTE") }
                 }
 
+                selected?.let { activeEvidence ->
                 // Evidence links begin as player hypotheses. Confirmation is a separate,
                 // explicit action and never rewrites the source records.
                 Spacer(Modifier.height(16.dp))
@@ -248,7 +249,7 @@ fun EvidenceScreen(onBack: () -> Unit) {
                     "Select another discovered record, describe the relationship, then add it as an unconfirmed hypothesis.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp
                 )
-                val relationshipTargets = discovered.filter { it.id != selected.id }
+                val relationshipTargets = discovered.filter { it.id != activeEvidence.id }
                 relationshipTargets.forEach { target ->
                     Button(
                         onClick = { targetEvidenceId = target.id },
@@ -274,7 +275,7 @@ fun EvidenceScreen(onBack: () -> Unit) {
                     label = { Text("Why might these records be related?") }
                 )
                 Button(
-                    enabled = targetEvidenceId != null && targetEvidenceId != selected.id,
+                    enabled = targetEvidenceId != null && targetEvidenceId != activeEvidence.id,
                     onClick = {
                         val current = graph ?: return@Button
                         val target = targetEvidenceId ?: return@Button
@@ -282,7 +283,7 @@ fun EvidenceScreen(onBack: () -> Unit) {
                             current,
                             EvidenceRelationship(
                                 id = "hyp_" + System.currentTimeMillis(),
-                                fromEvidenceId = selected.id,
+                                fromEvidenceId = activeEvidence.id,
                                 toEvidenceId = target,
                                 type = relationType,
                                 status = EvidenceLinkStatus.PLAYER_HYPOTHESIS,
@@ -310,9 +311,9 @@ fun EvidenceScreen(onBack: () -> Unit) {
                 ) { Text("ADD PLAYER HYPOTHESIS") }
 
                 graph!!.relationships
-                    .filter { it.fromEvidenceId == selected.id || it.toEvidenceId == selected.id }
+                    .filter { it.fromEvidenceId == activeEvidence.id || it.toEvidenceId == activeEvidence.id }
                     .forEach { relationship ->
-                        val otherId = if (relationship.fromEvidenceId == selected.id) relationship.toEvidenceId
+                        val otherId = if (relationship.fromEvidenceId == activeEvidence.id) relationship.toEvidenceId
                             else relationship.fromEvidenceId
                         val other = graph!!.evidence.firstOrNull { it.id == otherId }
                         Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
@@ -393,8 +394,8 @@ fun EvidenceScreen(onBack: () -> Unit) {
                         val claim = EvidenceClaim(
                             id = "claim_" + System.currentTimeMillis(),
                             statement = claimStatement.trim(),
-                            supportingEvidenceIds = if (claimStatus == ClaimStatus.SUPPORTED) setOf(selected.id) else emptySet(),
-                            contradictingEvidenceIds = if (claimStatus == ClaimStatus.DISPUTED) setOf(selected.id) else emptySet(),
+                            supportingEvidenceIds = if (claimStatus == ClaimStatus.SUPPORTED) setOf(activeEvidence.id) else emptySet(),
+                            contradictingEvidenceIds = if (claimStatus == ClaimStatus.DISPUTED) setOf(activeEvidence.id) else emptySet(),
                             confidence = when (claimStatus) {
                                 ClaimStatus.SUPPORTED, ClaimStatus.DISPUTED -> EvidenceConfidence.MEDIUM
                                 ClaimStatus.INSUFFICIENT -> EvidenceConfidence.LOW
@@ -430,6 +431,7 @@ fun EvidenceScreen(onBack: () -> Unit) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp
                         )
                     }
+                }
                 }
             }
         }
