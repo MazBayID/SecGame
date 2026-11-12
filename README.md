@@ -33,16 +33,16 @@ Build debug secara lokal (dengan Android SDK dan Gradle yang sesuai tersedia):
 gradle --no-daemon assembleDebug
 ```
 
-GitHub Actions menjalankan unit test dan membuat debug APK pada push ke `main` maupun pull request. Jika workflow berhasil, APK tersedia sebagai artifact bernama `cyber-trace-debug`.
+GitHub Actions menjalankan unit test otomatis saat kode aplikasi atau konfigurasi build berubah pada `main` maupun pull request. Build dan upload debug APK dijalankan secara manual pada milestone melalui `workflow_dispatch` dengan opsi `build_apk` diaktifkan. Artifact bernama `cyber-trace-debug` tersedia setelah job build berhasil.
 
 ### Status verifikasi
 
 <badge color="success">CI berhasil</badge>
 
 - Android project berhasil dikompilasi pada GitHub Actions.
-- Tiga unit test kebijakan pembukaan lesson telah berhasil dijalankan pada baseline CI sebelumnya. Enam test tambahan untuk kontrak API eksekusi Python kini telah ditambahkan; hasil CI yang menjalankan seluruh sembilan test menunggu workflow commit terbaru.
+- Lima belas unit test telah ditambahkan: tiga untuk kebijakan akses lesson, enam untuk kontrak API eksekusi Python, dan enam untuk validasi kurikulum serta lesson pertama. Hasil CI terbaru untuk seluruh test masih menunggu penyelesaian workflow.
 - Debug APK berhasil dibuat dan diunggah sebagai artifact.
-- Workflow terbaru yang memverifikasi commit dokumentasi dan test: [GitHub Actions run #43259419839](https://github.com/MazBayID/SecGame/actions/runs/43259419839).
+- Workflow build/test baseline yang berhasil: [GitHub Actions run #43261479549](https://github.com/MazBayID/SecGame/actions/runs/43261479549). Workflow baru memisahkan unit test otomatis dari build APK milestone.
 - Instalasi, peluncuran, dan pengujian pada perangkat Android fisik **belum diverifikasi**.
 - Kontrak API runtime Python kini tersedia, mencakup batas ukuran source, batas resource, workspace virtual, status eksekusi, diagnostik terstruktur, dan pembatalan asinkron. Ini **belum menjalankan Python** dan bukan sandbox.
 - Runtime Python **belum diintegrasikan**. Pemilihan runtime menunggu proof of concept yang membuktikan isolasi dan batas sumber daya.
