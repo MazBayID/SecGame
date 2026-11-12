@@ -166,7 +166,7 @@ The first implementation milestone should prove one complete experience rather t
 6. The real interpreter executes it and displays output.
 7. The player introduces a deliberate syntax or runtime error and receives understandable feedback.
 8. A first mission uses only concepts already introduced.
-9. Mission completion is checked using program behavior, not exact text matching alone.
+9. Mission completion is checked using program behavior, not exact text matching alone. A first output-comparison policy now exists at `domain/learning/PythonPracticeEvaluator.kt`; it evaluates bounded interpreter results, distinguishes execution failures and truncated output, and normalizes line endings. It is not a substitute for a real interpreter.
 10. Story and learning progress can be saved and restored.
 11. Critical behavior is covered by automated tests.
 
@@ -211,15 +211,15 @@ This is a target structure, not a claim that every listed module already exists.
 - The concept requires real Python execution and controlled fictional systems.
 - Android is the working platform direction.
 - A native Kotlin/Compose application scaffold and an initial terminal-themed launch screen have been added.
-- The canonical 15-chapter Python curriculum metadata and a structured first lesson are now represented in the domain layer at `domain/learning/PythonCurriculum.kt`. The first lesson introduces programs, Python/interpreters, `print()`, syntax, and a small output task. This is content data, not yet a playable lesson screen.
+- The canonical 15-chapter Python curriculum metadata and a structured first lesson are represented in `domain/learning/PythonCurriculum.kt`. The first lesson introduces programs, Python/interpreters, `print()`, syntax, and a small output task. The Compose screen now presents its learning steps one at a time with progress and previous/next navigation. The exercise is still a preview; no player code is executed yet.
 - GitHub Actions run **#43259419839** completed successfully for commit `046feb3c0d8ce59fb001162863c107037087a31f`.
 - The workflow successfully compiled the app, compiled and executed the unit-test source set, assembled a debug APK, and uploaded the `cyber-trace-debug` artifact.
-- Fifteen unit tests currently cover three areas: lesson prerequisite access (three tests), the Python execution API contract (six tests), and curriculum/first-lesson integrity (six tests).
+- Twenty-one unit tests currently cover four areas: lesson prerequisite access (three tests), the Python execution API contract (six tests), curriculum/first-lesson integrity (six tests), and practice-output evaluation (six tests).
 - This CI result does **not** verify installation, launch, or behavior on a physical Android device. Those checks remain outstanding.
 - Python runtime isolation is the main technical risk and must be validated before it becomes a dependency of the game.
 - A runtime-neutral execution API contract has been added, but no interpreter or execution adapter is present. The first runtime proof of concept must compare Android isolated-service execution with a WebAssembly-based option before a final runtime decision.
 
-CI evidence: [GitHub Actions run #43261479549](https://github.com/MazBayID/SecGame/actions/runs/43261479549) verified the previous test and APK pipeline. The newer curriculum test run and split workflow are being verified separately.
+CI evidence: [GitHub Actions run #43264156219](https://github.com/MazBayID/SecGame/actions/runs/43264156219) verified the first-lesson preview screen and current split workflow. The latest guided-step UI and practice evaluator changes are awaiting the newest unit-test run.
 
 ## 9. References
 
