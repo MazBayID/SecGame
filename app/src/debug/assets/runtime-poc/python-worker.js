@@ -41,7 +41,7 @@ function classifyError(error) {
 
   return {
     kind: isSyntaxError ? "SYNTAX" : "RUNTIME",
-    exceptionType: typeMatch?.[1] || (isSyntaxError ? "SyntaxError" : "PythonError"),
+    exceptionType: (typeMatch?.[1] || (isSyntaxError ? "SyntaxError" : "PythonError")).slice(0, 128),
     line: lineMatch ? Number(lineMatch[1]) : null,
     message,
   };
