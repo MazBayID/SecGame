@@ -3,12 +3,17 @@ package com.mazbayid.cybertrace.execution.poc
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
+import android.widget.TextView
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.webkit.WebViewAssetLoader
+import androidx.webkit.WebViewCompat
+import androidx.webkit.WebViewFeature
 
 private class SecureRuntimeAssetsHandler(context: Context) :
     WebViewAssetLoader.PathHandler {
@@ -76,6 +81,20 @@ class RuntimePocActivity : Activity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!WebViewFeature.isFeatureSupported(WebViewFeature.MULTI_PROCESS) ||
+            !WebViewCompat.isMultiProcessEnabled()
+        ) {
+            setContentView(TextView(this).apply {
+                text = "RUNTIME BLOCKED\\n\\nThis device is not running WebView in a separate sandboxed renderer process. Python execution is disabled."
+                setTextColor(Color.WHITE)
+                setBackgroundColor(Color.rgb(7, 11, 18))
+                textSize = 16f
+                gravity = Gravity.CENTER
+                setPadding(32, 32, 32, 32)
+            })
+            return
+        }
 
         val assetLoader = WebViewAssetLoader.Builder()
             .addPathHandler(
