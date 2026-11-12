@@ -32,6 +32,7 @@ class IsolatedProcessPocActivity : Activity() {
 
             val serviceUid = message.data.getInt(KEY_UID, -1)
             val servicePid = message.data.getInt(KEY_PID, -1)
+            val assetReadable = message.data.getBoolean(KEY_ASSET_READABLE, false)
             val appUid = applicationInfo.uid
             val separated = serviceUid >= 0 && serviceUid != appUid
 
@@ -44,12 +45,19 @@ class IsolatedProcessPocActivity : Activity() {
                 append(serviceUid)
                 append("\nService PID: ")
                 append(servicePid)
+                append("\nBundled APK asset: ")
+                append(if (assetReadable) "PASS" else "FAIL")
                 append("\n\n")
                 append(
-                    if (separated) {
-                        "The service runs under a different Android UID. " +
-                            "This verifies the Android isolated-process boundary only; " +
-                            "Python runtime startup and resource limits remain untested."
+                    if (separated && assetReadable) {
+                        "The isolated service has a distinct UID and can read a " +
+                            "packaged APK asset. This is promising for bundled runtime " +
+                            "files, but does not prove native library loading, Python " +
+                            "startup, private-file isolation, or resource limits."
+                    } else if (separated) {
+                        "UID isolation passed, but the service could not read the " +
+                            "packaged APK asset. Investigate runtime asset access before " +
+                            "considering Chaquopy."
                     } else {
                         "The service did not report a distinct UID. Do not use this " +
                             "process as a Python execution boundary."
@@ -152,5 +160,6 @@ class IsolatedProcessPocActivity : Activity() {
         const val MSG_PROBE_RESULT = 2
         const val KEY_UID = "uid"
         const val KEY_PID = "pid"
+        const val KEY_ASSET_READABLE = "asset_readable"
     }
 }
