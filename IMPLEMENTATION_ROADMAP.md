@@ -98,7 +98,8 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Add an offline SharedPreferences adapter with a global personal workspace key and per-operation mission snapshot keys.
 - [ ] Add corruption recovery/diagnostics and size/resource limits before exposing persistence to player UI.
 - [x] Implement a bounded in-game terminal parser/dispatcher for VFS commands; reject shell chaining, pipes, expansion, and redirection, and never expose the Android shell.
-- [ ] Build the player-facing Terminal screen and persist terminal session/history state.
+- [x] Add a Compose Terminal screen connected to the bounded dispatcher and offline workspace repository.
+- [ ] Add automated Compose UI tests, persistent terminal history/session restoration, and richer output/keyboard behavior.
 - [ ] Implement editor state and exact script-version/hash tracking.
 - [ ] Integrate the controlled Python runtime only after operation and VFS boundaries are tested.
 - [ ] Add RUN feedback and SUBMIT evaluation as separate flows.

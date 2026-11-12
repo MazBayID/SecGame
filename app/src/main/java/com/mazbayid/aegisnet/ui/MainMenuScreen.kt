@@ -173,6 +173,8 @@ fun AegisNetApp() {
                 ) {
                     if (selected == "CAMPAIGN OVERVIEW") {
                         CampaignOpeningScreen(onBack = { selected = "MAIN MENU" })
+                    } else if (selected == "TERMINAL") {
+                        TerminalScreen(onBack = { selected = "MAIN MENU" })
                     } else {
                         AegisPanel(title = selected) {
                             Text(
