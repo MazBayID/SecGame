@@ -32,11 +32,15 @@ class SharedPreferencesVfsRepository(
 
     private fun load(key: String): VfsWorkspaceSnapshot {
         val serialized = preferences.getString(key, null) ?: return VfsWorkspaceSnapshot()
-        return runCatching { VfsSnapshotCodec.decode(serialized) }
-            .getOrElse {
-                // Preserve the corrupted value for diagnosis; do not silently overwrite it.
-                VfsWorkspaceSnapshot()
-            }
+        return try {
+            VfsSnapshotCodec.decode(serialized)
+        } catch (error: Exception) {
+            // Never present corrupted data as an empty workspace or overwrite it silently.
+            throw IllegalStateException(
+                "Saved virtual workspace is corrupted; the original save was preserved.",
+                error
+            )
+        }
     }
 
     private fun save(key: String, snapshot: VfsWorkspaceSnapshot): Boolean {
