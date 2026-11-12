@@ -14,7 +14,7 @@ The POC is disposable: its code and assets must not become the production runtim
 
 ### Candidate A — Pyodide in a Web Worker hosted by Android WebView
 
-This is the first implementation experiment because a dedicated worker can keep synchronous Python execution away from the UI thread and can be terminated as a whole when a deadline expires. The official Pyodide worker guide requires a module-type worker. The current official download guide lists the v314.0.7 release and says the full distribution is over 200 MB; therefore, the POC must measure the smaller core distribution plus only the offline packages the curriculum actually needs, rather than bundling the full distribution by default.
+This is the first implementation experiment because a dedicated worker can keep synchronous Python execution away from the UI thread and can be terminated as a whole when a deadline expires. The official Pyodide worker guide requires a module-type worker. Release 314.0.7 publishes a 337,536,678-byte full archive and a 6,757,104-byte core archive. The core archive contains the loader, WASM binary, Python standard library, and lockfile, but is primarily intended for Node and may automatically fetch missing packages from a CDN. It is only a viable offline starting point if the app never invokes automatic package discovery/loading and every additional wheel is bundled and served locally. The POC must explicitly fail closed when a module is not present locally.
 
 Proposed shape:
 
@@ -43,7 +43,7 @@ Keep this as the comparison path if Pyodide cannot satisfy Python compatibility 
 
 ## WebView hardening checklist
 
-- [ ] Pin the initial candidate to the documented Pyodide v314.0.7 release for reproducibility; record the exact archive checksum in the POC results.
+- [ ] Pin the initial candidate to Pyodide v314.0.7. The official GitHub release API reports the core archive as 6,757,104 bytes with SHA-256 `2abdcc2e35208af406e07724cffa85bc582ced97e9028383ecf5462541393f95`; verify this checksum after downloading before extracting it. The full archive is 337,536,678 bytes (SHA-256 `192b5864e6e6d30ab074861af800cb8b4acb0998ef0f9342c3367448aeb86645`).
 - [ ] Use a pinned, APK-bundled runtime and local assets only.
 - [ ] Measure core distribution and selected offline wheels before choosing whether they fit the APK budget; the full distribution is documented as 200+ MB.
 - [ ] Use `WebViewAssetLoader`; do not load the POC from `file://`.
@@ -56,7 +56,7 @@ Keep this as the comparison path if Pyodide cannot satisfy Python compatibility 
 - [ ] Do not grant the app `INTERNET` permission for the POC.
 - [ ] Do not load remote scripts, packages, Python wheels, or source code at runtime.
 - [ ] Ensure worker messages are schema-validated and size-limited on both sides.
-- [ ] Confirm that the worker does not fetch missing packages from a CDN; every required module must already be bundled or unavailable.
+- [ ] Confirm that the worker does not fetch missing packages from a CDN; do not call `loadPackagesFromImports` or `micropip.install` in the offline runtime. Every required module must already be bundled or unavailable.
 
 ## Required test matrix
 
@@ -101,7 +101,18 @@ If neither candidate passes, do not enable Run. Rework the architecture or narro
 
 A disposable WebView harness now lives under `app/src/main/assets/runtime-poc/` and is launched by the debug-only `RuntimePocActivity`. It loads through `WebViewAssetLoader` at the app-assets HTTPS origin, uses a module worker, exposes no JavaScript-to-Android bridge, disables file/content access, rejects navigation outside the app-assets origin, and applies a restrictive CSP with `connect-src 'none'`. It has controls to ping the worker, start a deliberately non-terminating synchronous task, terminate the worker from the host, and create a fresh worker. The harness deliberately contains no Python interpreter and does not execute player code; it validates only the WebView worker lifecycle. It is debug-only and is not part of the production lesson flow. Launch it on a connected device with `adb shell am start -n com.mazbayid.cybertrace/.execution.poc.RuntimePocActivity` after installing a debug APK.
 
-This harness is an early platform experiment, not a sandbox certification. It still requires physical-device testing for module-worker support, hard-stop responsiveness, worker recreation, renderer recovery, and memory release. The next runtime step remains bundling the pinned Pyodide distribution locally and testing offline Python execution inside this worker.
+This harness uses AndroidX WebKit 1.18.0 and is an early platform experiment, not a sandbox certification. It still requires physical-device testing for module-worker support, hard-stop responsiveness, worker recreation, renderer recovery, and memory release. The next runtime step remains bundling the pinned Pyodide distribution locally and testing offline Python execution inside this worker.
+
+## Pyodide artifact facts
+
+The official `pyodide/pyodide` 314.0.7 GitHub release exposes these archives:
+
+| Archive | Compressed size | SHA-256 |
+|---|---:|---|
+| `pyodide-core-314.0.7.tar.bz2` | 6,757,104 bytes | `2abdcc2e35208af406e07724cffa85bc582ced97e9028383ecf5462541393f95` |
+| `pyodide-314.0.7.tar.bz2` | 337,536,678 bytes | `192b5864e6e6d30ab074861af800cb8b4acb0998ef0f9342c3367448aeb86645` |
+
+The core archive is much smaller but does not contain the vendored wheel collection. Upstream documents it as primarily intended for Node, where missing packages are automatically installed from the CDN. CYBER//TRACE must not inherit that network behavior. The POC must verify all local paths and missing-package behavior before any core files are bundled in the app.
 
 ## Implementation order after POC
 
