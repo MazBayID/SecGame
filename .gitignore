@@ -1,0 +1,11 @@
+# Gradle and Android build outputs
+.gradle/
+**/build/
+local.properties
+
+# IDE files
+.idea/
+*.iml
+
+# Downloaded Pyodide runtime assets (reproducibly prepared by tools/prepare_pyodide_core.sh)
+app/src/debug/assets/runtime-poc/pyodide/
