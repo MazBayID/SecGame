@@ -232,7 +232,7 @@ that operation.
   decisions may have consequences, but must not create arbitrary
   unwinnable dead ends.
 - Mission evaluation can assess Intelligence, Evidence, Technical,
-  Stealth/Exposure, and Judgment where relevant. Each mission defines
+  Stealth / Exposure, and Judgment where relevant. Each mission defines
   its active dimensions and deterministic criteria; no universal
   score formula is required. Technical correctness and investigative
   reasoning are evaluated separately.
@@ -246,10 +246,7 @@ that operation.
 
 **RUN and SUBMIT always stay separate:**
 
-- RUN saves and executes the exact current script through the
-  controlled runtime and VFS, then displays actual output/errors in
-  Terminal. A successful run record is tied to the operation and
-  exact source version/hash.
+- RUN atomically saves an immutable snapshot of the exact current editor buffer, including unsaved edits, then executes that same snapshot through the controlled runtime and VFS. Terminal displays the actual output/errors. The explicit Save action remains a separate manual-save action. A successful run record is tied to the operation and exact source version/hash of the RUN snapshot.
 - SUBMIT occurs through Mission Control. The domain layer rechecks
   that the submitted source matches a successful RUN, then evaluates
   the authored mission criteria and any required evidence/report.
