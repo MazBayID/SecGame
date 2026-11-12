@@ -83,7 +83,8 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 Preserve all eight approved learning missions and their existing learning order.
 
 - [x] Build the opening recruitment interaction sequence with sequential, interruption-safe local progress.
-- [ ] Implement the first operation end-to-end with briefing, evidence, investigation, decision/report, debrief, and saved progress.
+- [x] Author the canonical eight-mission First Contact sequence with stable IDs, briefings, learning concepts, semantic outcomes, and explicit uncertainty in the final report.
+- [ ] Implement the first operation end-to-end with evidence fixtures, investigation, decision/report, debrief, and saved progress.
 - [x] Add the opening Freya notification interaction and unlock NEXUS only after the player taps its link.
 - [ ] Build the full Messenger inbox and conversation history; the current opening interaction is a focused vertical slice, not the complete Messenger app.
 - [ ] Add only the tools needed by each mission; no forced app-hopping.
