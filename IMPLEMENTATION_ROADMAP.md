@@ -85,8 +85,9 @@ Preserve all eight approved learning missions and their existing learning order.
 
 - [x] Build the opening recruitment interaction sequence with sequential, interruption-safe local progress.
 - [x] Author the canonical eight-mission First Contact sequence with stable IDs, briefings, learning concepts, semantic outcomes, and explicit uncertainty in the final report.
-- [x] Add the first playable First Contact mission slice: seeded read-only message fragment, Room discovery state, mission workspace starter script, Editor RUN, source-hash receipt check, deterministic SUBMIT evaluation, and saved completion.\n- [x] Add the second playable mission, Identity Check: official Recruitment Office record, distinct read-only evidence, named-variable extraction starter script, preselected mission editor path, output/evidence requirements, and persisted campaign completion.
-- [ ] Expand the remaining seven mission data packages, full evidence graph investigation UI, debrief, and campaign continuity.
+- [x] Add the first playable First Contact mission slice: seeded read-only message fragment, Room discovery state, mission workspace starter script, Editor RUN, source-hash receipt check, deterministic SUBMIT evaluation, and saved completion.
+- [x] Add the second playable mission, Identity Check: official Recruitment Office record, distinct read-only evidence, named-variable extraction starter script, preselected mission editor path, output/evidence requirements, and persisted campaign completion.
+- [ ] Expand the remaining six mission data packages, full evidence graph investigation UI, debrief, and campaign continuity.
 - [x] Add the opening Freya notification interaction and unlock NEXUS only after the player taps its link.
 - [ ] Build the full Messenger inbox and conversation history; the current opening interaction is a focused vertical slice, not the complete Messenger app.
 - [ ] Add only the tools needed by each mission; no forced app-hopping.
@@ -116,7 +117,8 @@ Preserve all eight approved learning missions and their existing learning order.
 ## Phase 5 — Campaign continuity and expanded routes
 
 - [x] Add a deterministic ordered mission-progression domain: only the next authored mission unlocks, completion is idempotent, unknown missions are rejected, and restored saves are sanitized to a contiguous completed prefix. JVM tests cover locking, unlocking, gaps, unknown IDs, and repeated completion.
-- [x] Connect Mission 01 and Mission 02 acceptance to the ordered campaign progression and persist completions through an offline SharedPreferences repository; save failure does not falsely mark a mission complete.\n- [x] Migrate the previous Mission 01 boolean completion save into the ordered campaign snapshot without discarding an existing player's completed milestone.
+- [x] Connect Mission 01 and Mission 02 acceptance to the ordered campaign progression and persist completions through an offline SharedPreferences repository; save failure does not falsely mark a mission complete.
+- [x] Migrate the previous Mission 01 boolean completion save into the ordered campaign snapshot without discarding an existing player's completed milestone.
 - [ ] Persist meaningful decisions, claims, reports, character knowledge, trust conditions, rank, clearance, and unlocks.
 - [ ] Add alternate accepted approaches to selected operations and test each route.
 - [ ] Add authored operational consequences with fair warnings and recovery routes.
