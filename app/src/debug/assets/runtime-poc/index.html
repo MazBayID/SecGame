@@ -29,6 +29,16 @@
   <h2>REAL PYTHON TEST</h2>
   <p>Uses a fresh Pyodide worker. Initialization has a 20-second ceiling; execution has a 3-second host deadline.</p>
   <textarea id="python-source" rows="5" style="box-sizing:border-box;width:100%;background:#05090f;color:#e2edf5;border:1px solid #1b3544;border-radius:6px;padding:10px;font:13px monospace">print("NEXUS connection ready")</textarea>
+  <p>Quick test presets:</p>
+  <div id="python-presets">
+    <button class="secondary" data-python-preset="basic">BASIC</button>
+    <button class="secondary" data-python-preset="beginner">BEGINNER</button>
+    <button class="secondary" data-python-preset="syntax">SYNTAX ERROR</button>
+    <button class="secondary" data-python-preset="runtime">RUNTIME ERROR</button>
+    <button class="secondary" data-python-preset="timeout">TIMEOUT</button>
+    <button class="secondary" data-python-preset="output">OUTPUT LIMIT</button>
+    <button class="secondary" data-python-preset="offline">MISSING PACKAGE</button>
+  </div>
   <button id="run-python">RUN PYTHON</button>
   <button id="cancel-python" class="secondary" disabled>CANCEL PYTHON</button>
   <pre id="output" aria-live="polite">No test run yet.</pre>
