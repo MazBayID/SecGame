@@ -189,7 +189,7 @@ pythonButton.addEventListener("click", () => {
     if (pythonWorker !== activeWorker || activeRunId !== thisRunId) return;
 
     const expectedCapabilities = new Set([
-      "arithmetic", "json", "datetime", "sqlite3",
+      "arithmetic", "json", "datetime", "sqlite3", "virtual_fs_isolated",
     ]);
     const capabilitiesValid = Array.isArray(data?.capabilities) &&
       data.capabilities.length === expectedCapabilities.size &&
@@ -210,7 +210,7 @@ pythonButton.addEventListener("click", () => {
       }, 3000);
       setStatus(
         "Python " + data.pythonVersion + " · Pyodide " + data.version +
-        " · arithmetic / JSON / datetime / SQLite passed · sandboxed WebView renderer"
+        " · Python stdlib / virtual filesystem probes passed · sandboxed WebView renderer"
       );
       try {
         activeWorker.postMessage({
