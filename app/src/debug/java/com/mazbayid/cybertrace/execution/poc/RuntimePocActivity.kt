@@ -78,6 +78,9 @@ private class SecureRuntimeAssetsHandler(context: Context) :
 class RuntimePocActivity : Activity() {
     private var webView: WebView? = null
 
+    internal var runtimeWebViewForTests: WebView? = null
+        private set
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,6 +142,7 @@ class RuntimePocActivity : Activity() {
         }
 
         webView = runtimeWebView
+        runtimeWebViewForTests = runtimeWebView
         setContentView(runtimeWebView)
         runtimeWebView.loadUrl(
             "https://appassets.androidplatform.net/assets/runtime-poc/index.html"
@@ -151,6 +155,7 @@ class RuntimePocActivity : Activity() {
             destroy()
         }
         webView = null
+        runtimeWebViewForTests = null
         super.onDestroy()
     }
 }
