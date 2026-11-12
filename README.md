@@ -12,6 +12,7 @@ Game ini berpusat pada terminal interaktif, code editor, eksekusi Python sungguh
 - **[STORYLINE.md](STORYLINE.md)** — latar dunia NEXUS CITY, karakter utama, konflik HELIX CORPORATION, perjalanan cerita lima Act, lima belas chapter, misteri NEXUS, dan rancangan ending.
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** — rancangan arsitektur Android, fondasi build, kandidat runtime Python terisolasi, risiko keamanan, dan gerbang pengujian teknis.
 - **[docs/PYTHON_RUNTIME_POC.md](docs/PYTHON_RUNTIME_POC.md)** — proof of concept runtime Python, harness Web Worker debug, hardening WebView, batas resource, dan matriks uji keamanan.
+- **[docs/ANDROID_RUNTIME_TEST_CHECKLIST.md](docs/ANDROID_RUNTIME_TEST_CHECKLIST.md)** — prosedur pengujian manual pada perangkat Android untuk runtime Pyodide dan Android isolated-process POC.
 - **[PROMPT.md](PROMPT.md)** — arahan eksekusi proyek, tanggung jawab, prinsip desain, standar engineering, dan tahapan produksi.
 
 ## Identitas Game
