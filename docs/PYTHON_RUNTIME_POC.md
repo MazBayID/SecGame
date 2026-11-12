@@ -14,7 +14,7 @@ The POC is disposable: its code and assets must not become the production runtim
 
 ### Candidate A — Pyodide in a Web Worker hosted by Android WebView
 
-This is the first implementation experiment because a dedicated worker can keep synchronous Python execution away from the UI thread and can be terminated as a whole when a deadline expires. The official Pyodide worker guide requires a module-type worker. The current official download guide lists the v314.0.0 release and says the full distribution is over 200 MB; therefore, the POC must measure the smaller core distribution plus only the offline packages the curriculum actually needs, rather than bundling the full distribution by default.
+This is the first implementation experiment because a dedicated worker can keep synchronous Python execution away from the UI thread and can be terminated as a whole when a deadline expires. The official Pyodide worker guide requires a module-type worker. The current official download guide lists the v314.0.7 release and says the full distribution is over 200 MB; therefore, the POC must measure the smaller core distribution plus only the offline packages the curriculum actually needs, rather than bundling the full distribution by default.
 
 Proposed shape:
 
@@ -43,7 +43,7 @@ Keep this as the comparison path if Pyodide cannot satisfy Python compatibility 
 
 ## WebView hardening checklist
 
-- [ ] Pin the initial candidate to the documented Pyodide v314.0.0 release for reproducibility; record the exact archive checksum in the POC results.
+- [ ] Pin the initial candidate to the documented Pyodide v314.0.7 release for reproducibility; record the exact archive checksum in the POC results.
 - [ ] Use a pinned, APK-bundled runtime and local assets only.
 - [ ] Measure core distribution and selected offline wheels before choosing whether they fit the APK budget; the full distribution is documented as 200+ MB.
 - [ ] Use `WebViewAssetLoader`; do not load the POC from `file://`.
@@ -97,6 +97,12 @@ Select Pyodide only if its offline package, supported Python features, WebView b
 
 If neither candidate passes, do not enable Run. Rework the architecture or narrow the runtime capabilities while preserving the core requirement: genuine Python execution with honest, understandable limits.
 
+## Worker lifecycle harness (implemented in debug source set)
+
+A disposable WebView harness now lives under `app/src/main/assets/runtime-poc/` and is launched by the debug-only `RuntimePocActivity`. It loads through `WebViewAssetLoader` at the app-assets HTTPS origin, uses a module worker, exposes no JavaScript-to-Android bridge, disables file/content access, rejects navigation outside the app-assets origin, and applies a restrictive CSP with `connect-src 'none'`. It has controls to ping the worker, start a deliberately non-terminating synchronous task, terminate the worker from the host, and create a fresh worker. The harness deliberately contains no Python interpreter and does not execute player code; it validates only the WebView worker lifecycle. It is debug-only and is not part of the production lesson flow. Launch it on a connected device with `adb shell am start -n com.mazbayid.cybertrace/.execution.poc.RuntimePocActivity` after installing a debug APK.
+
+This harness is an early platform experiment, not a sandbox certification. It still requires physical-device testing for module-worker support, hard-stop responsiveness, worker recreation, renderer recovery, and memory release. The next runtime step remains bundling the pinned Pyodide distribution locally and testing offline Python execution inside this worker.
+
 ## Implementation order after POC
 
 1. Pin and bundle the candidate runtime.
@@ -110,8 +116,8 @@ If neither candidate passes, do not enable Run. Rework the architecture or narro
 
 ## Source notes
 
-- [Pyodide v314.0.0 — Web Worker guide](https://pyodide.org/en/314.0.0/usage/webworker.html): Pyodide uses a module-type worker and documents message-based execution outside the UI thread.
-- [Pyodide v314.0.0 — downloading and deploying](https://pyodide.org/en/314.0.0/usage/downloading-and-deploying.html): the full distribution is documented as 200+ MB; the core archive contains the runtime loader, WASM binary, Python standard library, and lockfile.
+- [Pyodide v314.0.7 — Web Worker guide](https://pyodide.org/en/314.0.0/usage/webworker.html): Pyodide uses a module-type worker and documents message-based execution outside the UI thread.
+- [Pyodide v314.0.7 — downloading and deploying](https://pyodide.org/en/314.0.0/usage/downloading-and-deploying.html): the full distribution is documented as 200+ MB; the core archive contains the runtime loader, WASM binary, Python standard library, and lockfile.
 - [Pyodide — interrupting execution](https://pyodide.org/en/stable/usage/keyboard-interrupts.html): cooperative interruption requires a Web Worker, SharedArrayBuffer, and appropriate cross-origin isolation headers.
 - [MDN — Worker.terminate()](https://developer.mozilla.org/en-US/docs/Web/API/Worker/terminate): termination immediately stops a worker without waiting for its code to finish.
 - [Android — security tips](https://developer.android.com/privacy-and-security/security-tips): Android recommends minimizing permissions and protecting app-private data and IPC boundaries.
