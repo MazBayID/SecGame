@@ -97,7 +97,8 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Add deterministic workspace snapshots and a versioned, validated codec with round-trip JVM tests.
 - [x] Add an offline SharedPreferences adapter with a global personal workspace key and per-operation mission snapshot keys.
 - [ ] Add corruption recovery/diagnostics and size/resource limits before exposing persistence to player UI.
-- [ ] Implement a real in-game terminal parser/dispatcher; never expose the Android shell.
+- [x] Implement a bounded in-game terminal parser/dispatcher for VFS commands; reject shell chaining, pipes, expansion, and redirection, and never expose the Android shell.
+- [ ] Build the player-facing Terminal screen and persist terminal session/history state.
 - [ ] Implement editor state and exact script-version/hash tracking.
 - [ ] Integrate the controlled Python runtime only after operation and VFS boundaries are tested.
 - [ ] Add RUN feedback and SUBMIT evaluation as separate flows.
