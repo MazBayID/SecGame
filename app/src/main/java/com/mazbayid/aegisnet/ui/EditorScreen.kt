@@ -39,7 +39,10 @@ import com.mazbayid.aegisnet.ui.components.AegisPanel
 private const val EDITOR_OPERATION_ID = "first_contact_01"
 
 @Composable
-fun EditorScreen(onBack: () -> Unit) {
+fun EditorScreen(
+    onBack: () -> Unit,
+    initialWorkspace: VfsWorkspace = VfsWorkspace.PERSONAL
+) {
     val context = LocalContext.current
     val repository = remember(context) { SharedPreferencesVfsRepository(context) }
     val runReceiptRepository = remember(context) { SharedPreferencesRunReceiptRepository(context) }
@@ -67,8 +70,10 @@ fun EditorScreen(onBack: () -> Unit) {
         return
     }
 
-    val fileSystem = remember(restoreResult) { restoreResult.getOrThrow() }
-    var workspace by remember { mutableStateOf(VfsWorkspace.PERSONAL) }
+    val fileSystem = remember(restoreResult) {
+        restoreResult.getOrThrow().also { it.switchWorkspace(initialWorkspace) }
+    }
+    var workspace by remember { mutableStateOf(initialWorkspace) }
     var path by remember { mutableStateOf("scripts/analysis.py") }
     var document by remember { mutableStateOf<EditorDocument?>(null) }
     var status by remember { mutableStateOf("Open a writable script from the virtual workspace.") }
