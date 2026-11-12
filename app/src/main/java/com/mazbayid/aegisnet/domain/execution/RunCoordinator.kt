@@ -44,6 +44,11 @@ class RunCoordinator(
     private val fileSystem: VirtualFileSystem,
     private val engine: ScriptExecutionEngine
 ) {
+    init {
+        require(operationId == fileSystem.operationId) {
+            "Run coordinator and virtual workspace must belong to the same operation."
+        }
+    }
 
     fun run(document: EditorDocument): RunCoordinatorResult {
         val prepared = EditorDocumentService.prepareRun(fileSystem, operationId, document)

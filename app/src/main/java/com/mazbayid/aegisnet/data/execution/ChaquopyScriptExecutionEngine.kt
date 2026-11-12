@@ -1,7 +1,7 @@
 package com.mazbayid.aegisnet.data.execution
 
 import android.content.Context
-import com.chaquo.python.AndroidPlatform
+import com.chaquo.python.android.AndroidPlatform
 import com.chaquo.python.Python
 import com.mazbayid.aegisnet.domain.execution.ScriptExecutionEngine
 import com.mazbayid.aegisnet.domain.execution.ScriptExecutionResult
@@ -32,6 +32,7 @@ class AegisVfsBridge(
         }
     }
 
+    @JvmOverloads
     fun list_files(path: String = "."): List<String> =
         when (val result = fileSystem.ls(path)) {
             is VfsResult.Success -> result.value.take(MAX_LIST_ITEMS).map { entry ->
@@ -61,6 +62,12 @@ class ChaquopyScriptExecutionEngine(
         snapshot: EditorRunSnapshot,
         fileSystem: VirtualFileSystem
     ): ScriptExecutionResult {
+        if (snapshot.operationId != fileSystem.operationId) {
+            return ScriptExecutionResult(
+                exitCode = -1,
+                stderr = "RUN snapshot belongs to a different operation."
+            )
+        }
         return try {
             ensurePythonStarted()
             synchronized(PYTHON_EXECUTION_LOCK) {

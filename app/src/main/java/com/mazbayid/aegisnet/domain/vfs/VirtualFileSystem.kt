@@ -49,7 +49,7 @@ sealed interface VfsResult<out T> {
  * bound to one operation ID. No method accesses Android files or the host OS.
  */
 class VirtualFileSystem(
-    private val operationId: String,
+    val operationId: String,
     personalFiles: List<VfsFile> = emptyList(),
     missionFiles: List<VfsFile> = emptyList(),
     personalDirectories: Set<String> = emptySet(),

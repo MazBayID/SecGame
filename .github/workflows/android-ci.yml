@@ -43,20 +43,15 @@ jobs:
       - name: Run Kotlin JVM unit tests
         run: gradle :app:testDebugUnitTest
 
-      - name: Set up Python 3.13 when Python sources exist
-        if: hashFiles('python/**/*.py', 'app/src/main/python/**/*.py') != ''
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
-      - name: Run Python unit tests when Python sources exist
-        if: hashFiles('python/**/*.py', 'app/src/main/python/**/*.py') != ''
+      - name: Run Python unit tests
         run: |
           set -euo pipefail
-          test -d python/tests || {
-            echo "Python sources detected, but python/tests is missing."
-            exit 1
-          }
+          test -d python/tests
           python -m unittest discover -s python/tests -p 'test_*.py'
 
   build-debug-apk:
