@@ -56,9 +56,9 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 
 ### Slice 1.4 — Evidence Graph interface
 
-- [ ] Build an operation-scoped Evidence screen using the AEGIS workstation visual language.
-- [ ] Provide a readable evidence list and detail view before adding a graph visualization.
-- [ ] Show provenance, event time versus receipt/creation time, integrity, and source classification.
+- [x] Build an operation-scoped Evidence Archive screen using the AEGIS workstation visual language.
+- [x] Provide a readable discovered-evidence list and detail view before adding a graph visualization.
+- [x] Show provenance, event time versus receipt/creation time when present, integrity, and source classification.
 - [ ] Add a relationship editor with explicit relation type and status.
 - [ ] Visualize confirmed links, hypotheses, and unresolved links differently.
 - [ ] Provide a timeline and source-comparison view for mobile layouts.
@@ -74,7 +74,7 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [ ] Define the remaining mission constraints, risk dimensions, decision/recovery routes, and debrief criteria.
 - [ ] Implement an operation context shared by Mission Control, Evidence, Editor, and Terminal.
 - [x] Separate authored mission/objective definitions from player submission state.
-- [ ] Integrate the deterministic domain evaluator with an authoritative operation/evidence repository and Mission Control.
+- [x] Integrate the deterministic domain evaluator with the Room evidence repository and Mission Control for First Contact Mission 01; generalize it to the remaining missions.
 - [ ] Keep RUN and SUBMIT separate; a successful RUN alone never completes an operation.
 - [ ] Add debrief output with Intelligence, Evidence, Technical, Stealth / Exposure, and Judgment dimensions only when active for that mission.
 - [ ] Test multiple valid approaches, incomplete evidence, responsible uncertainty, and repeat submission idempotency.
@@ -110,7 +110,7 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Connect the Editor RUN action to Chaquopy, persist the latest receipt per operation, and display the exact executed source hash and output.
 - [ ] Add on-device runtime tests and stronger process/resource isolation; the in-process runtime is not a hardened security sandbox.
 - [x] Add a runtime-agnostic RUN coordinator contract that saves the exact editor buffer, hashes the immutable snapshot, calls an injected engine, and issues operation-bound success/failure receipts.
-- [ ] Integrate a real controlled Python runtime and add RUN feedback and SUBMIT evaluation as separate player flows.
+- [x] Integrate the Chaquopy Python runtime with Editor RUN feedback and a separate Mission 01 SUBMIT evaluation flow; extend this integration across the remaining missions.
 - [ ] Enforce authorization and resource limits; document that in-process Python is not a hardened security sandbox.
 
 ## Phase 5 — Campaign continuity and expanded routes
@@ -134,7 +134,7 @@ Preserve all eight approved learning missions and their existing learning order.
 
 ## Current implementation boundary
 
-The Android app now has an initial campaign-opening vertical slice with a pure Kotlin progression state machine, interruption-safe local milestone persistence, and a player-driven official-message → mission-sequence → Freya → NEXUS unlock flow. A pure Kotlin mission contract and deterministic SUBMIT evaluator now enforce authored approaches/outcomes, evidence availability, operation-bound successful RUN records, and exact source-hash matching. The Evidence Graph remains a domain foundation only. Structured evidence persistence, graph UI, mission evaluation, the playable first operation, full Messenger/Intranet, terminal, VFS, Python runtime, and later campaign continuity remain unimplemented until their corresponding checklist items are completed and verified.
+The Android app has a persisted campaign-opening sequence (official recruitment → mission activation → Freya → player-triggered NEXUS unlock), a canonical eight-mission catalog, and one playable First Contact operation (Mission 01). Mission 01 seeds a read-only message fragment in Room-backed evidence storage and the mission VFS, supports Python 3.13 execution through Chaquopy, records an operation-bound exact-source-hash RUN receipt, and evaluates a separate SUBMIT against authored criteria before persisting completion. The Terminal is a bounded VFS-only interface; the Editor supports personal/mission workspaces, exact-buffer saves, and RUN. The Database route now exposes discovered evidence with provenance and separately persisted private notes. The Evidence Graph relationship/claim domain and Room persistence exist, but the full graph/timeline/comparison UI and relationship editor remain pending. Missions 02–08 are cataloged but not yet playable; full Messenger/Intranet, campaign continuity, security hardening, UI/instrumentation coverage, and physical-device testing remain incomplete.
 
 ## Engineering rules
 
