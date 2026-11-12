@@ -195,10 +195,19 @@ fun AegisNetApp() {
                     if (selected == "CAMPAIGN OVERVIEW") {
                         CampaignOpeningScreen(onBack = { selected = "MAIN MENU" })
                     } else if (selected == "OPERATIONS") {
+                        CampaignOperationsScreen(
+                            onOpenMission = { number ->
+                                selected = "MISSION_" + number.toString().padStart(2, '0')
+                            },
+                            onOpenChapterReport = { selected = "CHAPTER_REPORT" },
+                            onOpenCampaign = { selected = "CAMPAIGN OVERVIEW" },
+                            onBack = { selected = "MAIN MENU" }
+                        )
+                    } else if (selected == "MISSION_01") {
                         FirstContactMissionScreen(
                             onOpenEditor = { selected = "MISSION_EDITOR" },
                             onOpenMissionTwo = { selected = "MISSION_02" },
-                            onBack = { selected = "MAIN MENU" }
+                            onBack = { selected = "OPERATIONS" }
                         )
                     } else if (selected == "MISSION_02") {
                         IdentityCheckMissionScreen(
@@ -293,7 +302,7 @@ fun AegisNetApp() {
                     } else if (selected == "MISSION_EDITOR") {
                         EditorScreen(
                             initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
-                            onBack = { selected = "OPERATIONS" }
+                            onBack = { selected = "MISSION_01" }
                         )
                     } else if (selected == "INTRANET") {
                         IntranetScreen(
