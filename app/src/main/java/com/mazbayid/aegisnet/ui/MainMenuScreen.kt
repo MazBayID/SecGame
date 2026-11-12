@@ -50,6 +50,7 @@ private val appTiles = listOf(
     MenuAction("MESSENGER", "SECURE COMMUNICATION"),
     MenuAction("INTRANET", "INTERNAL NETWORK"),
     MenuAction("TERMINAL", "COMMAND INTERFACE"),
+    MenuAction("EDITOR", "SOURCE WORKSPACE"),
     MenuAction("DATABASE", "INTELLIGENCE RECORDS"),
     MenuAction("DOSSIER", "PERSONNEL & EVIDENCE"),
     MenuAction("ANALYSIS", "INVESTIGATION TOOLS"),
@@ -175,6 +176,8 @@ fun AegisNetApp() {
                         CampaignOpeningScreen(onBack = { selected = "MAIN MENU" })
                     } else if (selected == "TERMINAL") {
                         TerminalScreen(onBack = { selected = "MAIN MENU" })
+                    } else if (selected == "EDITOR") {
+                        EditorScreen(onBack = { selected = "MAIN MENU" })
                     } else {
                         AegisPanel(title = selected) {
                             Text(

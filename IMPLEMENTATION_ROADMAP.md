@@ -101,7 +101,8 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Add a Compose Terminal screen connected to the bounded dispatcher and offline workspace repository.
 - [ ] Add automated Compose UI tests, persistent terminal history/session restoration, and richer output/keyboard behavior.
 - [x] Add editor document state with dirty tracking, exact-buffer save, read-only source protection, and immutable SHA-256 RUN snapshot preparation.
-- [ ] Add the Compose Editor screen, version history, and durable snapshot archive.
+- [x] Add a Compose Editor screen with workspace switching, file opening, dirty-buffer editing, read-only source protection, SHA-256 display, and local save.
+- [ ] Add automated Compose UI tests, version history, and durable immutable RUN snapshot archive.
 - [ ] Integrate a controlled Python runtime only after operation and VFS boundaries are tested; current RUN preparation is not code execution.
 - [ ] Add RUN feedback and SUBMIT evaluation as separate flows.
 - [ ] Enforce authorization and resource limits; document that in-process Python is not a hardened security sandbox.
