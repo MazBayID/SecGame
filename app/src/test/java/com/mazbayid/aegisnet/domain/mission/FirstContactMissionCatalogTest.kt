@@ -106,4 +106,28 @@ class FirstContactMissionCatalogTest {
         assertEquals(setOf("SOURCE_INDEX=2|RX-14|RECEIPT"), objective.requiredOutputContains)
         assertTrue(objective.requiresSuccessfulRun)
     }
+
+    @Test
+    fun twoSourceComparisonRequiresBothRecordsAndExactSourceValues() {
+        val objective = FirstContactMissionCatalog.missions[5].definition.objectives.single()
+        assertEquals(setOf("aegis_receipts", "archive_receipts"), objective.requiredEvidenceIds)
+        assertEquals(
+            setOf("AEGIS_TIME=09:41:12", "ARCHIVE_TIME=09:41:16", "SAME_REFERENCE=True"),
+            objective.requiredOutputContains
+        )
+    }
+
+    @Test
+    fun timeNormalizationRequiresSignedFourSecondDelta() {
+        val objective = FirstContactMissionCatalog.missions[6].definition.objectives.single()
+        assertEquals(setOf("aegis_receipts", "archive_receipts"), objective.requiredEvidenceIds)
+        assertEquals(setOf("SIGNED_DELTA=4"), objective.requiredOutputContains)
+    }
+
+    @Test
+    fun finalDeltaValidationRequiresAbsoluteDifferenceAndResponsibleUncertainty() {
+        val mission = FirstContactMissionCatalog.missions[7].definition
+        assertEquals(setOf("ABSOLUTE_DELTA=4"), mission.objectives.first().requiredOutputContains)
+        assertTrue(mission.objectives.any { it.id == "report_unresolved_cause" })
+    }
 }

@@ -92,7 +92,9 @@ object FirstContactMissionCatalog {
             objectiveId = "compare_receipt_records",
             objectiveDescription = "Ambil dan bandingkan dua catatan dari sumber yang berbeda.",
             approach = "python_list_indexing",
-            outcome = "two_source_records_compared"
+            outcome = "two_source_records_compared",
+            requiredEvidence = setOf("aegis_receipts", "archive_receipts"),
+            requiredOutput = setOf("AEGIS_TIME=09:41:12", "ARCHIVE_TIME=09:41:16", "SAME_REFERENCE=True")
         ),
         mission(
             number = 7,
@@ -103,7 +105,9 @@ object FirstContactMissionCatalog {
             objectiveId = "calculate_signed_time_delta",
             objectiveDescription = "Normalisasi komponen waktu dan pertahankan tanda selisih.",
             approach = "python_int_and_signed_difference",
-            outcome = "signed_time_delta_reported"
+            outcome = "signed_time_delta_reported",
+            requiredEvidence = setOf("aegis_receipts", "archive_receipts"),
+            requiredOutput = setOf("SIGNED_DELTA=4")
         ),
         mission(
             number = 8,
@@ -115,6 +119,8 @@ object FirstContactMissionCatalog {
             objectiveDescription = "Hitung selisih absolut dari dua catatan penerimaan.",
             approach = "python_abs_validation",
             outcome = "four_second_delta_verified",
+            requiredEvidence = setOf("aegis_receipts", "archive_receipts"),
+            requiredOutput = setOf("ABSOLUTE_DELTA=4"),
             additionalObjectives = listOf(
                 MissionObjective(
                     id = "report_unresolved_cause",

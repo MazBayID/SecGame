@@ -269,6 +269,10 @@ fun ReferenceTraceMissionScreen(
                 }
                 if (completed) {
                     Text("MISSION 05 COMPLETE", color = MaterialTheme.colorScheme.primary)
+                    Spacer(Modifier.height(8.dp))
+                    Button(onClick = onOpenMissionSix, modifier = Modifier.fillMaxWidth()) {
+                        Text("CONTINUE TO MISSION 06 / TWO-SOURCE COMPARISON")
+                    }
                 }
             }
         }

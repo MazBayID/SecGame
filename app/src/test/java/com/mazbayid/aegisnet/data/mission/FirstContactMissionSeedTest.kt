@@ -23,6 +23,8 @@ class FirstContactMissionSeedTest {
         assertTrue(ids.contains("system_trace_log"))
         assertTrue(ids.contains("record_inventory"))
         assertTrue(ids.contains("reference_catalog"))
+        assertTrue(ids.contains("aegis_receipts"))
+        assertTrue(ids.contains("archive_receipts"))
         assertTrue(ids.contains("reference_catalog"))
         assertEquals(
             EvidenceType.SYSTEM_LOG,
@@ -93,6 +95,14 @@ class FirstContactMissionSeedTest {
 
         assertEquals(VfsAccess.READ_ONLY, catalog.access)
         assertEquals("RX-14|RECEIPT", catalog.content.lineSequence().elementAt(2))
+    }
+
+
+    @Test
+    fun pairedReceiptSourcesContainTheAuthoredFourSecondDifference() {
+        val files = FirstContactMissionSeed.missionWorkspace().files.associateBy { it.path }
+        assertEquals("RX-14|09:41:12", files["briefing/aegis_receipt.txt"]?.content?.lineSequence()?.first())
+        assertEquals("RX-14|09:41:16", files["briefing/archive_receipt.txt"]?.content?.lineSequence()?.first())
     }
 
 }

@@ -201,7 +201,46 @@ fun AegisNetApp() {
                     } else if (selected == "MISSION_05") {
                         ReferenceTraceMissionScreen(
                             onOpenEditor = { selected = "MISSION_05_EDITOR" },
+                            onOpenMissionSix = { selected = "MISSION_06" },
                             onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_06") {
+                        TwoSourceComparisonMissionScreen(
+                            onOpenEditor = { selected = "MISSION_06_EDITOR" },
+                            onOpenMissionSeven = { selected = "MISSION_07" },
+                            onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_06_EDITOR") {
+                        EditorScreen(
+                            initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
+                            initialPath = "scripts/source_compare.py",
+                            onBack = { selected = "MISSION_06" }
+                        )
+                    } else if (selected == "MISSION_07") {
+                        TimeAnalysisMissionScreen(
+                            missionNumber = 7,
+                            onOpenEditor = { selected = "MISSION_07_EDITOR" },
+                            onNext = { selected = "MISSION_08" },
+                            onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_07_EDITOR") {
+                        EditorScreen(
+                            initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
+                            initialPath = "scripts/time_normalization.py",
+                            onBack = { selected = "MISSION_07" }
+                        )
+                    } else if (selected == "MISSION_08") {
+                        TimeAnalysisMissionScreen(
+                            missionNumber = 8,
+                            onOpenEditor = { selected = "MISSION_08_EDITOR" },
+                            onNext = null,
+                            onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_08_EDITOR") {
+                        EditorScreen(
+                            initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
+                            initialPath = "scripts/delta_validation.py",
+                            onBack = { selected = "MISSION_08" }
                         )
                     } else if (selected == "MISSION_05_EDITOR") {
                         EditorScreen(

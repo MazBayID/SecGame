@@ -72,6 +72,32 @@ object FirstContactMissionSeed {
                 access = EvidenceAccess.INTERNAL,
                 origin = EvidenceOrigin.ORIGINAL,
                 operationId = FirstContactMissionCatalog.OPERATION_ID
+            ),
+            EvidenceRecord(
+                id = "aegis_receipts",
+                title = "A.E.G.I.S. Receipt Records",
+                description = "Three locally recorded transmission receipts, including the RX-14 receipt time.",
+                type = EvidenceType.DATASET,
+                sourceId = "aegis_receipt_register_017",
+                sourceLabel = "A.E.G.I.S. Operations Registry",
+                sourceReference = "aegis_receipt.txt",
+                integrity = EvidenceIntegrity.UNKNOWN,
+                access = EvidenceAccess.INTERNAL,
+                origin = EvidenceOrigin.ORIGINAL,
+                operationId = FirstContactMissionCatalog.OPERATION_ID
+            ),
+            EvidenceRecord(
+                id = "archive_receipts",
+                title = "ARCHIVE Receipt Records",
+                description = "A comparison export for the same transmission references from the ARCHIVE source.",
+                type = EvidenceType.DATASET,
+                sourceId = "archive_receipt_export_017",
+                sourceLabel = "ARCHIVE Comparison Registry",
+                sourceReference = "archive_receipt.txt",
+                integrity = EvidenceIntegrity.UNKNOWN,
+                access = EvidenceAccess.INTERNAL,
+                origin = EvidenceOrigin.ORIGINAL,
+                operationId = FirstContactMissionCatalog.OPERATION_ID
             )
         )
     )
@@ -151,6 +177,36 @@ object FirstContactMissionSeed {
             VfsFile(
                 path = "scripts/reference_trace.py",
                 content = "catalog_text = aegis.read_text('briefing/reference_catalog.txt')\nentries = catalog_text.split('\\n')\nfor source_index, entry in enumerate(entries):\n    if 'RX-14' in entry:\n        print('SOURCE_INDEX=' + str(source_index) + '|' + entry)\n",
+                access = VfsAccess.READ_WRITE,
+                origin = VfsOrigin.PLAYER_CREATED
+            ),
+            VfsFile(
+                path = "briefing/aegis_receipt.txt",
+                content = "RX-14|09:41:12\nRX-15|09:42:05\nRX-16|09:43:01",
+                access = VfsAccess.READ_ONLY,
+                origin = VfsOrigin.MISSION_SOURCE
+            ),
+            VfsFile(
+                path = "briefing/archive_receipt.txt",
+                content = "RX-14|09:41:16\nRX-15|09:42:05\nRX-16|09:43:01",
+                access = VfsAccess.READ_ONLY,
+                origin = VfsOrigin.MISSION_SOURCE
+            ),
+            VfsFile(
+                path = "scripts/source_compare.py",
+                content = "aegis_records = aegis.read_text('briefing/aegis_receipt.txt').split('\\n')\narchive_records = aegis.read_text('briefing/archive_receipt.txt').split('\\n')\naegis_fields = aegis_records[0].split('|')\narchive_fields = archive_records[0].split('|')\naegis_time = aegis_fields[1]\narchive_time = archive_fields[1]\nsame_reference = aegis_fields[0] == archive_fields[0]\nprint('AEGIS_TIME=' + aegis_time)\nprint('ARCHIVE_TIME=' + archive_time)\nprint('SAME_REFERENCE=' + str(same_reference))\n",
+                access = VfsAccess.READ_WRITE,
+                origin = VfsOrigin.PLAYER_CREATED
+            ),
+            VfsFile(
+                path = "scripts/time_normalization.py",
+                content = "aegis_time = aegis.read_text('briefing/aegis_receipt.txt').split('|')[1].split('\\n')[0]\narchive_time = aegis.read_text('briefing/archive_receipt.txt').split('|')[1].split('\\n')[0]\naegis_parts = aegis_time.split(':')\narchive_parts = archive_time.split(':')\naegis_seconds = int(aegis_parts[0]) * 3600 + int(aegis_parts[1]) * 60 + int(aegis_parts[2])\narchive_seconds = int(archive_parts[0]) * 3600 + int(archive_parts[1]) * 60 + int(archive_parts[2])\nsigned_delta = archive_seconds - aegis_seconds\nprint('SIGNED_DELTA=' + str(signed_delta))\n",
+                access = VfsAccess.READ_WRITE,
+                origin = VfsOrigin.PLAYER_CREATED
+            ),
+            VfsFile(
+                path = "scripts/delta_validation.py",
+                content = "aegis_time = aegis.read_text('briefing/aegis_receipt.txt').split('|')[1].split('\\n')[0]\narchive_time = aegis.read_text('briefing/archive_receipt.txt').split('|')[1].split('\\n')[0]\naegis_parts = aegis_time.split(':')\narchive_parts = archive_time.split(':')\naegis_seconds = int(aegis_parts[0]) * 3600 + int(aegis_parts[1]) * 60 + int(aegis_parts[2])\narchive_seconds = int(archive_parts[0]) * 3600 + int(archive_parts[1]) * 60 + int(archive_parts[2])\nsigned_delta = archive_seconds - aegis_seconds\nabsolute_delta = abs(signed_delta)\nprint('ABSOLUTE_DELTA=' + str(absolute_delta))\n",
                 access = VfsAccess.READ_WRITE,
                 origin = VfsOrigin.PLAYER_CREATED
             )
