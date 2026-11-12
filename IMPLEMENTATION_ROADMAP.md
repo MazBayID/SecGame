@@ -80,9 +80,10 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 
 Preserve all eight approved learning missions and their existing learning order.
 
-- [ ] Build the opening recruitment and notification sequence with interruption-safe state.
+- [x] Build the opening recruitment interaction sequence with sequential, interruption-safe local progress.
 - [ ] Implement the first operation end-to-end with briefing, evidence, investigation, decision/report, debrief, and saved progress.
-- [ ] Add Freya and NEXUS message delivery/unlock rules.
+- [x] Add the opening Freya notification interaction and unlock NEXUS only after the player taps its link.
+- [ ] Build the full Messenger inbox and conversation history; the current opening interaction is a focused vertical slice, not the complete Messenger app.
 - [ ] Add only the tools needed by each mission; no forced app-hopping.
 - [ ] Validate the first operation on a physical Android phone in portrait orientation.
 
@@ -118,7 +119,7 @@ Preserve all eight approved learning missions and their existing learning order.
 
 ## Current implementation boundary
 
-The Android app is still an initial shell. The Evidence domain contract and validation are the first real gameplay-domain implementation slice. Persistence, graph UI, mission integration, terminal, VFS, Python runtime, campaign continuity, and playable operations remain unimplemented until their corresponding checklist items are completed and verified.
+The Android app now has an initial campaign-opening vertical slice with a pure Kotlin progression state machine, interruption-safe local milestone persistence, and a player-driven official-message → mission-sequence → Freya → NEXUS unlock flow. The Evidence Graph remains a domain foundation only. Structured evidence persistence, graph UI, mission evaluation, the playable first operation, full Messenger/Intranet, terminal, VFS, Python runtime, and later campaign continuity remain unimplemented until their corresponding checklist items are completed and verified.
 
 ## Engineering rules
 

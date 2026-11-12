@@ -8,6 +8,9 @@ The `main` branch currently contains:
 
 - Kotlin + Jetpack Compose application entry point and black-green A.E.G.I.S. theme
 - Main menu prototype, local secure-system status panel, and seven-tile App Hub prototype
+- First Contact opening vertical slice: sequential official recruitment, mission activation, Freya message, and player-triggered NEXUS contact unlock
+- Pure Kotlin campaign progression rules with idempotent actions, out-of-order protection, corrupted-save prefix recovery, and JVM unit tests
+- Offline campaign milestone persistence through a dedicated SharedPreferences adapter; campaign domain remains Android-independent
 - Code-drawn tactical grid background and reusable panel primitive
 - Initial Evidence Graph domain contract: typed evidence records, provenance metadata, separate player annotations, relationship states, and claims
 - Pure Kotlin graph operations for idempotent evidence creation, annotation, relationship/claim updates, and deterministic filtering
@@ -21,7 +24,7 @@ The `main` branch currently contains:
 
 Planned technical target: Python 3.13 through Chaquopy for local in-game execution; this runtime is not implemented in the current foundation.
 
-The Evidence Graph is currently a domain foundation only. Evidence persistence, repository operations, graph/timeline UI, mission integration, campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, and mission evaluation are not implemented yet. The app is not a playable game.
+The Evidence Graph is currently a domain foundation only. Structured evidence persistence, graph/timeline UI, mission evaluation, a complete playable operation, full Messenger history, Intranet routing, functional Terminal, VFS, and Python runtime are not implemented yet. The opening campaign flow is a persisted vertical slice, not a complete game. The app is not yet a playable end-to-end game.
 
 ## Implementation plan
 

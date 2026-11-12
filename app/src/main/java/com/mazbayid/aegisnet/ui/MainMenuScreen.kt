@@ -171,14 +171,18 @@ fun AegisNetApp() {
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
-                    AegisPanel(title = selected) {
-                        Text(
-                            "This interface module is reserved for the next implementation slice.",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = 12.sp
-                        )
-                        Spacer(Modifier.height(10.dp))
-                        ActionButton("RETURN TO MAIN MENU", { selected = "MAIN MENU" })
+                    if (selected == "CAMPAIGN OVERVIEW") {
+                        CampaignOpeningScreen(onBack = { selected = "MAIN MENU" })
+                    } else {
+                        AegisPanel(title = selected) {
+                            Text(
+                                "This interface module is reserved for a later implementation slice.",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 12.sp
+                            )
+                            Spacer(Modifier.height(10.dp))
+                            ActionButton("RETURN TO MAIN MENU", { selected = "MAIN MENU" })
+                        }
                     }
                 }
 
