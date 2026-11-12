@@ -82,7 +82,7 @@ Detailed implementation and test status: `docs/PYTHON_RUNTIME_POC.md`.
 
 ### Candidate B — CPython in an Android isolated-process service
 
-The comparison path is a service declared with `android:isolatedProcess="true"`. A debug-only identity probe has been added: it binds to the isolated service through Messenger and compares its UID with the app UID. This confirms only the Android isolated-process boundary when tested on a device; it does not yet load Python or Chaquopy.
+The comparison path is a service declared with `android:isolatedProcess="true"`. A debug-only identity probe has been added: it binds to the isolated service through Messenger, compares its UID with the app UID, and checks whether it can read a fixture packaged in the APK. This confirms only the Android isolated-process boundary and packaged-asset visibility when tested on a device; it does not yet load Python or Chaquopy.
 
 Chaquopy 17.2 documents support for Python 3.10–3.15, AGP 7.3–9.5, and Android API 24+, so it is a plausible CPython packaging candidate for the current AGP 9.4 project. However, Chaquopy normally runs in the app process. Its FAQ discusses a separate process as an advanced option, and its public Jupyter example uses `android:process=":kernel"`, not `android:isolatedProcess="true"`. A normal secondary process shares the app UID and is not the required boundary for arbitrary player code.
 
