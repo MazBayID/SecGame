@@ -56,7 +56,7 @@ The application should be separated into the following boundaries:
 
 The game domain must not directly access Android storage, network sockets, or the Python interpreter. Those capabilities must be provided through explicit interfaces.
 
-The first execution-boundary contract now exists at `execution/api/PythonExecutionContract.kt`. It defines bounded source requests, a game-owned workspace identifier, resource-limit fields, structured terminal statuses and diagnostics, and an asynchronous engine/cancellation interface. The contract is not yet connected to the lesson UI or production engine. A separate debug-only POC now exercises Pyodide in a Web Worker when its locally bundled core assets are prepared. A debug-only WebView worker lifecycle harness now exists under `app/src/debug/assets/runtime-poc/`; it verifies the local app-assets origin, module-worker startup, host-side termination, and recreation, and can run a real Pyodide interpreter when the pinned core assets are present. It is still a disposable debug experiment, not a production adapter or approved player-code sandbox. The current limit values are conservative defaults and validation bounds, not proof that a runtime enforces CPU or memory limits.
+The first execution-boundary contract now exists at `execution/api/PythonExecutionContract.kt`. It defines bounded source requests, a game-owned workspace identifier, resource-limit fields, structured terminal statuses and diagnostics, and an asynchronous engine/cancellation interface. The contract is not yet connected to the lesson UI or production engine. A separate debug-only POC now runs Pyodide 314.0.7 in a module Web Worker. The pinned core archive is downloaded and checksum-verified by `tools/prepare_pyodide_core.sh`, then extracted into ignored debug assets during local preparation or manual APK packaging. The WebView asset handler applies CSP response headers to document and worker assets, denies file/content access, exposes no Android JavaScript bridge, and serves the local app-assets origin only. The worker protocol now correlates results to a run ID and validates result shape. It is still a disposable debug experiment, not a production adapter or approved player-code sandbox. The current limit values are conservative defaults and validation bounds, not proof that a runtime enforces CPU or memory limits.
 
 ## 4. Python runtime: critical proof of concept
 
@@ -112,7 +112,7 @@ A WebView must not expose a privileged JavaScript bridge to player-controlled co
 **Current assessment (not a final runtime selection)**
 - Chaquopy offers the strongest CPython compatibility, but its process model requires careful validation before it can satisfy the isolation requirement.
 - Pyodide offers a WebAssembly execution boundary and worker model, but has compatibility and interruption constraints.
-- Neither candidate is approved yet. The POC must compare offline startup, package size, Android memory use, bounded execution, worker/process termination, virtual-file integration, and resistance to host access. A debug-only worker lifecycle harness has been added; physical-device verification is still pending and no Python runtime is bundled.
+- Neither candidate is approved yet. The Pyodide core is now included only in prepared debug APKs; it is not committed to Git and is not connected to the lesson UI. The POC must compare offline startup, package size, Android memory use, bounded execution, worker/process termination, virtual-file integration, and resistance to host access. Physical-device verification is still pending. Pyodide 314.0.7 has no documented `maxMemoryBytes` option, so the current POC does not enforce a memory cap.
 - The game curriculum must not depend on real internet sockets. Simulated networking remains the intended educational interface unless a future safe runtime proves otherwise.
 
 Research references:
@@ -235,4 +235,4 @@ CI evidence: [GitHub Actions run #43265293776](https://github.com/MazBayID/SecGa
 
 ---
 
-**Next engineering milestone:** verify the app on a physical Android device, then implement and test a disposable Python-runtime isolation proof of concept against the execution API contract. Do not integrate player-code execution into the main game process.
+**Next engineering milestone:** build the milestone debug APK and verify the Pyodide POC on a physical Android device, especially offline initialization, real Python output, syntax/runtime diagnostics, hard timeout/cancel, worker recreation, renderer recovery, host-access attempts, and memory pressure. Compare against CPython in a genuine isolated-process service before approving any production runtime. Do not integrate player-code execution into the main game process.
