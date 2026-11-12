@@ -1,8 +1,7 @@
 # AEGIS-Net — IMPLEMENTATION ROADMAP
 
 > Status: active implementation plan · 12 November 2026
-> Source of truth: `GAME_CONCEPT.md`, `GAMEPLAY_DESIGN.md`, and `UI_ARCHITECTURE.md`.
-> This roadmap orders implementation work. It does not mark a feature complete until code and tests exist.
+> Specification authority: follow the document roles and conflict hierarchy in `GAME_CONCEPT.md`; `GAMEPLAY_DESIGN.md` and `UI_ARCHITECTURE.md` own their respective specialist domains, while `Story_Line.md` owns narrative continuity. This roadmap orders implementation work and records verified status only; it cannot weaken requirements or mark a feature complete until code and tests exist.
 
 ## Delivery strategy
 
@@ -72,7 +71,7 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [ ] Separate mission definition/content from runtime player state.
 - [ ] Implement deterministic mission evaluation against semantic outcomes and evidence provenance.
 - [ ] Keep RUN and SUBMIT separate; a successful RUN alone never completes an operation.
-- [ ] Add debrief output with intelligence, evidence, technical, exposure, and judgment dimensions only when active for that mission.
+- [ ] Add debrief output with Intelligence, Evidence, Technical, Stealt​​h / Exposure, and Judgment dimensions only when active for that mission.
 - [ ] Test multiple valid approaches, incomplete evidence, responsible uncertainty, and repeat submission idempotency.
 
 ## Phase 3 — First Contact vertical slice
@@ -108,7 +107,9 @@ Preserve all eight approved learning missions and their existing learning order.
 
 - [ ] Complete Android portrait usability, IME, touch-target, text-scaling, TalkBack, and reduced-motion checks.
 - [ ] Add regression tests for process death, rotation/configuration change, and offline behavior.
-- [ ] Verify clean debug and release builds.
+- [ ] Run applicable automated source tests, then build exactly one signed Release APK candidate from `main`; do not produce or publish a separate debug APK as a release candidate.
+- [ ] Validate signature and APK metadata, then smoke-test the exact candidate APK on an emulator without rebuilding it.
+- [ ] Complete physical-device acceptance using that same APK and its recorded SHA-256.
 - [ ] Review original art/audio/license provenance and app permissions.
 - [ ] Update project status and release notes from verified implementation only.
 
