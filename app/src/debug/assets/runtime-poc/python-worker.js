@@ -95,6 +95,7 @@ import json
 import math
 import sqlite3
 import sys
+from pathlib import Path
 
 if sys.version_info[:2] != (3, 14):
     raise RuntimeError("Unexpected Python version: " + sys.version)
@@ -115,6 +116,14 @@ with sqlite3.connect(":memory:") as database:
     if database.execute("SELECT value FROM runtime_probe").fetchone() != (42,):
         raise RuntimeError("SQLite standard-library smoke test failed")
 
+for host_path in (
+    "/data/data/com.mazbayid.cybertrace",
+    "/data/user/0/com.mazbayid.cybertrace",
+    "/storage/emulated/0",
+):
+    if Path(host_path).exists():
+        raise RuntimeError("Host filesystem path unexpectedly visible: " + host_path)
+
 sys.version.split()[0]
 `);
   if (typeof pythonVersion !== "string" || !/^3\.14\./.test(pythonVersion)) {
@@ -125,7 +134,7 @@ sys.version.split()[0]
     type: "ready",
     version: pyodide.version,
     pythonVersion,
-    capabilities: ["arithmetic", "json", "datetime", "sqlite3"],
+    capabilities: ["arithmetic", "json", "datetime", "sqlite3", "virtual_fs_isolated"],
   });
 } catch (error) {
   sendInitializationError(error);
