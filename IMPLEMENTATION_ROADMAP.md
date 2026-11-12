@@ -72,8 +72,8 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [x] Add deterministic SUBMIT evaluation for objective outcomes, evidence existence/proof, operation-bound RUN receipts, and exact source-hash matching.
 - [ ] Define the remaining mission constraints, risk dimensions, decision/recovery routes, and debrief criteria.
 - [ ] Implement an operation context shared by Mission Control, Evidence, Editor, and Terminal.
-- [ ] Separate mission definition/content from runtime player state.
-- [ ] Implement deterministic mission evaluation against semantic outcomes and evidence provenance.
+- [x] Separate authored mission/objective definitions from player submission state.
+- [ ] Integrate the deterministic domain evaluator with an authoritative operation/evidence repository and Mission Control.
 - [ ] Keep RUN and SUBMIT separate; a successful RUN alone never completes an operation.
 - [ ] Add debrief output with Intelligence, Evidence, Technical, Stealth / Exposure, and Judgment dimensions only when active for that mission.
 - [ ] Test multiple valid approaches, incomplete evidence, responsible uncertainty, and repeat submission idempotency.

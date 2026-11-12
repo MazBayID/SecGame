@@ -536,8 +536,11 @@ Approved strategy: Full Rebuild. The six coordinated specification documents (`G
 
 ## 16. Current Project Status
 
-- The `main` branch contains the initial Android application shell built with Kotlin and Jetpack Compose: app entry point, semantic theme, Main Menu prototype, local system-status panel, campaign-entry placeholder, seven-tile App Hub prototype, tactical-grid background, and reusable panel primitive.
-- This is an early foundation, not a playable game. The Evidence Graph currently has domain records, structural validation, in-memory editing/search operations, and JVM unit tests; persistence and player-facing graph/timeline UI are not implemented. Campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, mission evaluation, and persistent decision consequences are also not implemented.
+- The `main` branch contains the Kotlin/Jetpack Compose Android shell, black-green design system, Main Menu and App Hub prototypes, and a persisted Campaign 01 opening slice. The opening interaction records the official recruitment message, mission-sequence opening, first mission activation, Freya message, NEXUS link, and NEXUS channel opening in sequential local progress.
+- The campaign progression domain is pure Kotlin; a SharedPreferences adapter stores its milestones offline. The first-contact screen is an interaction slice, not the complete Messenger app or the full cinematic notification sequence.
+- The Evidence Graph has typed domain records, structural validation, immutable editing/search operations, and JVM unit tests; structured persistence and player-facing graph/timeline UI are not implemented.
+- The mission domain has typed objective/accepted-approach contracts and deterministic SUBMIT evaluation for accepted outcomes, evidence availability, operation-bound successful RUN receipts, and exact source-hash matching. It is not yet integrated with an operation workspace, authored mission content, an editor, or a real execution runtime.
+- The app is not a playable end-to-end game. Full Messenger history, Intranet routing, structured evidence persistence/UI, operation context, Mission Control, functional Terminal, controlled VFS, Python runtime, real RUN coordination, debriefs, and persistent campaign decisions beyond the opening sequence remain unimplemented.
 - The approved gameplay systems are documented in `GAMEPLAY_DESIGN.md`; implementation must be delivered as verified vertical slices rather than empty screen placeholders.
 - Do not infer build, test, or release success from the presence of source files. Report only checks actually run against the relevant commit and APK.
 
