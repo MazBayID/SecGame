@@ -23,6 +23,7 @@ class FirstContactMissionSeedTest {
         assertTrue(ids.contains("system_trace_log"))
         assertTrue(ids.contains("record_inventory"))
         assertTrue(ids.contains("reference_catalog"))
+        assertTrue(ids.contains("reference_catalog"))
         assertEquals(
             EvidenceType.SYSTEM_LOG,
             graph.evidence.single { it.id == "system_trace_log" }.type
