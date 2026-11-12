@@ -35,6 +35,28 @@ Hacknet is a reference for interaction patterns and separation of responsibiliti
 
 **Important:** the inspected Hacknet repositories contain decompiled C# / XNA code. Do not copy their source, proprietary assets, exact layouts, or distinctive artwork. Implement original Kotlin and Compose code based on high-level UX principles only. The Android rendering and lifecycle model is not a literal port of XNA.
 
+### 2.1 Workstation visual direction (binding implementation rule)
+
+The active-operation interface must communicate the feeling of a dedicated intelligence workstation, using Hacknet as a high-level UX reference while retaining AEGIS-Net's own identity.
+
+- **Workstation, not dashboard:** do not present the operation workspace as a stack of generic rounded Material cards. Prefer a coherent application frame, restrained separators, compact technical metadata, clear panel hierarchy, and purposeful negative space.
+- **Terminal-forward hierarchy:** when an operation involves technical work, the terminal and code/evidence context must be visually prominent. The terminal is a real interaction surface, not a decorative green text panel.
+- **Distinct application surfaces:** Messenger, Intranet, Terminal, Database, Dossier, Analysis, and Operations should feel like tools inside one fictional system. Each may have its own content layout, but shares the same shell, typography rules, status language, and navigation behavior.
+- **Original AEGIS visual language:** use the approved black-green palette, original typography choices, original iconography, and original panel geometry. Do not reproduce Hacknet screenshots, exact window arrangements, distinctive graphics, or proprietary assets.
+- **Functional density:** technical screens may show compact logs, paths, timestamps, file metadata, and status indicators where useful. Never add fake telemetry or decorative data that implies functionality that does not exist.
+- **Visual effects serve information:** grid lines, scanlines, glow, cursor blink, and transitions are restrained accents. They must not reduce text contrast, conceal state, or run continuously at high cost behind dense content.
+
+### 2.2 Mobile adaptation — preserve the workstation, not desktop limitations
+
+AEGIS-Net is Android-first. The Hacknet reference does not require copying a desktop multi-window interaction model onto a phone.
+
+- On portrait phones, show one primary application surface at a time inside a persistent AEGIS shell. Use tabs, a compact app switcher, contextual drawers, or stacked navigation to move between tools.
+- Keep essential operation context visible or one deliberate action away: operation title/status, current file/evidence context, and unsaved editor state.
+- Do not shrink several desktop-style windows until they become unreadable. A secondary panel should become a sheet, tab, or dedicated view on narrow screens.
+- On tablets and sufficiently wide screens, allow a main work surface plus one supporting panel, or a carefully constrained multi-panel layout, when it improves investigation.
+- Switching applications must preserve operation state and restore each app's relevant scroll/selection state where feasible.
+- Touch targets, keyboard/IME behavior, system insets, text scaling, TalkBack, and reduced-motion behavior remain first-class requirements.
+
 ## 3. Application and navigation model
 
 ### 3.1 Top-level flow
