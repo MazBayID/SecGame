@@ -1,5 +1,6 @@
 package com.mazbayid.aegisnet.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,11 +19,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.platform.LocalContext
 import com.mazbayid.aegisnet.data.campaign.SharedPreferencesCampaignProgressRepository
-import com.mazbayid.aegisnet.domain.campaign.CampaignProgress
+import com.mazbayid.aegisnet.data.campaign.SharedPreferencesMessengerReadStateRepository
 import com.mazbayid.aegisnet.domain.campaign.CampaignStep
 import com.mazbayid.aegisnet.ui.components.AegisPanel
 
@@ -44,8 +45,15 @@ fun MessengerScreen(
     val campaignRepository = remember(context) {
         SharedPreferencesCampaignProgressRepository(context)
     }
+    val readStateRepository = remember(context) {
+        SharedPreferencesMessengerReadStateRepository(context)
+    }
     val progress = remember(context) { campaignRepository.load() }
+    var readMessageIds by remember(context) {
+        mutableStateOf(readStateRepository.loadReadMessageIds())
+    }
     var selectedConversationId by remember { mutableStateOf<String?>(null) }
+    var readSaveError by remember { mutableStateOf(false) }
 
     val conversations = remember {
         listOf(
@@ -95,6 +103,22 @@ fun MessengerScreen(
     val available = conversations.filter { it.unlockStep in progress.completedSteps }
     val selected = available.firstOrNull { it.id == selectedConversationId }
 
+    fun openConversation(conversation: SecureConversation) {
+        val ids = conversation.messages.indices.map { index -> "${conversation.id}:$index" }
+        if (readStateRepository.markRead(ids)) {
+            readMessageIds = readMessageIds + ids
+            readSaveError = false
+        } else {
+            readSaveError = true
+        }
+        selectedConversationId = conversation.id
+    }
+
+    fun unreadCount(conversation: SecureConversation): Int =
+        conversation.messages.indices.count { index ->
+            "${conversation.id}:$index" !in readMessageIds
+        }
+
     AegisPanel(
         title = if (selected == null) "MESSENGER / SECURE INBOX" else "MESSENGER / SECURE THREAD",
         trailing = {
@@ -125,15 +149,13 @@ fun MessengerScreen(
                 )
             } else {
                 available.forEach { conversation ->
+                    val unread = unreadCount(conversation)
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { selectedConversationId = conversation.id },
+                            .clickable { openConversation(conversation) },
                         color = MaterialTheme.colorScheme.surfaceVariant,
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp,
-                            MaterialTheme.colorScheme.outline
-                        )
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                     ) {
                         Column(Modifier.padding(12.dp)) {
                             Row(
@@ -145,9 +167,18 @@ fun MessengerScreen(
                                     color = MaterialTheme.colorScheme.primary,
                                     fontSize = 10.sp
                                 )
-                                Text("AVAILABLE", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp)
+                                Text(
+                                    if (unread > 0) "UNREAD $unread" else "READ",
+                                    color = if (unread > 0) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontSize = 8.sp
+                                )
                             }
-                            Text(conversation.channel, fontSize = 8.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(
+                                conversation.channel,
+                                fontSize = 8.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                             Spacer(Modifier.height(4.dp))
                             Text(conversation.preview, fontSize = 10.sp)
                         }
@@ -163,9 +194,12 @@ fun MessengerScreen(
             Text(selected.channel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp)
             Spacer(Modifier.height(10.dp))
             selected.messages.forEachIndexed { index, message ->
+                val messageId = "${selected.id}:$index"
+                val isRead = messageId in readMessageIds
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        message.first + "  /  MESSAGE ${index + 1}",
+                        message.first + "  /  MESSAGE ${index + 1}  /  " +
+                            if (isRead) "READ" else "UNREAD",
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 8.sp
                     )
@@ -183,6 +217,13 @@ fun MessengerScreen(
                     Spacer(Modifier.height(8.dp))
                 }
             }
+            if (readSaveError) {
+                Text(
+                    "READ RECEIPT SAVE FAILED — this thread is open, but its unread state may return after restart.",
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 9.sp
+                )
+            }
             if (selected.id == "recruitment" || selected.id == "freya") {
                 Button(onClick = onOpenCampaign, modifier = Modifier.fillMaxWidth()) {
                     Text("RETURN TO CAMPAIGN SEQUENCE")
@@ -196,7 +237,7 @@ fun MessengerScreen(
         }
         Spacer(Modifier.height(10.dp))
         Text(
-            "Messages are authored local campaign records. No network connection is required.",
+            "Messages and read receipts are stored locally. No network connection is required.",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 8.sp
         )
