@@ -107,9 +107,10 @@ Preserve all eight approved learning missions and their existing learning order.
 
 - [ ] Complete Android portrait usability, IME, touch-target, text-scaling, TalkBack, and reduced-motion checks.
 - [ ] Add regression tests for process death, rotation/configuration change, and offline behavior.
-- [ ] Run applicable automated source tests, then build exactly one unsigned Release APK artifact from `main`; do not produce a separate debug APK artifact.
+- [ ] Run applicable automated source tests, then build exactly one installable Debug APK artifact from `main`, using the automatically generated debug signing key; do not create a separate unsigned Release artifact for this test candidate.
 - [ ] Validate APK archive integrity, package, versionCode, and ABI metadata; record the SHA-256 checksum.
-- [ ] Do not claim emulator or physical-device installation tests for the unsigned artifact. Installable testing requires a separately approved signing policy.
+- [ ] Install and smoke-test the Debug APK on a physical Android phone when available; report emulator and physical-device results separately. Because CI debug keys may change between ephemeral runners, uninstall an older test build before installing a differently signed candidate when required, warning that local app data may be erased.
+- [ ] Keep Debug APKs strictly for development/testing. Any production or distribution signing identity requires separate explicit owner approval.
 - [ ] Review original art/audio/license provenance and app permissions.
 - [ ] Update project status and release notes from verified implementation only.
 
