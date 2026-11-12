@@ -60,6 +60,25 @@ document.querySelector("#restart").addEventListener("click", () => {
   write("A fresh worker was created. Wait for its ready message.");
 });
 
+const pythonSource = document.querySelector("#python-source");
+const pythonPresets = {
+  basic: 'print("NEXUS connection ready")',
+  beginner: 'signal = 7\nprint(signal * 6)',
+  syntax: 'if True print("broken")',
+  runtime: 'print(1 / 0)',
+  timeout: 'while True: pass',
+  output: 'print("X" * 20000)',
+  offline: 'import numpy',
+};
+document.querySelectorAll("[data-python-preset]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const preset = button.dataset.pythonPreset;
+    if (!Object.hasOwn(pythonPresets, preset)) return;
+    pythonSource.value = pythonPresets[preset];
+    write("Loaded preset: " + preset.toUpperCase() + ". Press RUN PYTHON to execute.");
+  });
+});
+
 let pythonWorker = null;
 let pythonTimer = null;
 let pythonRunState = "idle";
