@@ -55,9 +55,9 @@ fun AnalysisScreen(onBack: () -> Unit) {
                     when (val seeded = repository.save(FirstContactMissionSeed.evidenceGraph())) {
                         com.mazbayid.aegisnet.domain.evidence.EvidenceGraphSaveResult.Saved -> Unit
                         is com.mazbayid.aegisnet.domain.evidence.EvidenceGraphSaveResult.Rejected ->
-                            error(seeded.issues.joinToString { it.message })
+                            throw IllegalStateException(seeded.issues.joinToString { it.message })
                         is com.mazbayid.aegisnet.domain.evidence.EvidenceGraphSaveResult.Failed ->
-                            error(seeded.reason)
+                            throw IllegalStateException(seeded.reason)
                     }
                     current = repository.load(FirstContactMissionCatalog.OPERATION_ID)
                 }
@@ -140,8 +140,8 @@ fun AnalysisScreen(onBack: () -> Unit) {
                 if (left != null && right != null) {
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        ComparisonColumn("SOURCE A", left.title, left.sourceLabel, left.sourceReference, left.type.name, left.integrity.name, left.eventAtEpochMillis)
-                        ComparisonColumn("SOURCE B", right.title, right.sourceLabel, right.sourceReference, right.type.name, right.integrity.name, right.eventAtEpochMillis)
+                        ComparisonColumn("SOURCE A", left.title, left.sourceLabel, left.sourceReference, left.type.name, left.integrity.name, left.eventAtEpochMillis, Modifier.weight(1f))
+                        ComparisonColumn("SOURCE B", right.title, right.sourceLabel, right.sourceReference, right.type.name, right.integrity.name, right.eventAtEpochMillis, Modifier.weight(1f))
                     }
                     if (left.id == right.id) {
                         Text("Both slots reference the same record. Select a different record to compare two sources.", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp)
@@ -228,9 +228,10 @@ private fun ComparisonColumn(
     reference: String?,
     type: String,
     integrity: String,
-    eventAt: Long?
+    eventAt: Long?,
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.weight(1f)) {
+    Column(modifier = modifier) {
         Text(label, color = MaterialTheme.colorScheme.primary, fontSize = 8.sp)
         Text(title, fontSize = 10.sp)
         Text("SOURCE: $source", fontSize = 8.sp)
