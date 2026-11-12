@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'none'; img-src 'self' data:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:">
   <title>CYBER//TRACE Runtime POC</title>
   <style>
     :root { color-scheme: dark; font-family: system-ui, sans-serif; background:#070b12; color:#e2edf5; }
@@ -24,6 +24,11 @@
   <button id="hang" class="secondary">START NON-STOP TASK</button>
   <button id="stop" class="secondary">TERMINATE WORKER</button>
   <button id="restart" class="secondary">RECREATE WORKER</button>
+  <hr>
+  <h2>REAL PYTHON TEST</h2>
+  <p>Uses a fresh Pyodide worker. Initialization has a 20-second ceiling; execution has a 3-second host deadline.</p>
+  <textarea id="python-source" rows="5" style="box-sizing:border-box;width:100%;background:#05090f;color:#e2edf5;border:1px solid #1b3544;border-radius:6px;padding:10px;font:13px monospace">print("NEXUS connection ready")</textarea>
+  <button id="run-python">RUN PYTHON</button>
   <pre id="output" aria-live="polite">No test run yet.</pre>
   <script type="module" src="./host.js"></script>
 </body>
