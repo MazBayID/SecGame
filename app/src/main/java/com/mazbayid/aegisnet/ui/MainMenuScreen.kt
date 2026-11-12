@@ -189,7 +189,6 @@ fun AegisNetApp() {
                     } else if (selected == "MISSION_03") {
                         SystemTraceAuditMissionScreen(
                             onOpenEditor = { selected = "MISSION_03_EDITOR" },
-                            onOpenMissionFour = { selected = "MISSION_04" },
                             onBack = { selected = "OPERATIONS" }
                         )
                     } else if (selected == "MISSION_03_EDITOR") {
