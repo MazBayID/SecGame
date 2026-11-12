@@ -10,6 +10,8 @@ Game ini berpusat pada terminal interaktif, code editor, eksekusi Python sungguh
 
 - **[GAMECONCEPT.md](GAMECONCEPT.md)** — konsep game, identitas desain, gameplay loop, sistem hacking simulator, kurikulum Python, sistem bantuan NLAS, misi, progresi, antarmuka, dan arah pengembangan.
 - **[STORYLINE.md](STORYLINE.md)** — latar dunia NEXUS CITY, karakter utama, konflik HELIX CORPORATION, perjalanan cerita lima Act, lima belas chapter, misteri NEXUS, dan rancangan ending.
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** — penilaian platform Android, rancangan arsitektur aplikasi, kandidat runtime Python terisolasi, risiko keamanan, serta gerbang pengujian teknis sebelum implementasi.
+- **[PROMPT.md](PROMPT.md)** — arahan eksekusi proyek, tanggung jawab, prinsip desain, standar engineering, dan tahapan produksi.
 
 ## Identitas Game
 
@@ -29,4 +31,4 @@ Pemain datang karena tertarik pada dunia cyberpunk dan ceritanya, menjalankan mi
 
 ---
 
-*Dokumen konsep dan storyline merupakan fondasi desain awal. Detail implementasi dan produksi akan dikembangkan berdasarkan kedua dokumen tersebut.*
+*Dokumen konsep dan storyline merupakan fondasi desain awal. Detail implementasi dan produksi akan dikembangkan berdasarkan dokumen arsitektur dan hasil validasi teknis.*
