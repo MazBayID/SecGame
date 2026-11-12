@@ -72,6 +72,56 @@ object EvidenceGraphEditor {
         return validateCandidate(graph.copy(relationships = graph.relationships + relationship))
     }
 
+    /**
+     * Explicitly confirms a player hypothesis. Merely adding a relationship never
+     * promotes it; the caller must invoke this operation after a player-confirmed
+     * action or an authored mission rule.
+     */
+    fun confirmHypothesis(
+        graph: EvidenceGraph,
+        relationshipId: String
+    ): EvidenceGraphMutation {
+        val index = graph.relationships.indexOfFirst { it.id == relationshipId }
+        if (index < 0) {
+            return reject("missing_relationship", "Relationship does not exist in this operation.")
+        }
+
+        val relationship = graph.relationships[index]
+        if (relationship.status == EvidenceLinkStatus.CONFIRMED) {
+            return accepted(graph, changed = false)
+        }
+        if (relationship.status != EvidenceLinkStatus.PLAYER_HYPOTHESIS) {
+            return reject(
+                "relationship_not_hypothesis",
+                "Only a player hypothesis can be explicitly confirmed."
+            )
+        }
+
+        val updated = relationship.copy(status = EvidenceLinkStatus.CONFIRMED)
+        val relationships = graph.relationships.toMutableList().also { it[index] = updated }
+        return validateCandidate(graph.copy(relationships = relationships))
+    }
+
+    /** Removes only player-owned, unconfirmed hypotheses; confirmed links are preserved. */
+    fun removeHypothesis(
+        graph: EvidenceGraph,
+        relationshipId: String
+    ): EvidenceGraphMutation {
+        val relationship = graph.relationships.firstOrNull { it.id == relationshipId }
+            ?: return reject("missing_relationship", "Relationship does not exist in this operation.")
+
+        if (relationship.status == EvidenceLinkStatus.CONFIRMED) {
+            return reject(
+                "cannot_remove_confirmed_relationship",
+                "Confirmed relationships cannot be removed as player hypotheses."
+            )
+        }
+
+        return validateCandidate(
+            graph.copy(relationships = graph.relationships.filterNot { it.id == relationshipId })
+        )
+    }
+
     fun saveClaim(
         graph: EvidenceGraph,
         claim: EvidenceClaim
