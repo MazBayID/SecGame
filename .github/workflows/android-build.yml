@@ -14,6 +14,8 @@ on:
     branches: [main]
     paths:
       - "app/**"
+      - "tools/**"
+      - ".gitignore"
       - "*.gradle.kts"
       - "gradle.properties"
       - ".github/workflows/android-build.yml"
