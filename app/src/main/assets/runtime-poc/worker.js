@@ -1,4 +1,4 @@
-let generation = 1;
+const generation = new URL(self.location.href).searchParams.get("generation") || "unknown";
 
 self.postMessage({ type: "ready", generation });
 
