@@ -104,6 +104,7 @@ fun EditorScreen(onBack: () -> Unit) {
         Spacer(Modifier.height(10.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
+                enabled = !isRunning,
                 onClick = {
                     workspace = VfsWorkspace.PERSONAL
                     fileSystem.switchWorkspace(workspace)
@@ -114,6 +115,7 @@ fun EditorScreen(onBack: () -> Unit) {
                 }
             ) { Text("PERSONAL") }
             Button(
+                enabled = !isRunning,
                 onClick = {
                     workspace = VfsWorkspace.MISSION
                     fileSystem.switchWorkspace(workspace)
@@ -141,6 +143,8 @@ fun EditorScreen(onBack: () -> Unit) {
                 when (val result = EditorDocumentService.open(fileSystem, path)) {
                     is VfsResult.Success -> {
                         document = result.value
+                        runOutput = ""
+                        lastRunHash = null
                         status = "Opened ${result.value.path} · ${result.value.access.name}"
                         statusIsError = false
                     }

@@ -117,4 +117,19 @@ class RunCoordinatorTest {
 
     private fun documentForMission(vfs: VirtualFileSystem): EditorDocument =
         (EditorDocumentService.open(vfs, "source/task.py") as VfsResult.Success).value
+    @Test
+    fun coordinatorRejectsWorkspaceFromAnotherOperationAtConstruction() {
+        val vfs = fileSystem()
+        val failure = runCatching {
+            RunCoordinator(
+                operationId = "another_operation",
+                fileSystem = vfs,
+                engine = ScriptExecutionEngine { _, _ -> error("must not execute") }
+            )
+        }.exceptionOrNull()
+
+        assertTrue(failure is IllegalArgumentException)
+    }
+
 }
+
