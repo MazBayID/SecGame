@@ -50,6 +50,20 @@ class RuntimePocInstrumentedTest {
             )
             assertTrue(runtime.contains("ZeroDivisionError"))
 
+            val outputLimit = runPythonAndAwait(
+                scenario,
+                """print("X" * 20000)""",
+                "OUTPUT_LIMIT"
+            )
+            assertTrue(outputLimit.contains("Output truncated at 16 KiB"))
+
+            val missingPackage = runPythonAndAwait(
+                scenario,
+                """import numpy""",
+                "RUNTIME_ERROR"
+            )
+            assertTrue(missingPackage.contains("ModuleNotFoundError"))
+
             val timeout = runPythonAndAwait(
                 scenario,
                 """while True: pass""",
