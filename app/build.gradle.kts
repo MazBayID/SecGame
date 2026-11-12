@@ -4,10 +4,17 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.chaquopy)
 }
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+chaquopy {
+    defaultConfig {
+        version = "3.13"
+    }
 }
 
 android {
@@ -22,6 +29,9 @@ android {
         versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
     }
 
     buildTypes {
