@@ -31,6 +31,7 @@ Fondasi Android menggunakan Kotlin, Jetpack Compose, Android Gradle Plugin 9.4.0
 Build debug secara lokal (dengan Android SDK dan Gradle yang sesuai tersedia):
 
 ```bash
+bash tools/prepare_pyodide_core.sh
 gradle --no-daemon assembleDebug
 ```
 
@@ -47,7 +48,7 @@ GitHub Actions menjalankan unit test otomatis saat kode aplikasi atau konfiguras
 - Instalasi, peluncuran, dan pengujian pada perangkat Android fisik **belum diverifikasi**.
 - Kontrak API runtime Python kini tersedia, mencakup batas ukuran source, batas resource, workspace virtual, status eksekusi, diagnostik terstruktur, dan pembatalan asinkron. Evaluator latihan dapat memeriksa output dari hasil interpreter sungguhan. Ini **belum menjalankan Python** dan bukan sandbox.
 - Langkah latihan pertama menyediakan editor draft yang dapat diubah. Tombol Run tetap nonaktif sampai runtime Python terisolasi tersedia; draft ini belum disimpan dan belum dieksekusi. Model progres lesson kini mengatur langkah yang sudah dilihat, jumlah percobaan, status latihan lulus, dan syarat penyelesaian lesson.
-- Runtime Python **belum diintegrasikan**. Harness WebView/Web Worker khusus debug kini tersedia untuk menguji ping, tugas sinkron yang tidak berhenti, terminasi worker dari host, dan pembuatan worker baru. Harness ini **belum menjalankan Python** dan belum diuji pada perangkat fisik. Eksperimen berikutnya adalah mengemas Pyodide secara lokal/offline (versi kandidat 314.0.7) dan mengujinya di worker tersebut; CPython pada Android isolated-process service tetap menjadi pembanding. Belum ada kandidat sandbox yang disetujui sebelum seluruh pengujian keamanan lulus. Lesson pertama memiliki navigasi langkah demi langkah dan editor draft, tetapi belum menjadi lesson yang dapat dieksekusi.
+- Runtime Python untuk lesson **belum diintegrasikan**. Harness debug kini menguji lifecycle Web Worker dan menyediakan panel eksekusi Python sungguhan melalui Pyodide 314.0.7. Runtime core diunduh saat persiapan build, diverifikasi dengan SHA-256, lalu dimasukkan ke debug APK; file biner tidak disimpan di Git. Panel POC membatasi source 16 KiB, output gabungan 16 KiB, dan waktu eksekusi 3 detik melalui terminasi worker dari host. Ini belum membuktikan batas memori atau keamanan sandbox dan belum diuji pada perangkat fisik. CPython pada Android isolated-process service tetap menjadi pembanding. Belum ada kandidat sandbox produksi yang disetujui. Lesson pertama masih belum terhubung ke runtime tersebut.
 
 Untuk membuka harness debug setelah memasang debug APK, gunakan `adb shell am start -n com.mazbayid.cybertrace/.execution.poc.RuntimePocActivity`. Detail prosedur dan batas pengujiannya ada di [docs/PYTHON_RUNTIME_POC.md](docs/PYTHON_RUNTIME_POC.md).
 
