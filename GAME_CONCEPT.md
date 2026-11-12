@@ -496,7 +496,7 @@ The English must read naturally and preserve Freya's voice.
   systems. Teach defensive, analytical, authorized skills.
 - Early "decryption" is only a transparent toy transformation; never
   imply a beginner is breaking modern cryptography.
-- Code execution uses validation and resource limits. Chaquopy runs in the application process; these controls are defense-in-depth, not hardened process isolation.
+- Code execution must use validation and resource limits. Chaquopy runs in the application process; these controls are defense-in-depth only, not process isolation or a hardened sandbox. This is the same limitation stated in section 12.
 
 ## 14. Build and Release (Single APK)
 
