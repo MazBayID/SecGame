@@ -43,64 +43,6 @@ with sqlite3.connect(":memory:") as database:
 `);
 assert.equal(startupProbe, "startup-ok");
 
-const beginnerProbe = pyodide.runPython(`
-events = [3, 7, 12]
-
-def classify(value):
-    if value >= 10:
-        return "critical"
-    if value >= 5:
-        return "warning"
-    return "normal"
-
-summary = [classify(value) for value in events]
-report = {
-    "city": "NEXUS",
-    "events": len(events),
-    "status": summary[-1],
-}
-print(f"{report['city']}:{report['events']}:{report['status']}")
-`);
-assert.equal(beginnerProbe, undefined);
-
-resetOutputCapture();
-pyodide.runPython(`
-events = [3, 7, 12]
-
-def classify(value):
-    if value >= 10:
-        return "critical"
-    if value >= 5:
-        return "warning"
-    return "normal"
-
-summary = [classify(value) for value in events]
-report = {"city": "NEXUS", "events": len(events), "status": summary[-1]}
-print(f"{report['city']}:{report['events']}:{report['status']}")
-`);
-assert.equal(decode(stdoutBytes), "NEXUS:3:critical\\n");
-
-pyodide.runPython(`
-from pathlib import Path
-
-evidence = Path("/tmp/cybertrace-virtual-workspace.txt")
-evidence.write_text("ECHO evidence", encoding="utf-8")
-assert evidence.read_text(encoding="utf-8") == "ECHO evidence"
-evidence.unlink()
-`);
-
-let unavailablePackageError = null;
-try {
-  pyodide.runPython("import numpy");
-} catch (error) {
-  unavailablePackageError = String(error);
-}
-assert.match(
-  unavailablePackageError ?? "",
-  /ModuleNotFoundError/,
-  "An unbundled package should fail closed instead of being installed"
-);
-
 let stdoutBytes = [];
 let stderrBytes = [];
 let outputBytes = 0;
@@ -129,6 +71,44 @@ function resetOutputCapture() {
 function decode(bytes) {
   return new TextDecoder("utf-8").decode(new Uint8Array(bytes));
 }
+
+resetOutputCapture();
+pyodide.runPython(`
+events = [3, 7, 12]
+
+def classify(value):
+    if value >= 10:
+        return "critical"
+    if value >= 5:
+        return "warning"
+    return "normal"
+
+summary = [classify(value) for value in events]
+report = {"city": "NEXUS", "events": len(events), "status": summary[-1]}
+print(f"{report['city']}:{report['events']}:{report['status']}")
+`);
+assert.equal(decode(stdoutBytes), "NEXUS:3:critical\n");
+
+pyodide.runPython(`
+from pathlib import Path
+
+evidence = Path("/tmp/cybertrace-virtual-workspace.txt")
+evidence.write_text("ECHO evidence", encoding="utf-8")
+assert evidence.read_text(encoding="utf-8") == "ECHO evidence"
+evidence.unlink()
+`);
+
+let unavailablePackageError = null;
+try {
+  pyodide.runPython("import numpy");
+} catch (error) {
+  unavailablePackageError = String(error);
+}
+assert.match(
+  unavailablePackageError ?? "",
+  /ModuleNotFoundError/,
+  "An unbundled package should fail closed instead of being installed"
+);
 
 resetOutputCapture();
 pyodide.runPython('print("NEXUS connection ready")');
@@ -170,6 +150,9 @@ assert.match(runtimeError ?? "", /runtime-probe/);
 console.log("PASS · Pyodide " + pyodide.version);
 console.log("PASS · Python " + pythonVersion);
 console.log("PASS · arithmetic, JSON, datetime, and SQLite");
+console.log("PASS · beginner variables, conditions, loops, functions, and collections");
+console.log("PASS · in-memory virtual filesystem read/write");
+console.log("PASS · missing packages fail closed");
 console.log("PASS · stdout and stderr capture");
 console.log("PASS · 16 KiB combined output cap");
 console.log("PASS · syntax and runtime exceptions");
