@@ -90,7 +90,7 @@ fun CampaignOpeningScreen(onBack: () -> Unit) {
             CampaignStep.NEXUS_LINK_OPENED -> StoryBeat(
                 eyebrow = "FREYA / SECURE CHAT",
                 title = "MENTOR ASSIGNED",
-                body = "Namaku Freya Knox. Aku akan menjadi mentor teknismu. Dan sebelum kamu bertanya—ya, aku memang sehebat itu.",
+                body = "Namaku Freya Knox. Aku ditugaskan sebagai mentor yang akan mendampingimu selama penugasan. Kita akan mulai dari dasar. Jika ada yang belum kamu pahami, tanyakan saja.",
                 detail = "Freya memperkenalkan NEXUS sebagai kanal dukungan sistem. Kontak NEXUS belum tersedia sampai tautan di bawah dibuka."
             )
             CampaignStep.NEXUS_CHANNEL_OPENED -> StoryBeat(
