@@ -16,7 +16,14 @@ class EvidenceGraphEntityMapperTest {
             integrity = EvidenceIntegrity.VERIFIED, access = EvidenceAccess.INTERNAL,
             origin = EvidenceOrigin.ORIGINAL, operationId = "first_contact_01", isDiscovered = true
         )
-        assertEquals(record, EvidenceGraphEntityMapper.run { record.toEntity().toDomain() })
+        assertEquals(
+            record.copy(isDiscovered = false),
+            EvidenceGraphEntityMapper.run { record.toEntity().toDomain(isDiscovered = false) }
+        )
+        assertEquals(
+            record.isDiscovered,
+            EvidenceGraphEntityMapper.run { record.toDiscoveryEntity().isDiscovered }
+        )
     }
 
     @Test
