@@ -110,8 +110,8 @@ pythonButton.addEventListener("click", () => {
         "",
         "STDERR",
         data.stderr || "(empty)",
-        data.diagnostic ? "\\nDIAGNOSTIC\\n" + data.diagnostic : "",
-      ].filter(Boolean).join("\\n");
+        data.diagnostic ? "\nDIAGNOSTIC\n" + data.diagnostic : "",
+      ].filter(Boolean).join("\n");
       finishPythonRun("Execution finished · worker discarded");
       write(details);
       return;
