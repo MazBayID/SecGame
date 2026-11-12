@@ -15,7 +15,7 @@ The `main` branch currently contains:
 - Android CI runs Kotlin JVM source validation only; it does not create a debug APK
 - `unsigned-apk-candidate.yml` builds exactly one unsigned Release APK, validates its package metadata, and uploads it with its SHA-256 checksum
 - No keystore, signing key, signing password, or GitHub signing secret is required. The output is unsigned and cannot be installed on Android until a signing policy is explicitly approved.
-- An emulator-tested candidate is not a final release until the exact same APK passes physical-device acceptance
+- Unsigned APK artifacts cannot be installed or accepted as device-tested releases
 
 Planned technical target: Python 3.13 through Chaquopy for local in-game execution; this runtime is not implemented in the current foundation.
 
