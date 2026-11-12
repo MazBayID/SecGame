@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'none'; img-src 'self' data:">
+  <title>CYBER//TRACE Runtime POC</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background:#070b12; color:#e2edf5; }
+    body { margin:0; padding:20px; }
+    h1 { color:#55f2c2; font-size:20px; }
+    p, small { color:#91a5b8; line-height:1.5; }
+    button { background:#55f2c2; color:#070b12; border:0; border-radius:6px; padding:12px; font-weight:700; margin:4px 4px 4px 0; }
+    button.secondary { background:#1b3544; color:#e2edf5; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#0d1420; border:1px solid #1b3544; border-radius:6px; padding:12px; min-height:90px; }
+    .warning { border-left:3px solid #e5b65c; padding-left:10px; }
+  </style>
+</head>
+<body>
+  <h1>CYBER//TRACE / WORKER POC</h1>
+  <p class="warning"><strong>Worker lifecycle test only.</strong> This page does not contain Python or execute player code. It tests worker startup, message handling, hard termination, and recreation inside the Android WebView.</p>
+  <p id="status">Starting test harness…</p>
+  <button id="ping">PING WORKER</button>
+  <button id="hang" class="secondary">START NON-STOP TASK</button>
+  <button id="stop" class="secondary">TERMINATE WORKER</button>
+  <button id="restart" class="secondary">RECREATE WORKER</button>
+  <pre id="output" aria-live="polite">No test run yet.</pre>
+  <script type="module" src="./host.mjs"></script>
+</body>
+</html>
