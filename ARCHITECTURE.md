@@ -186,7 +186,7 @@ This is a target structure, not a claim that every listed module already exists.
 - Python runtime isolation is the main technical risk and must be validated before it becomes a dependency of the game. See `docs/PYTHON_RUNTIME_POC.md` for the candidate plan, hardening checklist, and acceptance matrix.
 - A runtime-neutral execution API contract has been added. A real interpreter exists only in the disposable debug POC; no production execution adapter or lesson integration is present. The detailed disposable runtime POC plan is in `docs/PYTHON_RUNTIME_POC.md`. Pyodide in a bundled Web Worker is the first experiment; CPython in a true Android isolated-process service remains the comparison candidate. Neither is approved until all mandatory tests pass.
 
-CI evidence: [GitHub Actions run #43276377251](https://github.com/MazBayID/SecGame/actions/runs/43276377251) completed successfully for all 29 unit tests, runtime POC validation, and debug-source compilation. APK packaging remains a separate manual milestone action and was not run in this test workflow.
+CI evidence: [GitHub Actions run #43276717762](https://github.com/MazBayID/SecGame/actions/runs/43276717762) completed successfully for all 29 unit tests, runtime POC validation, and debug-source compilation including the isolated-process packaged-asset probe. APK packaging remains a separate manual milestone action and was not run in this test workflow.
 
 ## 9. References
 
