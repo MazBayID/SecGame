@@ -70,12 +70,12 @@ Keep this as the comparison path if Pyodide cannot satisfy Python compatibility 
 | Infinite loop | Run `while True: pass` | Host terminates worker within the configured deadline |
 | Cancellation | Cancel a running execution | Worker is stopped; no late result is accepted |
 | Output flood | Repeatedly print beyond the cap | Output stays within byte cap and UI remains responsive |
-| Memory pressure | Allocate progressively larger objects | Worker is stopped or fails safely; app survives and recovers |
+| Memory pressure | Only after preparing a recovery path, allocate progressively larger objects in controlled increments | Record peak renderer memory, failure mode, app survival, and ability to recreate a fresh worker; no memory cap is claimed by this POC |
 | Host filesystem | Attempt common absolute paths and app-private locations | No host file contents are exposed or modified |
 | Environment | Inspect environment variables and runtime globals | No app secrets, tokens, or host configuration are exposed |
 | Network | Attempt DNS, HTTP, and socket access | No direct external network access |
 | Virtual files | Read/write only mission-provided virtual paths | No access outside the in-memory game workspace |
-| JS/Android bridge | Inspect worker globals and attempt bridge access | No privileged Android bridge or host object exists |
+| JS/Android bridge | Run `import js; print(hasattr(js, 'self')); print(hasattr(js.self, 'postMessage'))` and inspect reachable globals | JavaScript worker globals may be visible, but no Android bridge, host application object, secret, or privileged callback is reachable |
 | Repeatability | Run, terminate, recreate, and run again repeatedly | Fresh execution state; no previous globals or output leak |
 | Renderer failure | Force worker/renderer failure where test tooling allows | Main app survives and can recreate the execution environment |
 | Offline | Disable network before first launch | Runtime initializes and executes without downloading dependencies |
