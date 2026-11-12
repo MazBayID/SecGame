@@ -41,7 +41,6 @@ private const val TRACE_AUDIT_MISSION_ID = "fc_m03_system_trace_audit"
 @Composable
 fun SystemTraceAuditMissionScreen(
     onOpenEditor: () -> Unit,
-    onOpenMissionFour: () -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -99,7 +98,7 @@ fun SystemTraceAuditMissionScreen(
 
     AegisPanel(title = "MISSION CONTROL / SYSTEM TRACE AUDIT") {
         when {
-            loading -> Text("Loading personnel record...", fontSize = 11.sp)
+            loading -> Text("Loading system trace log...", fontSize = 11.sp)
             error != null -> Text(error ?: "Operation error", color = MaterialTheme.colorScheme.error, fontSize = 11.sp)
             else -> {
                 Text("MISSION 03 / " + mission.definition.title, color = MaterialTheme.colorScheme.primary)
@@ -140,7 +139,7 @@ fun SystemTraceAuditMissionScreen(
                                     if (saved is EvidenceGraphSaveResult.Saved) {
                                         graph = updated
                                     } else {
-                                        error = "Identity record was read, but its discovery state could not be saved."
+                                        error = "Trace log was read, but its discovery state could not be saved."
                                     }
                                 }
                                 is VfsResult.Failure -> error = file.message
@@ -174,7 +173,7 @@ fun SystemTraceAuditMissionScreen(
                         onCheckedChange = { approachConfirmed = it },
                         enabled = !completed
                     )
-                    Text("I used for and if to extract ERROR entries.", fontSize = 10.sp)
+                    Text("I used a for loop and if condition to count ERROR entries.", fontSize = 10.sp)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
@@ -270,10 +269,6 @@ fun SystemTraceAuditMissionScreen(
                 }
                 if (completed) {
                     Text("MISSION 03 COMPLETE", color = MaterialTheme.colorScheme.primary)
-                    Spacer(Modifier.height(8.dp))
-                    Button(onClick = onOpenMissionFour, modifier = Modifier.fillMaxWidth()) {
-                        Text("CONTINUE TO MISSION 04 / RECORD INVENTORY")
-                    }
                 }
             }
         }
