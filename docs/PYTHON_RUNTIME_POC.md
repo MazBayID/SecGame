@@ -2,7 +2,6 @@
 
 > Status: disposable debug-only Pyodide POC implemented; production lesson runtime is not integrated or approved.
 >
-> Scope: CYBER//TRACE in `MazBayID/SecGame` only. The separate `firstGame` project is out of scope and must not be inspected or used.
 
 ## Objective
 
