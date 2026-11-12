@@ -22,6 +22,7 @@ The working target is an Android phone application.
 |---|---|---|
 | Application language | Kotlin | Native Android integration |
 | UI | Jetpack Compose | Screen-based terminal, editor, panels, dialogue, and responsive layouts |
+| WebView support | AndroidX WebKit 1.18.0 | Debug-only worker lifecycle POC via `WebViewAssetLoader`; not yet used by the lesson UI |
 | Android Gradle Plugin | 9.4.0 | Current build configuration; CI build verified |
 | Gradle | 9.6.0 | Used by the CI workflow; CI build verified |
 | JDK | 17 | Used by the CI workflow |
@@ -53,7 +54,9 @@ The application should be separated into the following boundaries:
 6. **Python execution boundary** — a separate execution component receiving bounded requests and returning bounded results.
 7. **Content** — story chapters, dialogue, mission definitions, lesson definitions, and localization.
 
-The game domain must not directly access Android storage, network sockets, or the Python interpreter. Those capabilities must be provided through explicit interfaces.\n\nThe first execution-boundary contract now exists at `execution/api/PythonExecutionContract.kt`. It defines bounded source requests, a game-owned workspace identifier, resource-limit fields, structured terminal statuses and diagnostics, and an asynchronous engine/cancellation interface. This is an API contract only: there is no Python interpreter implementation behind it yet. The current limit values are conservative defaults and validation bounds, not proof that a runtime enforces CPU or memory limits.
+The game domain must not directly access Android storage, network sockets, or the Python interpreter. Those capabilities must be provided through explicit interfaces.
+
+The first execution-boundary contract now exists at `execution/api/PythonExecutionContract.kt`. It defines bounded source requests, a game-owned workspace identifier, resource-limit fields, structured terminal statuses and diagnostics, and an asynchronous engine/cancellation interface. This is an API contract only: there is no Python interpreter implementation behind it yet. A debug-only WebView worker lifecycle harness now exists under `app/src/main/assets/runtime-poc/`; it verifies the local app-assets origin, module-worker startup, host-side termination, and recreation, but contains no Python interpreter and is not a player-code sandbox. The current limit values are conservative defaults and validation bounds, not proof that a runtime enforces CPU or memory limits.
 
 ## 4. Python runtime: critical proof of concept
 
@@ -109,7 +112,7 @@ A WebView must not expose a privileged JavaScript bridge to player-controlled co
 **Current assessment (not a final runtime selection)**
 - Chaquopy offers the strongest CPython compatibility, but its process model requires careful validation before it can satisfy the isolation requirement.
 - Pyodide offers a WebAssembly execution boundary and worker model, but has compatibility and interruption constraints.
-- Neither candidate is approved yet. The POC must compare offline startup, package size, Android memory use, bounded execution, worker/process termination, virtual-file integration, and resistance to host access.
+- Neither candidate is approved yet. The POC must compare offline startup, package size, Android memory use, bounded execution, worker/process termination, virtual-file integration, and resistance to host access. A debug-only worker lifecycle harness has been added; physical-device verification is still pending and no Python runtime is bundled.
 - The game curriculum must not depend on real internet sockets. Simulated networking remains the intended educational interface unless a future safe runtime proves otherwise.
 
 Research references:
