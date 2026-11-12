@@ -46,6 +46,14 @@ class RuntimePocActivity : Activity() {
                     return request.url.scheme != "https" ||
                         request.url.host != "appassets.androidplatform.net"
                 }
+
+                override fun onRenderProcessGone(
+                    view: WebView,
+                    detail: android.webkit.RenderProcessGoneDetail
+                ): Boolean {
+                    finish()
+                    return true
+                }
             }
         }
 
