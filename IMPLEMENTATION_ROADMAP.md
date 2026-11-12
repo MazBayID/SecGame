@@ -13,7 +13,7 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [x] Inspect the existing Android shell and current CI workflow.
 - [x] Establish an implementation roadmap aligned with the approved gameplay design.
 - [x] Add automated Kotlin unit-test execution to Android CI.
-- [ ] Verify a successful CI run after resolving the initial Compose compilation error.
+- [x] Verify successful Kotlin JVM unit tests on the merge candidate (GitHub Actions PR check).
 - [ ] Establish feature package boundaries and test conventions.
 - [ ] Add a small shared domain-result/error convention only when a concrete feature needs it.
 
