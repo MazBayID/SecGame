@@ -2,15 +2,24 @@ import { loadPyodide } from "./pyodide/pyodide.mjs";
 
 const MAX_SOURCE_BYTES = 16 * 1024;
 const MAX_OUTPUT_BYTES = 16 * 1024;
-const outputEncoder = new TextDecoder("utf-8");
+const MAX_DIAGNOSTIC_CHARS = 4096;
+const outputDecoder = new TextDecoder("utf-8");
 
 let pyodide;
+let activeRunId = null;
+let isBusy = false;
 
-function makeCapture() {
+function sendInitializationError(error) {
+  self.postMessage({
+    type: "initialization-error",
+    message: String(error?.message || error).slice(0, MAX_DIAGNOSTIC_CHARS),
+  });
+}
+
+function makeCapture(shared) {
   const bytes = [];
   return {
-    bytes,
-    write(byte, shared) {
+    write(byte) {
       if (shared.count < MAX_OUTPUT_BYTES) {
         bytes.push(byte);
         shared.count += 1;
@@ -19,8 +28,22 @@ function makeCapture() {
       }
     },
     text() {
-      return outputEncoder.decode(new Uint8Array(bytes));
+      return outputDecoder.decode(new Uint8Array(bytes));
     },
+  };
+}
+
+function classifyError(error) {
+  const message = String(error?.message || error).slice(0, MAX_DIAGNOSTIC_CHARS);
+  const isSyntaxError = /SyntaxError/.test(message);
+  const lineMatch = message.match(/line\s+(\d+)/i);
+  const typeMatch = message.match(/(?:^|\n)([A-Za-z_][A-Za-z0-9_.]*Error|SyntaxError):/);
+
+  return {
+    kind: isSyntaxError ? "SYNTAX" : "RUNTIME",
+    exceptionType: typeMatch?.[1] || (isSyntaxError ? "SyntaxError" : "PythonError"),
+    line: lineMatch ? Number(lineMatch[1]) : null,
+    message,
   };
 }
 
@@ -31,39 +54,61 @@ try {
   pyodide.setStdin({ error: true });
   self.postMessage({ type: "ready", version: pyodide.version });
 } catch (error) {
-  self.postMessage({
-    type: "error",
-    message: String(error?.message || error).slice(0, MAX_OUTPUT_BYTES),
-  });
+  sendInitializationError(error);
 }
 
 self.onmessage = ({ data }) => {
-  if (!pyodide || data?.type !== "run") return;
+  if (!pyodide || isBusy || data?.type !== "run") return;
+  if (typeof data.runId !== "string" || data.runId.length < 16 ||
+      data.runId.length > 128) return;
 
   const source = data.source;
   if (typeof source !== "string") {
-    self.postMessage({ type: "error", message: "Source must be a string." });
+    self.postMessage({
+      type: "result",
+      runId: data.runId,
+      status: "RESOURCE_LIMIT",
+      stdout: "",
+      stderr: "",
+      durationMs: 0,
+      outputTruncated: false,
+      diagnostic: {
+        kind: "RESOURCE",
+        exceptionType: "InvalidRequest",
+        line: null,
+        message: "Source must be a string.",
+      },
+    });
     return;
   }
 
   if (new TextEncoder().encode(source).byteLength > MAX_SOURCE_BYTES) {
     self.postMessage({
       type: "result",
+      runId: data.runId,
       status: "RESOURCE_LIMIT",
       stdout: "",
       stderr: "",
       durationMs: 0,
       outputTruncated: false,
-      diagnostic: "Source exceeds the 16 KiB limit.",
+      diagnostic: {
+        kind: "RESOURCE",
+        exceptionType: "SourceTooLarge",
+        line: null,
+        message: "Source exceeds the 16 KiB limit.",
+      },
     });
     return;
   }
 
+  isBusy = true;
+  activeRunId = data.runId;
+
   const shared = { count: 0, truncated: false };
-  const stdout = makeCapture();
-  const stderr = makeCapture();
-  pyodide.setStdout({ raw: (byte) => stdout.write(byte, shared) });
-  pyodide.setStderr({ raw: (byte) => stderr.write(byte, shared) });
+  const stdout = makeCapture(shared);
+  const stderr = makeCapture(shared);
+  pyodide.setStdout({ raw: (byte) => stdout.write(byte) });
+  pyodide.setStderr({ raw: (byte) => stderr.write(byte) });
 
   const startedAt = performance.now();
   let status = "COMPLETED";
@@ -73,13 +118,13 @@ self.onmessage = ({ data }) => {
     const result = pyodide.runPython(source, { filename: "<player>" });
     if (result && typeof result.destroy === "function") result.destroy();
   } catch (error) {
-    const message = String(error?.message || error);
-    status = message.includes("SyntaxError") ? "SYNTAX_ERROR" : "RUNTIME_ERROR";
-    diagnostic = message.slice(0, MAX_OUTPUT_BYTES);
+    diagnostic = classifyError(error);
+    status = diagnostic.kind === "SYNTAX" ? "SYNTAX_ERROR" : "RUNTIME_ERROR";
   }
 
   self.postMessage({
     type: "result",
+    runId: activeRunId,
     status,
     stdout: stdout.text(),
     stderr: stderr.text(),
@@ -87,4 +132,7 @@ self.onmessage = ({ data }) => {
     outputTruncated: shared.truncated,
     diagnostic,
   });
+
+  activeRunId = null;
+  isBusy = false;
 };
