@@ -105,4 +105,17 @@ class FirstContactMissionSeedTest {
         assertEquals("RX-14|09:41:16", files["briefing/archive_receipt.txt"]?.content?.lineSequence()?.first())
     }
 
+
+    @Test
+    fun sourceComparisonAndTimeScriptsAreSeededForTheFinalThreeMissions() {
+        val files = FirstContactMissionSeed.missionWorkspace().files.associateBy { it.path }
+
+        assertNotNull(files["scripts/source_compare.py"])
+        assertNotNull(files["scripts/time_normalization.py"])
+        assertNotNull(files["scripts/delta_validation.py"])
+        assertTrue(files["scripts/source_compare.py"]!!.content.contains("aegis_fields[0] == archive_fields[0]"))
+        assertTrue(files["scripts/time_normalization.py"]!!.content.contains("int("))
+        assertTrue(files["scripts/delta_validation.py"]!!.content.contains("abs("))
+    }
+
 }
