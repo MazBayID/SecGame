@@ -15,8 +15,13 @@ class SharedPreferencesCampaignMissionProgressRepository(
     context: Context
 ) : CampaignMissionProgressRepository {
 
-    private val preferences = context.applicationContext.getSharedPreferences(
+    private val applicationContext = context.applicationContext
+    private val preferences = applicationContext.getSharedPreferences(
         PREFERENCES_NAME,
+        Context.MODE_PRIVATE
+    )
+    private val legacyPreferences = applicationContext.getSharedPreferences(
+        LEGACY_PREFERENCES_NAME,
         Context.MODE_PRIVATE
     )
 
@@ -41,7 +46,6 @@ class SharedPreferencesCampaignMissionProgressRepository(
      * fails, the in-memory result still reflects the legacy completion.
      */
     private fun migrateLegacyMissionOneCompletion(): List<String> {
-        val legacyPreferences = preferences
         val legacyCompleted = legacyPreferences.getBoolean(LEGACY_MISSION_ONE_KEY, false)
         if (!legacyCompleted) return emptyList()
 
@@ -64,6 +68,7 @@ class SharedPreferencesCampaignMissionProgressRepository(
 
     private companion object {
         const val PREFERENCES_NAME = "aegis_campaign_mission_progress"
+        const val LEGACY_PREFERENCES_NAME = "aegis_mission_progress"
         const val KEY_COMPLETED_MISSIONS = "first_contact_completed_missions"
         const val LEGACY_MISSION_ONE_KEY = "completed_fc_m01_first_signal"
     }
