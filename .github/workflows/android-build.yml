@@ -71,6 +71,9 @@ jobs:
       - name: Run unit tests
         run: gradle --no-daemon testDebugUnitTest
 
+      - name: Compile Android instrumentation tests
+        run: gradle --no-daemon assembleDebugAndroidTest
+
   runtime-smoke:
     name: Real Pyodide runtime smoke test
     runs-on: ubuntu-latest
