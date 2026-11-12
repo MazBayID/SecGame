@@ -127,6 +127,8 @@ Run each snippet separately in the debug Python panel:
 | Output cap | `print("X" * 20000)` | Captured output remains capped at 16 KiB and is marked truncated |
 | Offline package behavior | `import numpy` | Fails if the wheel is not locally bundled; must not attempt a CDN download |
 
+The debug page also provides quick preset buttons for basic output, beginner arithmetic, syntax error, runtime error, timeout, output-limit, and missing-package checks. A preset only fills the editor; tap **RUN PYTHON** to execute it. This avoids manually typing the test snippets on a phone and makes the device checklist easier to repeat.
+
 The smoke tests validate basic runtime behavior only. They do not replace the host-access, memory-pressure, renderer-recovery, or physical-device tests in the full matrix.
 
 ## Pyodide artifact facts
