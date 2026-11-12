@@ -28,6 +28,7 @@ import com.mazbayid.aegisnet.domain.evidence.EvidenceGraph
 import com.mazbayid.aegisnet.domain.evidence.EvidenceGraphSaveResult
 import com.mazbayid.aegisnet.domain.mission.FirstContactMissionCatalog
 import com.mazbayid.aegisnet.domain.mission.MissionEvaluator
+import com.mazbayid.aegisnet.domain.mission.MissionEvaluation
 import com.mazbayid.aegisnet.domain.mission.MissionSubmission
 import com.mazbayid.aegisnet.domain.vfs.VfsResult
 import com.mazbayid.aegisnet.domain.vfs.VfsWorkspace
@@ -59,6 +60,7 @@ fun FirstContactMissionScreen(
     var outcome by remember { mutableStateOf(false) }
     var attachEvidence by remember { mutableStateOf(false) }
     var resultText by remember { mutableStateOf("") }
+    var evaluationResult by remember { mutableStateOf<MissionEvaluation?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(true) }
     var completed by remember { mutableStateOf(false) }
@@ -184,6 +186,7 @@ fun FirstContactMissionScreen(
                                 availableEvidenceIds = currentGraph.evidence.filter { it.isDiscovered }.map { it.id }.toSet()
                             )
                         }
+                        evaluationResult = evaluation
                         resultText = evaluation.criteria.joinToString("\n") {
                             (if (it.passed) "PASS" else "FAIL") + " · " + it.message
                         }
@@ -220,7 +223,8 @@ fun FirstContactMissionScreen(
 
             if (resultText.isNotEmpty()) {
                 Spacer(Modifier.height(8.dp))
-                Text(resultText, fontSize = 9.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
+                evaluationResult?.let { MissionDebriefPanel(it) }
+                Text(resultText.substringBefore('\n'), fontSize = 9.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
             }
             if (completed) {
                 Text("MISSION COMPLETE", color = MaterialTheme.colorScheme.primary)

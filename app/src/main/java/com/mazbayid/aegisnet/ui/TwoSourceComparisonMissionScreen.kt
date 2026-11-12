@@ -27,6 +27,7 @@ import com.mazbayid.aegisnet.domain.evidence.EvidenceGraph
 import com.mazbayid.aegisnet.domain.evidence.EvidenceGraphSaveResult
 import com.mazbayid.aegisnet.domain.mission.FirstContactMissionCatalog
 import com.mazbayid.aegisnet.domain.mission.MissionEvaluator
+import com.mazbayid.aegisnet.domain.mission.MissionEvaluation
 import com.mazbayid.aegisnet.domain.mission.MissionSubmission
 import com.mazbayid.aegisnet.domain.vfs.VfsResult
 import com.mazbayid.aegisnet.domain.vfs.VfsWorkspace
@@ -65,6 +66,7 @@ fun TwoSourceComparisonMissionScreen(
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     var resultText by remember { mutableStateOf("") }
+    var evaluationResult by remember { mutableStateOf<MissionEvaluation?>(null) }
 
     LaunchedEffect(Unit) {
         try {
@@ -211,6 +213,7 @@ fun TwoSourceComparisonMissionScreen(
                                         .toSet()
                                 )
                             }
+                            evaluationResult = evaluation
                             val criteria = evaluation.criteria.joinToString("\n") {
                                 (if (it.passed) "PASS" else "FAIL") + " · " + it.message
                             }
@@ -243,7 +246,8 @@ fun TwoSourceComparisonMissionScreen(
 
                 if (resultText.isNotEmpty()) {
                     Spacer(Modifier.height(8.dp))
-                    Text(resultText, fontSize = 9.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
+                    evaluationResult?.let { MissionDebriefPanel(it) }
+                Text(resultText.substringBefore('\n'), fontSize = 9.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
                 }
                 if (completed) {
                     Text("MISSION 06 COMPLETE", color = MaterialTheme.colorScheme.primary)

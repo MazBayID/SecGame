@@ -27,6 +27,7 @@ import com.mazbayid.aegisnet.domain.evidence.EvidenceGraph
 import com.mazbayid.aegisnet.domain.evidence.EvidenceGraphSaveResult
 import com.mazbayid.aegisnet.domain.mission.FirstContactMissionCatalog
 import com.mazbayid.aegisnet.domain.mission.MissionEvaluator
+import com.mazbayid.aegisnet.domain.mission.MissionEvaluation
 import com.mazbayid.aegisnet.domain.mission.MissionSubmission
 import com.mazbayid.aegisnet.domain.vfs.VfsResult
 import com.mazbayid.aegisnet.domain.vfs.VfsWorkspace
@@ -70,6 +71,7 @@ fun TimeAnalysisMissionScreen(
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     var resultText by remember { mutableStateOf("") }
+    var evaluationResult by remember { mutableStateOf<MissionEvaluation?>(null) }
 
     LaunchedEffect(missionNumber) {
         try {
@@ -227,6 +229,7 @@ fun TimeAnalysisMissionScreen(
                                         .filter { it.isDiscovered }.map { it.id }.toSet()
                                 )
                             }
+                            evaluationResult = evaluation
                             val criteria = evaluation.criteria.joinToString("\n") {
                                 (if (it.passed) "PASS" else "FAIL") + " · " + it.message
                             }
@@ -254,7 +257,8 @@ fun TimeAnalysisMissionScreen(
 
                 if (resultText.isNotEmpty()) {
                     Spacer(Modifier.height(8.dp))
-                    Text(resultText, fontSize = 9.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
+                    evaluationResult?.let { MissionDebriefPanel(it) }
+                Text(resultText.substringBefore('\n'), fontSize = 9.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
                 }
                 if (completed) {
                     Text("MISSION " + missionNumber.toString().padStart(2, '0') + " COMPLETE", color = MaterialTheme.colorScheme.primary)
