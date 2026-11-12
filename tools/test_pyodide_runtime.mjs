@@ -23,7 +23,13 @@ import js
 import pyodide_js
 
 for namespace_name, namespace in (("js", js), ("pyodide_js", pyodide_js)):
-    for name in ("self", "globalThis", "postMessage", "fetch", "Worker", "document", "window"):
+    for name in (
+    "self", "globalThis", "postMessage", "fetch", "Worker", "document", "window",
+    "XMLHttpRequest", "WebSocket", "importScripts", "close", "navigator",
+    "location", "indexedDB", "localStorage", "caches", "crypto",
+    "process", "require", "Deno", "Bun", "__dirname", "__filename",
+    "Function", "eval", "Object", "Reflect", "Proxy",
+):
         if hasattr(namespace, name):
             raise RuntimeError(
                 namespace_name + " unexpectedly exposes JavaScript global: " + name
