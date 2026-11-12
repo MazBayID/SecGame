@@ -214,7 +214,11 @@ pythonButton.addEventListener("click", () => {
     if (data?.type === "initialization-error" && pythonRunState === "initializing") {
       finishPythonRun("Python runtime initialization failed · worker discarded");
       write(data.message || "Unknown runtime initialization error.");
+      return;
     }
+
+    finishPythonRun("Unexpected worker message · worker discarded");
+    write("WORKER_CRASHED · The worker sent an unexpected or out-of-order message.");
   };
 
   activeWorker.onerror = (event) => {
