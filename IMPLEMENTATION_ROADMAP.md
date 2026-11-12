@@ -11,7 +11,8 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 
 - [x] Inspect the existing Android shell and current CI workflow.
 - [x] Establish an implementation roadmap aligned with the approved gameplay design.
-- [x] Add automated Kotlin unit-test execution to Android CI.
+- [x] Add automated Kotlin unit-test execution to the combined Android CI workflow.
+- [x] Configure the same workflow to build and upload exactly one installable Debug APK after all applicable checks pass on every push to `main`; pull requests run checks without publishing APKs.
 - [x] Verify successful Kotlin JVM unit tests on the merge candidate (GitHub Actions PR check).
 - [ ] Establish feature package boundaries and test conventions.
 - [ ] Add a small shared domain-result/error convention only when a concrete feature needs it.
@@ -107,7 +108,7 @@ Preserve all eight approved learning missions and their existing learning order.
 
 - [ ] Complete Android portrait usability, IME, touch-target, text-scaling, TalkBack, and reduced-motion checks.
 - [ ] Add regression tests for process death, rotation/configuration change, and offline behavior.
-- [ ] Run applicable automated source tests, then build exactly one installable Debug APK artifact from `main`, using the automatically generated debug signing key; do not create a separate unsigned Release artifact for this test candidate.
+- [ ] Verify the combined Android CI workflow runs applicable automated source tests, then automatically builds exactly one installable Debug APK from each successful push to `main`, using the automatically generated debug signing key. Pull requests run checks only; do not create a separate unsigned Release artifact or a separate manual APK workflow.
 - [ ] Validate APK archive integrity, package, versionCode, and ABI metadata; record the SHA-256 checksum.
 - [ ] Install and smoke-test the Debug APK on a physical Android phone when available; report emulator and physical-device results separately. Because CI debug keys may change between ephemeral runners, uninstall an older test build before installing a differently signed candidate when required, warning that local app data may be erased.
 - [ ] Keep Debug APKs strictly for development/testing. Any production or distribution signing identity requires separate explicit owner approval.
