@@ -55,7 +55,7 @@ class RuntimePocInstrumentedTest {
                 """while True: pass""",
                 "TIMEOUT"
             )
-            assertTrue(timeout.contains("worker terminated"))
+            assertTrue(timeout.contains("terminated the worker"))
 
             startPython(scenario, """while True: pass""")
             awaitText(scenario, "output", 5_000) {
