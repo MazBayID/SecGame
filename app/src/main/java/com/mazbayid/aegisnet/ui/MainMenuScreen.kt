@@ -183,7 +183,20 @@ fun AegisNetApp() {
                     } else if (selected == "MISSION_02") {
                         IdentityCheckMissionScreen(
                             onOpenEditor = { selected = "MISSION_02_EDITOR" },
+                            onOpenMissionThree = { selected = "MISSION_03" },
                             onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_03") {
+                        SystemTraceAuditMissionScreen(
+                            onOpenEditor = { selected = "MISSION_03_EDITOR" },
+                            onOpenMissionFour = { selected = "MISSION_04" },
+                            onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_03_EDITOR") {
+                        EditorScreen(
+                            initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
+                            initialPath = "scripts/trace_audit.py",
+                            onBack = { selected = "MISSION_03" }
                         )
                     } else if (selected == "MISSION_02_EDITOR") {
                         EditorScreen(

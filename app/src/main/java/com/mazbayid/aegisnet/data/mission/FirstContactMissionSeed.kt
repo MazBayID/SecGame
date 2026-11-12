@@ -33,6 +33,19 @@ object FirstContactMissionSeed {
                 access = EvidenceAccess.INTERNAL,
                 origin = EvidenceOrigin.ORIGINAL,
                 operationId = FirstContactMissionCatalog.OPERATION_ID
+            ),
+            EvidenceRecord(
+                id = "system_trace_log",
+                title = "Training System Trace Log",
+                description = "A read-only diagnostic log from the training transmission gateway. It contains informational entries, a warning, and error records; the original lines must remain unchanged.",
+                type = EvidenceType.LOG,
+                sourceId = "training_gateway_trace_014",
+                sourceLabel = "A.E.G.I.S. Technical Operations",
+                sourceReference = "system_trace.log",
+                integrity = EvidenceIntegrity.UNKNOWN,
+                access = EvidenceAccess.INTERNAL,
+                origin = EvidenceOrigin.ORIGINAL,
+                operationId = FirstContactMissionCatalog.OPERATION_ID
             )
         )
     )
@@ -76,6 +89,18 @@ object FirstContactMissionSeed {
             VfsFile(
                 path = "scripts/identity_check.py",
                 content = "record = aegis.read_text('briefing/identity_record.txt')\nfields = record.split('\\n')\ncandidate_line = fields[1]\naccess_line = fields[2]\ncandidate_id = candidate_line.split(': ')[1]\naccess_code = access_line.split(': ')[1]\nprint(candidate_id)\nprint(access_code)\n",
+                access = VfsAccess.READ_WRITE,
+                origin = VfsOrigin.PLAYER_CREATED
+            ),
+            VfsFile(
+                path = "briefing/system_trace.log",
+                content = "09:40:58 INFO channel initialized\n09:41:02 ERROR retry queue overflow\n09:41:04 WARNING delayed packet\n09:41:08 ERROR checksum mismatch\n09:41:12 INFO receipt stored",
+                access = VfsAccess.READ_ONLY,
+                origin = VfsOrigin.MISSION_SOURCE
+            ),
+            VfsFile(
+                path = "scripts/trace_audit.py",
+                content = "log_text = aegis.read_text('briefing/system_trace.log')\nlines = log_text.split('\\n')\nerror_count = 0\nfor line in lines:\n    if 'ERROR' in line:\n        error_count = error_count + 1\nprint('ERROR_COUNT=' + str(error_count))\n",
                 access = VfsAccess.READ_WRITE,
                 origin = VfsOrigin.PLAYER_CREATED
             )

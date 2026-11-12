@@ -39,7 +39,11 @@ import kotlinx.coroutines.withContext
 private const val IDENTITY_MISSION_ID = "fc_m02_identity_check"
 
 @Composable
-fun IdentityCheckMissionScreen(onOpenEditor: () -> Unit, onBack: () -> Unit) {
+fun IdentityCheckMissionScreen(
+    onOpenEditor: () -> Unit,
+    onOpenMissionThree: () -> Unit,
+    onBack: () -> Unit
+) {
     val context = LocalContext.current
     val vfsRepository = remember(context) { SharedPreferencesVfsRepository(context) }
     val evidenceRepository = remember(context) {
@@ -266,6 +270,10 @@ fun IdentityCheckMissionScreen(onOpenEditor: () -> Unit, onBack: () -> Unit) {
                 }
                 if (completed) {
                     Text("MISSION 02 COMPLETE", color = MaterialTheme.colorScheme.primary)
+                    Spacer(Modifier.height(8.dp))
+                    Button(onClick = onOpenMissionThree, modifier = Modifier.fillMaxWidth()) {
+                        Text("CONTINUE TO MISSION 03 / SYSTEM TRACE AUDIT")
+                    }
                 }
             }
         }

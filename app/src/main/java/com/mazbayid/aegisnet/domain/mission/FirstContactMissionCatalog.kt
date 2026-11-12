@@ -53,7 +53,9 @@ object FirstContactMissionCatalog {
             objectiveId = "count_error_entries",
             objectiveDescription = "Telusuri setiap baris log dan hitung entri ERROR.",
             approach = "python_loop_and_condition",
-            outcome = "error_entries_counted"
+            outcome = "error_entries_counted",
+            requiredEvidence = setOf("system_trace_log"),
+            requiredOutput = setOf("ERROR_COUNT=2")
         ),
         mission(
             number = 4,

@@ -82,4 +82,12 @@ class FirstContactMissionCatalogTest {
         assertEquals(setOf("RECRUIT-014", "FIRSTCONTACT"), objective.requiredOutputContains)
         assertTrue(objective.requiresSuccessfulRun)
     }
+
+    @Test
+    fun systemTraceAuditRequiresLogEvidenceAndExactErrorCount() {
+        val objective = FirstContactMissionCatalog.missions[2].definition.objectives.single()
+        assertEquals(setOf("system_trace_log"), objective.requiredEvidenceIds)
+        assertEquals(setOf("ERROR_COUNT=2"), objective.requiredOutputContains)
+        assertTrue(objective.requiresSuccessfulRun)
+    }
 }
