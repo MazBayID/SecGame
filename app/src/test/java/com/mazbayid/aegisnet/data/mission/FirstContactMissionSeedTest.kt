@@ -14,16 +14,21 @@ import org.junit.Test
 class FirstContactMissionSeedTest {
 
     @Test
-    fun firstThreeMissionsHaveDistinctSourceEvidence() {
+    fun firstFourMissionsHaveDistinctSourceEvidence() {
         val graph = FirstContactMissionSeed.evidenceGraph()
         val ids = graph.evidence.map { it.id }.toSet()
 
         assertTrue(ids.contains("message_fragment"))
         assertTrue(ids.contains("identity_record"))
         assertTrue(ids.contains("system_trace_log"))
+        assertTrue(ids.contains("record_inventory"))
         assertEquals(
             EvidenceType.SYSTEM_LOG,
             graph.evidence.single { it.id == "system_trace_log" }.type
+        )
+        assertEquals(
+            EvidenceType.DATASET,
+            graph.evidence.single { it.id == "record_inventory" }.type
         )
     }
 
@@ -68,4 +73,14 @@ class FirstContactMissionSeedTest {
         assertNotNull(merged.files.find { it.path == "scripts/identity_check.py" })
         assertFalse(merged.files.any { it.path == "briefing/system_trace.log" && it.access == VfsAccess.READ_WRITE })
     }
+
+    @Test
+    fun recordInventoryIsReadOnlyAndContainsFiveRecords() {
+        val inventory = FirstContactMissionSeed.missionWorkspace().files
+            .single { it.path == "briefing/record_inventory.txt" }
+
+        assertEquals(VfsAccess.READ_ONLY, inventory.access)
+        assertEquals(5, inventory.content.lineSequence().count())
+    }
+
 }
