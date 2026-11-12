@@ -105,6 +105,24 @@ class EvidenceGraphValidatorTest {
     }
 
     @Test
+    fun annotationIsPlayerDataAndMustReferenceExistingEvidence() {
+        val graph = EvidenceGraph(
+            operationId = "op-001",
+            annotations = listOf(
+                EvidenceAnnotation(
+                    id = "note-1",
+                    evidenceId = "missing",
+                    text = "Player observation"
+                )
+            )
+        )
+
+        val issues = EvidenceGraphValidator.validate(graph)
+
+        assertTrue(issues.any { it.code == "missing_annotation_evidence" })
+    }
+
+    @Test
     fun supportedClaimRequiresAtLeastOneSupportingSource() {
         val graph = EvidenceGraph(
             operationId = "op-001",
