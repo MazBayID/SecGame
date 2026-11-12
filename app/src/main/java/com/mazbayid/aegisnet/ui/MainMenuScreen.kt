@@ -184,6 +184,8 @@ fun AegisNetApp() {
                             initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
                             onBack = { selected = "OPERATIONS" }
                         )
+                    } else if (selected == "DATABASE") {
+                        EvidenceScreen(onBack = { selected = "MAIN MENU" })
                     } else if (selected == "TERMINAL") {
                         TerminalScreen(onBack = { selected = "MAIN MENU" })
                     } else if (selected == "EDITOR") {
