@@ -15,7 +15,6 @@ jobs:
     name: Validate, build once, and smoke-test exact Release APK
     runs-on: ubuntu-latest
     env:
-      AEGIS_RELEASE_STORE_FILE: ${{ runner.temp }}/aegis-release.jks
       AEGIS_RELEASE_STORE_PASSWORD: ${{ secrets.AEGIS_RELEASE_STORE_PASSWORD }}
       AEGIS_RELEASE_KEY_ALIAS: ${{ secrets.AEGIS_RELEASE_KEY_ALIAS }}
       AEGIS_RELEASE_KEY_PASSWORD: ${{ secrets.AEGIS_RELEASE_KEY_PASSWORD }}
@@ -55,8 +54,10 @@ jobs:
           test -n "$AEGIS_RELEASE_STORE_PASSWORD" || { echo "Missing AEGIS_RELEASE_STORE_PASSWORD secret"; exit 1; }
           test -n "$AEGIS_RELEASE_KEY_ALIAS" || { echo "Missing AEGIS_RELEASE_KEY_ALIAS secret"; exit 1; }
           test -n "$AEGIS_RELEASE_KEY_PASSWORD" || { echo "Missing AEGIS_RELEASE_KEY_PASSWORD secret"; exit 1; }
-          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$AEGIS_RELEASE_STORE_FILE"
-          test -s "$AEGIS_RELEASE_STORE_FILE"
+          KEYSTORE_PATH="$RUNNER_TEMP/aegis-release.jks"
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE_PATH"
+          test -s "$KEYSTORE_PATH"
+          echo "AEGIS_RELEASE_STORE_FILE=$KEYSTORE_PATH" >> "$GITHUB_ENV"
 
       - name: Run Kotlin JVM unit tests
         run: gradle :app:testDebugUnitTest
