@@ -33,12 +33,12 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 
 ### Slice 1.2 — Evidence repository and persistence
 
-- [ ] Select the local persistence approach based on the existing dependency/build setup (Room is preferred for structured relational evidence if dependency and migration costs remain acceptable).
-- [ ] Define repository interface independently of Android UI.
-- [ ] Persist evidence, relations, claims, annotations, and discovery state by operation.
-- [ ] Add schema versioning and migration tests.
-- [ ] Ensure source evidence is immutable; annotations and graph links are separate player-owned data.
-- [ ] Add repository tests for insert, update, query, archive, and process-restart recovery.
+- [x] Select Room 2.8.5 with KSP 2.2.20-2.0.4 for structured relational evidence on the existing Kotlin 2.2.20 / AGP 8.13.0 build.
+- [x] Define the EvidenceGraphRepository boundary independently of Android UI.
+- [x] Add normalized Room tables for evidence, annotations, relationships, claims, and claim-evidence links, scoped by operation.
+- [x] Add database schema version 1 and schema export through the Room Gradle plugin.
+- [x] Ensure source evidence is insert-only and conflicting reuse of an evidence ID is rejected; player annotations and graph links remain separate.
+- [ ] Add Android database integration/migration tests for insert, update, query, archive, and process-restart recovery.
 
 ### Slice 1.3 — Evidence service/use cases
 
@@ -50,8 +50,9 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [ ] Add editing of hypothesis notes and confidence without changing their status.
 - [x] Create and revise claims while retaining their evidence references.
 - [x] Filter evidence in memory by source, type, event time, integrity, and discovery state.
-- [ ] Add repository-backed filtering and persistence tests.
-- [ ] Test authorization, immutability, and idempotency rules across persistence.
+- [ ] Add repository-backed filtering and Android database integration tests.
+- [x] Test entity mapping and source-evidence immutability policy at the repository boundary.
+- [ ] Test authorization and process-restart recovery against an actual Room database.
 
 ### Slice 1.4 — Evidence Graph interface
 
