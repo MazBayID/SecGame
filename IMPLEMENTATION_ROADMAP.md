@@ -115,7 +115,9 @@ Preserve all eight approved learning missions and their existing learning order.
 
 ## Phase 5 — Campaign continuity and expanded routes
 
-- [x] Add a deterministic ordered mission-progression domain: only the next authored mission unlocks, completion is idempotent, unknown missions are rejected, and restored saves are sanitized to a contiguous completed prefix. JVM tests cover locking, unlocking, gaps, unknown IDs, and repeated completion.\n- [ ] Persist meaningful decisions, claims, reports, character knowledge, trust conditions, rank, clearance, and unlocks.
+- [x] Add a deterministic ordered mission-progression domain: only the next authored mission unlocks, completion is idempotent, unknown missions are rejected, and restored saves are sanitized to a contiguous completed prefix. JVM tests cover locking, unlocking, gaps, unknown IDs, and repeated completion.
+- [x] Connect Mission 01 acceptance to the ordered campaign progression and persist its completion through an offline SharedPreferences repository; save failure does not falsely mark the mission complete.
+- [ ] Persist meaningful decisions, claims, reports, character knowledge, trust conditions, rank, clearance, and unlocks.
 - [ ] Add alternate accepted approaches to selected operations and test each route.
 - [ ] Add authored operational consequences with fair warnings and recovery routes.
 - [ ] Ensure characters only know information they received or independently discovered.

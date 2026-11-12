@@ -16,11 +16,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mazbayid.aegisnet.data.evidence.EvidenceDatabaseProvider
+import com.mazbayid.aegisnet.data.campaign.SharedPreferencesCampaignMissionProgressRepository
 import com.mazbayid.aegisnet.data.evidence.RoomEvidenceGraphRepository
 import com.mazbayid.aegisnet.data.mission.FirstContactMissionSeed
 import com.mazbayid.aegisnet.data.execution.SharedPreferencesRunReceiptRepository
 import com.mazbayid.aegisnet.data.vfs.SharedPreferencesVfsRepository
 import com.mazbayid.aegisnet.domain.editor.EditorDocumentService
+import com.mazbayid.aegisnet.domain.campaign.CampaignMissionMutation
+import com.mazbayid.aegisnet.domain.campaign.CampaignMissionProgression
 import com.mazbayid.aegisnet.domain.evidence.EvidenceGraph
 import com.mazbayid.aegisnet.domain.evidence.EvidenceGraphSaveResult
 import com.mazbayid.aegisnet.domain.mission.FirstContactMissionCatalog
@@ -42,8 +45,8 @@ fun FirstContactMissionScreen(onOpenEditor: () -> Unit, onBack: () -> Unit) {
         RoomEvidenceGraphRepository(EvidenceDatabaseProvider.get(context))
     }
     val receipts = remember(context) { SharedPreferencesRunReceiptRepository(context) }
-    val progress = remember(context) {
-        context.getSharedPreferences("aegis_mission_progress", android.content.Context.MODE_PRIVATE)
+    val missionProgressRepository = remember(context) {
+        SharedPreferencesCampaignMissionProgressRepository(context)
     }
     val scope = rememberCoroutineScope()
     var graph by remember { mutableStateOf<EvidenceGraph?>(null) }
@@ -73,7 +76,10 @@ fun FirstContactMissionScreen(onOpenEditor: () -> Unit, onBack: () -> Unit) {
                 }
                 loaded
             }
-            completed = progress.getBoolean("completed_fc_m01_first_signal", false)
+            completed = withContext(Dispatchers.IO) {
+                missionProgressRepository.load().completedMissionIds
+                    .contains(FirstContactMissionCatalog.missions.first().definition.id)
+            }
         } catch (failure: Exception) {
             error = failure.message ?: "Mission data could not be loaded."
         } finally {
@@ -175,12 +181,30 @@ fun FirstContactMissionScreen(onOpenEditor: () -> Unit, onBack: () -> Unit) {
                             (if (it.passed) "PASS" else "FAIL") + " · " + it.message
                         }
                         if (evaluation.accepted) {
-                            completed = progress.edit()
-                                .putBoolean("completed_fc_m01_first_signal", true)
-                                .commit()
-                            resultText = "MISSION ACCEPTED\n" + resultText
+                            val orderedMissionIds = FirstContactMissionCatalog.missions
+                                .sortedBy { it.sequenceNumber }
+                                .map { it.definition.id }
+                            val completion = withContext(Dispatchers.IO) {
+                                when (
+                                    val mutation = CampaignMissionProgression.complete(
+                                        missionProgressRepository.load(),
+                                        mission.definition.id,
+                                        orderedMissionIds
+                                    )
+                                ) {
+                                    is CampaignMissionMutation.Accepted ->
+                                        missionProgressRepository.save(mutation.progress)
+                                    is CampaignMissionMutation.Rejected -> false
+                                }
+                            }
+                            completed = completion
+                            resultText = if (completion) {
+                                "MISSION ACCEPTED\\n" + resultText
+                            } else {
+                                "MISSION PASSED, BUT CAMPAIGN SAVE FAILED. CHECK STORAGE AND RETRY.\\n" + resultText
+                            }
                         } else {
-                            resultText = "SUBMISSION NEEDS REVISION\n" + resultText
+                            resultText = "SUBMISSION NEEDS REVISION\\n" + resultText
                         }
                     }
                 },
