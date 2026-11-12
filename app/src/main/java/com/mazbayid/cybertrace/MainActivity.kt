@@ -174,6 +174,9 @@ private fun CyberTraceStartScreen(onStartLesson: () -> Unit) {
 @Composable
 private fun FirstLessonScreen(onBack: () -> Unit) {
     val lesson = PythonCurriculum.firstLesson
+    var currentStepIndex by remember { mutableStateOf(0) }
+    val currentStep = lesson.steps[currentStepIndex]
+    val isLastStep = currentStepIndex == lesson.steps.lastIndex
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -198,7 +201,7 @@ private fun FirstLessonScreen(onBack: () -> Unit) {
                     letterSpacing = 1.2.sp
                 )
                 TextButton(onClick = onBack) {
-                    Text("BACK", color = Muted)
+                    Text("EXIT", color = Muted)
                 }
             }
 
@@ -223,64 +226,134 @@ private fun FirstLessonScreen(onBack: () -> Unit) {
             StoryPanel(lesson.storyIntroduction)
 
             Spacer(modifier = Modifier.height(22.dp))
-            lesson.steps.forEachIndexed { index, step ->
-                LessonStepPanel(
-                    number = index + 1,
-                    heading = step.heading,
-                    explanation = step.explanation,
-                    exampleCode = step.exampleCode,
-                    expectedOutput = step.expectedOutput
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "GUIDED PRACTICE",
-                color = Neon,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.5.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = lesson.practicePrompt,
-                color = MainText,
-                fontSize = 15.sp,
-                lineHeight = 22.sp
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            CodePanel(lesson.starterCode)
-
-            Spacer(modifier = Modifier.height(14.dp))
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Border, RoundedCornerShape(8.dp))
-                    .background(Panel, RoundedCornerShape(8.dp))
-                    .padding(14.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "WORKSPACE STATUS",
+                    text = "LEARNING STEPS",
                     color = Muted,
                     fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp
                 )
-                Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Python runtime integration is in progress.",
-                    color = MainText,
-                    fontSize = 13.sp
-                )
-                Text(
-                    text = "This lesson is currently a readable preview. Code execution will be enabled only after the isolated interpreter passes its safety checks.",
-                    color = Muted,
-                    fontSize = 12.sp,
-                    lineHeight = 18.sp
+                    text = "${currentStepIndex + 1} / ${lesson.steps.size}",
+                    color = Neon,
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                lesson.steps.forEachIndexed { index, _ ->
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(4.dp)
+                            .background(
+                                color = if (index <= currentStepIndex) Neon else Border,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                    )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(14.dp))
+            LessonStepPanel(
+                number = currentStepIndex + 1,
+                heading = currentStep.heading,
+                explanation = currentStep.explanation,
+                exampleCode = currentStep.exampleCode,
+                expectedOutput = currentStep.expectedOutput
+            )
+
+            if (isLastStep) {
+                Spacer(modifier = Modifier.height(22.dp))
+                Text(
+                    text = "GUIDED PRACTICE",
+                    color = Neon,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.5.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = lesson.practicePrompt,
+                    color = MainText,
+                    fontSize = 15.sp,
+                    lineHeight = 22.sp
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                CodePanel(lesson.starterCode)
+
+                Spacer(modifier = Modifier.height(14.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Border, RoundedCornerShape(8.dp))
+                        .background(Panel, RoundedCornerShape(8.dp))
+                        .padding(14.dp)
+                ) {
+                    Text(
+                        text = "WORKSPACE STATUS",
+                        color = Muted,
+                        fontSize = 10.sp,
+                        letterSpacing = 1.sp
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "Python runtime integration is in progress.",
+                        color = MainText,
+                        fontSize = 13.sp
+                    )
+                    Text(
+                        text = "This is a lesson preview. Code execution will be enabled only after the isolated interpreter passes its safety checks.",
+                        color = Muted,
+                        fontSize = 12.sp,
+                        lineHeight = 18.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(22.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                TextButton(
+                    onClick = { currentStepIndex = (currentStepIndex - 1).coerceAtLeast(0) },
+                    enabled = currentStepIndex > 0,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("PREVIOUS", color = if (currentStepIndex > 0) MainText else Muted)
+                }
+                Button(
+                    onClick = {
+                        if (!isLastStep) currentStepIndex += 1
+                    },
+                    enabled = !isLastStep,
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Neon,
+                        contentColor = Background,
+                        disabledContainerColor = Border,
+                        disabledContentColor = Muted
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = if (isLastStep) "LESSON PREVIEW" else "NEXT STEP",
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.8.sp
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }
