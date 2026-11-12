@@ -8,6 +8,7 @@ ARCHIVE_URL="https://github.com/pyodide/pyodide/releases/download/${VERSION}/${A
 EXPECTED_SHA256="2abdcc2e35208af406e07724cffa85bc582ced97e9028383ecf5462541393f95"
 CACHE_DIR="${ROOT}/app/build/pyodide-core-download"
 ARCHIVE_PATH="${CACHE_DIR}/${ARCHIVE_NAME}"
+EXTRACT_DIR="${CACHE_DIR}/extract"
 DEST_DIR="${ROOT}/app/src/debug/assets/runtime-poc/pyodide"
 
 command -v curl >/dev/null 2>&1 || {
@@ -16,6 +17,10 @@ command -v curl >/dev/null 2>&1 || {
 }
 command -v tar >/dev/null 2>&1 || {
   echo "tar is required to extract the pinned Pyodide runtime." >&2
+  exit 1
+}
+command -v find >/dev/null 2>&1 || {
+  echo "find is required to locate the extracted Pyodide runtime." >&2
   exit 1
 }
 
@@ -39,9 +44,19 @@ if [[ "${ACTUAL_SHA256}" != "${EXPECTED_SHA256}" ]]; then
   exit 1
 fi
 
-rm -rf "${DEST_DIR}"
-mkdir -p "${DEST_DIR}"
-tar -xjf "${ARCHIVE_PATH}" -C "${DEST_DIR}"
+rm -rf "${EXTRACT_DIR}" "${DEST_DIR}"
+mkdir -p "${EXTRACT_DIR}" "${DEST_DIR}"
+tar -xjf "${ARCHIVE_PATH}" -C "${EXTRACT_DIR}"
+
+# GitHub's core archive may wrap the runtime files in a top-level directory.
+# Locate the verified loader instead of assuming a particular archive root.
+LOADER_PATH="$(find "${EXTRACT_DIR}" -type f -name pyodide.mjs -print -quit)"
+if [[ -z "${LOADER_PATH}" ]]; then
+  echo "Pyodide loader not found in the verified core archive." >&2
+  exit 1
+fi
+RUNTIME_ROOT="$(dirname "${LOADER_PATH}")"
+cp -a "${RUNTIME_ROOT}/." "${DEST_DIR}/"
 
 for required in pyodide.mjs pyodide.asm.mjs pyodide.asm.wasm python_stdlib.zip pyodide-lock.json; do
   if [[ ! -s "${DEST_DIR}/${required}" ]]; then
