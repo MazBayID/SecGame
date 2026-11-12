@@ -93,6 +93,31 @@ function formatDiagnostic(diagnostic) {
   return parts.join(" · ");
 }
 
+function capCombinedOutput(stdout, stderr) {
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder("utf-8");
+  let remaining = 16 * 1024;
+  let truncated = false;
+
+  function take(value) {
+    const bytes = encoder.encode(value);
+    if (bytes.byteLength <= remaining) {
+      remaining -= bytes.byteLength;
+      return value;
+    }
+    truncated = true;
+    const clipped = bytes.slice(0, remaining);
+    remaining = 0;
+    return decoder.decode(clipped);
+  }
+
+  return {
+    stdout: take(stdout),
+    stderr: take(stderr),
+    truncated,
+  };
+}
+
 cancelPythonButton.addEventListener("click", () => {
   if (!pythonWorker) return;
   finishPythonRun("Execution cancelled · worker terminated");
@@ -157,22 +182,28 @@ pythonButton.addEventListener("click", () => {
           typeof data.stdout !== "string" ||
           typeof data.stderr !== "string" ||
           typeof data.durationMs !== "number" ||
-          !Number.isFinite(data.durationMs)) {
+          !Number.isFinite(data.durationMs) ||
+          typeof data.outputTruncated !== "boolean") {
         finishPythonRun("Invalid worker response · worker discarded");
         write("WORKER_CRASHED · The runtime returned an invalid result.");
         return;
       }
 
+      const boundedOutput = capCombinedOutput(data.stdout, data.stderr);
+      const outputTruncated = data.outputTruncated || boundedOutput.truncated;
+      const displayStatus = boundedOutput.truncated && data.status === "COMPLETED"
+        ? "OUTPUT_LIMIT"
+        : data.status;
       const details = [
-        data.status,
+        displayStatus,
         "Duration: " + data.durationMs + " ms",
-        data.outputTruncated ? "Output truncated at 16 KiB." : "",
+        outputTruncated ? "Output truncated at 16 KiB." : "",
         "",
         "STDOUT",
-        data.stdout || "(empty)",
+        boundedOutput.stdout || "(empty)",
         "",
         "STDERR",
-        data.stderr || "(empty)",
+        boundedOutput.stderr || "(empty)",
         data.diagnostic ? "\nDIAGNOSTIC\n" + formatDiagnostic(data.diagnostic) : "",
       ].filter(Boolean).join("\n");
       finishPythonRun("Execution finished · worker discarded");
