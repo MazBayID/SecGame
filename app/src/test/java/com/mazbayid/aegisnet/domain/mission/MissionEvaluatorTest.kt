@@ -188,4 +188,42 @@ class MissionEvaluatorTest {
         assertFalse(result.accepted)
         assertTrue(result.criteria.any { it.code == "invalid_definition_missing_objectives" })
     }
+    @Test
+    fun requiresAuthoredOutputTokensFromSuccessfulRun() {
+        val outputDefinition = definition.copy(
+            objectives = definition.objectives.map {
+                it.copy(requiredOutputContains = setOf("ACCESS GRANTED"))
+            }
+        )
+        val missing = MissionEvaluator.evaluate(
+            outputDefinition,
+            submission(
+                receipt = MissionRunReceipt(
+                    definition.operationId,
+                    "sha256:source-v1",
+                    true,
+                    "different output"
+                )
+            ),
+            availableEvidenceIds = setOf("evidence_signal_01")
+        )
+        val present = MissionEvaluator.evaluate(
+            outputDefinition,
+            submission(
+                receipt = MissionRunReceipt(
+                    definition.operationId,
+                    "sha256:source-v1",
+                    true,
+                    "ACCESS GRANTED"
+                )
+            ),
+            availableEvidenceIds = setOf("evidence_signal_01")
+        )
+
+        assertFalse(missing.accepted)
+        assertTrue(missing.criteria.any { it.code == "required_run_output" && !it.passed })
+        assertTrue(present.accepted)
+    }
+
 }
+

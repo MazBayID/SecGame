@@ -46,7 +46,7 @@ class RunCoordinatorTest {
         assertEquals(receivedSource, attempt.snapshot.source)
         assertEquals(EditorDocumentService.sha256(receivedSource!!), attempt.receipt.sourceHash)
         assertEquals(
-            MissionRunReceipt("first_contact_01", attempt.snapshot.sourceHash, true),
+            MissionRunReceipt("first_contact_01", attempt.snapshot.sourceHash, true, "latest unsaved edit"),
             attempt.receipt
         )
     }
