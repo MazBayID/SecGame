@@ -10,7 +10,7 @@ Game ini berpusat pada terminal interaktif, code editor, eksekusi Python sungguh
 
 - **[GAMECONCEPT.md](GAMECONCEPT.md)** — konsep game, identitas desain, gameplay loop, sistem hacking simulator, kurikulum Python, sistem bantuan NLAS, misi, progresi, antarmuka, dan arah pengembangan.
 - **[STORYLINE.md](STORYLINE.md)** — latar dunia NEXUS CITY, karakter utama, konflik HELIX CORPORATION, perjalanan cerita lima Act, lima belas chapter, misteri NEXUS, dan rancangan ending.
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** — penilaian platform Android, rancangan arsitektur aplikasi, kandidat runtime Python terisolasi, risiko keamanan, serta gerbang pengujian teknis sebelum implementasi.
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** — rancangan arsitektur Android, fondasi build, kandidat runtime Python terisolasi, risiko keamanan, dan gerbang pengujian teknis.
 - **[PROMPT.md](PROMPT.md)** — arahan eksekusi proyek, tanggung jawab, prinsip desain, standar engineering, dan tahapan produksi.
 
 ## Identitas Game
@@ -22,6 +22,20 @@ Game ini berpusat pada terminal interaktif, code editor, eksekusi Python sungguh
 - **Cerita:** perjalanan mengungkap misteri jaringan NEXUS CITY
 - **Combat:** tidak ada sistem combat
 - **Hacking:** seluruh aktivitas berlangsung dalam lingkungan virtual yang dikendalikan game
+
+## Build Android
+
+Fondasi Android awal menggunakan Kotlin, Jetpack Compose, Android Gradle Plugin 9.4.0, Gradle 9.6.0, dan JDK 17.
+
+Build debug secara lokal (dengan Android SDK Platform 37 dan Gradle 9.6.0 tersedia):
+
+```bash
+gradle --no-daemon assembleDebug
+```
+
+GitHub Actions menjalankan unit-test task dan membuat debug APK pada push ke `main` maupun pull request. APK akan tersedia sebagai artifact bernama `cyber-trace-debug` jika workflow berhasil.
+
+**Status:** scaffold dan workflow sudah ditambahkan; hasil kompilasi pertama belum diverifikasi. Runtime Python belum diintegrasikan karena isolasinya harus dibuktikan terlebih dahulu.
 
 ## Prinsip Utama
 
