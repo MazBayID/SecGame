@@ -125,8 +125,8 @@ Preserve all eight approved learning missions and their existing learning order.
 
 - [ ] Complete Android portrait usability, IME, touch-target, text-scaling, TalkBack, and reduced-motion checks.
 - [ ] Add regression tests for process death, rotation/configuration change, and offline behavior.
-- [ ] Verify the combined Android CI workflow runs applicable automated source tests, then automatically builds exactly one installable Debug APK from each successful push to `main`, using the automatically generated debug signing key. Pull requests run checks only; do not create a separate unsigned Release artifact or a separate manual APK workflow.
-- [ ] Validate APK archive integrity, package, versionCode, and ABI metadata; record the SHA-256 checksum.
+- [x] Verify the combined Android CI workflow runs applicable automated source tests, then automatically builds exactly one installable Debug APK from each successful push to `main`, using the automatically generated debug signing key. Pull requests run checks only; do not create a separate unsigned Release artifact or a separate manual APK workflow. Verified on `main` commit `f71a5e998fecb85ccae08395e8d52802e907c857` (run `43166415654`).
+- [x] Validate APK archive integrity, package, versionCode, and ABI metadata; record the SHA-256 checksum. The downloaded artifact archive passed `unzip -t`; the APK checksum matched `3dc0e42358d95fe9931adc5baea43968fb6138bfe2366a1a329a37e1558f3350` on commit `f71a5e998fecb85ccae08395e8d52802e907c857`.
 - [ ] Install and smoke-test the Debug APK on a physical Android phone when available; report emulator and physical-device results separately. Because CI debug keys may change between ephemeral runners, uninstall an older test build before installing a differently signed candidate when required, warning that local app data may be erased.
 - [ ] Keep Debug APKs strictly for development/testing. Any production or distribution signing identity requires separate explicit owner approval.
 - [ ] Review original art/audio/license provenance and app permissions.
