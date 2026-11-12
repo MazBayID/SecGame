@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -175,6 +176,7 @@ private fun CyberTraceStartScreen(onStartLesson: () -> Unit) {
 private fun FirstLessonScreen(onBack: () -> Unit) {
     val lesson = PythonCurriculum.firstLesson
     var currentStepIndex by remember { mutableStateOf(0) }
+    var practiceSource by remember(lesson.id) { mutableStateOf(lesson.starterCode) }
     val currentStep = lesson.steps[currentStepIndex]
     val isLastStep = currentStepIndex == lesson.steps.lastIndex
 
@@ -289,7 +291,10 @@ private fun FirstLessonScreen(onBack: () -> Unit) {
                     lineHeight = 22.sp
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                CodePanel(lesson.starterCode)
+                PythonWorkspacePreview(
+                    source = practiceSource,
+                    onSourceChange = { practiceSource = it }
+                )
 
                 Spacer(modifier = Modifier.height(14.dp))
                 Column(
@@ -355,6 +360,90 @@ private fun FirstLessonScreen(onBack: () -> Unit) {
             }
             Spacer(modifier = Modifier.height(12.dp))
         }
+    }
+}
+
+@Composable
+private fun PythonWorkspacePreview(
+    source: String,
+    onSourceChange: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Border, RoundedCornerShape(8.dp))
+            .background(Panel, RoundedCornerShape(8.dp))
+            .padding(12.dp)
+    ) {
+        Text(
+            text = "PYTHON EDITOR  /  LOCAL DRAFT",
+            color = Neon,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        BasicTextField(
+            value = source,
+            onValueChange = onSourceChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(112.dp)
+                .border(1.dp, Border, RoundedCornerShape(6.dp))
+                .background(Color(0xFF05090F), RoundedCornerShape(6.dp))
+                .padding(12.dp),
+            textStyle = androidx.compose.ui.text.TextStyle(
+                color = MainText,
+                fontSize = 13.sp,
+                fontFamily = FontFamily.Monospace
+            ),
+            decorationBox = { innerTextField ->
+                Box {
+                    if (source.isEmpty()) {
+                        Text(
+                            text = "Write Python code here...",
+                            color = Muted,
+                            fontSize = 13.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+                    innerTextField()
+                }
+            }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Button(
+            onClick = {},
+            enabled = false,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                disabledContainerColor = Border,
+                disabledContentColor = Muted
+            ),
+            shape = RoundedCornerShape(6.dp)
+        ) {
+            Text(
+                text = "RUN  /  RUNTIME NOT CONNECTED",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "OUTPUT",
+            color = Muted,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = "No execution yet. Your draft is editable, but it is not being run.",
+            color = Muted,
+            fontSize = 11.sp,
+            lineHeight = 16.sp
+        )
     }
 }
 
