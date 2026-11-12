@@ -63,65 +63,30 @@ A real Python interpreter is mandatory. A fake command parser, text-matching ans
 
 However, arbitrary Python code can access files, processes, imports, sockets, and consume unbounded resources. AST checks, filtered built-ins, or hiding dangerous commands are not security boundaries.
 
-### Candidate A — Android isolated service
+### Candidate A — Pyodide in a Web Worker hosted by Android WebView
 
-Investigate running the interpreter inside an Android service declared with `android:isolatedProcess="true"`.
+A disposable debug-only POC now runs the pinned Pyodide 314.0.7 core distribution in a module-type Web Worker. The runtime assets are downloaded and SHA-256 verified during local preparation or manual APK packaging; they are not committed to Git and there is no runtime CDN fallback.
 
-Android documents that such a service runs in a special isolated process without its own permissions, and communicates with the rest of the app through the Service API. This is a promising boundary, but does not by itself prove that a chosen Python runtime can be initialized safely there.
+The POC currently:
+- Requires AndroidX WebView multi-process mode so the renderer runs separately from the application process.
+- Loads local assets through `WebViewAssetLoader`; it does not grant the app INTERNET permission.
+- Disables file/content access, rejects navigation away from the app-assets origin, and exposes no Android JavaScript bridge.
+- Applies restrictive CSP to document and worker responses, blocks nested workers, omits `unsafe-eval`, and probes the public Pyodide API for a Function-constructor escape.
+- Configures an empty immutable `jsglobals` object and refuses startup if common worker/browser globals are exposed to Python.
+- Creates a fresh worker per execution, enforces a source-size limit, caps combined output, and lets the host terminate execution after a deadline or cancellation.
+- Runs real Python startup probes for arithmetic, JSON, datetime, and SQLite in-memory before the host accepts the runtime-ready message.
 
-Questions the proof of concept must answer:
+This is not a production sandbox. The pinned Pyodide 314.0.7 release has no documented configurable `maxMemoryBytes` limit, so memory is not bounded by this POC. The option currently appears in the 314.1.0 development changelog only; do not silently move to a development build. A timeout and output cap do not prevent memory exhaustion. The debug screen now warns testers about this limitation. Physical-device verification is still required for offline initialization, CSP compatibility, hard termination, renderer recovery, host-access attempts, and memory pressure.
 
-- Can the selected CPython distribution initialize in the isolated service?
-- Can its standard library and required runtime files be loaded without granting access to the app's private data?
-- Can the runtime use a dedicated temporary/virtual filesystem rather than the host application's files?
-- Can all player-visible file operations be routed through a game-owned virtual filesystem?
-- Can network access be denied at the process boundary, not merely by hiding Python APIs?
-- Can execution be stopped reliably after a deadline or output limit?
-- Can memory and output limits be enforced and tested on supported Android versions?
+Detailed implementation and test status: `docs/PYTHON_RUNTIME_POC.md`.
 
-Chaquopy is a candidate for packaging CPython in an Android application, but its compatibility with this isolated-service design must be demonstrated. Its FAQ points to a separate-process Jupyter example which declares `android:process=":kernel"`; that is not the same as `android:isolatedProcess="true"` and does not prove isolated-UID compatibility. Do not initialize untrusted player code inside the main application process. Reference: [Chaquopy FAQ](https://www.chaquo.com/chaquopy/doc/current/faq.html) and [Jupyter service manifest](https://github.com/chaquo/chaquopy-jupyter/blob/main/app/src/main/AndroidManifest.xml).
+### Candidate B — CPython in an Android isolated-process service
 
-### Candidate B — WebAssembly Python runtime
+The comparison path is a service declared with `android:isolatedProcess="true"`. A debug-only identity probe has been added: it binds to the isolated service through Messenger and compares its UID with the app UID. This confirms only the Android isolated-process boundary when tested on a device; it does not yet load Python or Chaquopy.
 
-Investigate a CPython WebAssembly runtime hosted in a tightly configured WebView or another renderer sandbox.
+Chaquopy 17.2 documents support for Python 3.10–3.15, AGP 7.3–9.5, and Android API 24+, so it is a plausible CPython packaging candidate for the current AGP 9.4 project. However, Chaquopy normally runs in the app process. Its FAQ discusses a separate process as an advanced option, and its public Jupyter example uses `android:process=":kernel"`, not `android:isolatedProcess="true"`. A normal secondary process shares the app UID and is not the required boundary for arbitrary player code.
 
-Questions to validate:
-
-- Can the interpreter and required standard-library modules run fully offline?
-- Can player code be prevented from reaching Android JavaScript bridges, host files, and unrestricted network resources?
-- Can the renderer be terminated and recreated after timeouts or runaway execution?
-- Are memory, execution time, and output size bounded?
-- Is the package size and performance acceptable on mid-range Android devices?
-
-A WebView must not expose a privileged JavaScript bridge to player-controlled code.
-
-### Evidence-based candidate notes (research update)
-
-**Chaquopy / CPython**
-- Chaquopy 17.2 currently documents support for Python 3.10–3.15, AGP 7.3–9.5, and Android API 24+.
-- Its FAQ states that Python normally runs in the main app process. It mentions a separate process as an advanced option. The public Chaquopy Jupyter example declares `android:process=":kernel"`, not `android:isolatedProcess="true"`; this demonstrates process separation, not the stronger isolated-process boundary required here. See the [example manifest](https://github.com/chaquo/chaquopy-jupyter/blob/7a0c20de40d69c8afe9b92a75f3fcd3612750302/app/src/main/AndroidManifest.xml).
-- Therefore, Chaquopy is a strong compatibility candidate for real CPython, but it is **not approved as the player-code sandbox**. The proof of concept must demonstrate initialization inside a genuinely isolated process and test filesystem, permission, and process boundaries.
-
-**Pyodide / WebAssembly**
-- Pyodide documents running Python in a Web Worker to keep long-running execution off the UI thread.
-- Its WebAssembly environment does not provide working native sockets, threading, or multiprocessing in the same way as desktop CPython. This is a meaningful limitation for the curriculum, but it may be acceptable if networking lessons use explicit game-owned simulation APIs rather than real sockets.
-- Pyodide's interrupt mechanism has additional requirements (including a SharedArrayBuffer setup); the prototype must also test whether terminating and recreating a worker is reliable on Android WebView.
-- WebView must not expose a privileged JavaScript interface to player-controlled Python/JavaScript. Android's security guidance warns that JavaScript interfaces can expose host-app methods to all frames.
-
-**Current assessment (not a final runtime selection)**
-- Chaquopy offers the strongest CPython compatibility, but its process model requires careful validation before it can satisfy the isolation requirement.
-- Pyodide offers a WebAssembly execution boundary and worker model, but has compatibility and interruption constraints.
-- Neither candidate is approved yet. The Pyodide core is now included only in prepared debug APKs; it is not committed to Git and is not connected to the lesson UI. The POC must compare offline startup, package size, Android memory use, bounded execution, worker/process termination, virtual-file integration, and resistance to host access. Physical-device verification is still pending. Pyodide 314.0.7 has no documented `maxMemoryBytes` option, so the current POC does not enforce a memory cap.
-- The game curriculum must not depend on real internet sockets. Simulated networking remains the intended educational interface unless a future safe runtime proves otherwise.
-
-Research references:
-- [Chaquopy version compatibility](https://chaquo.com/chaquopy/doc/current/versions.html)
-- [Chaquopy FAQ — Python process and interruption](https://chaquo.com/chaquopy/doc/current/faq.html)
-- [Pyodide — Web Workers](https://pyodide.org/en/stable/usage/webworker.html)
-- [Pyodide — interrupting execution](https://pyodide.org/en/stable/usage/keyboard-interrupts.html)
-- [Pyodide — WebAssembly constraints](https://pyodide.org/en/stable/usage/wasm-constraints.html)
-- [Android — WebView native bridge security](https://developer.android.com/privacy-and-security/risks/insecure-webview-native-bridges)
-- [Android — application security tips](https://developer.android.com/privacy-and-security/security-tips)
+Before selecting this route, prove that Chaquopy can initialize inside a genuinely isolated UID, load its native libraries and standard library without access to app-private files, and enforce execution, memory, and output limits. Do not treat a successful normal secondary-process example as evidence of isolated-process compatibility.
 
 ### Runtime decision gate
 
