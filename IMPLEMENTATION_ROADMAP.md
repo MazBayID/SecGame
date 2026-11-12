@@ -76,7 +76,7 @@ Build vertical slices: each slice should introduce a real domain capability, a u
 - [x] Separate authored mission/objective definitions from player submission state.
 - [x] Integrate the deterministic domain evaluator with the Room evidence repository and Mission Control for First Contact Missions 01–08; the second operation has its own evidence requirement, output requirements, exact-source RUN receipt check, and separate SUBMIT. Generalize the same flow to missions 03–08.
 - [ ] Keep RUN and SUBMIT separate; a successful RUN alone never completes an operation.
-- [ ] Add debrief output with Intelligence, Evidence, Technical, Stealth / Exposure, and Judgment dimensions only when active for that mission.
+- [x] Add criteria-based debrief output grouped into Intelligence, Evidence, Technical, and Judgment dimensions only when active; Stealth / Exposure is omitted from missions that do not use it.
 - [ ] Test multiple valid approaches, incomplete evidence, responsible uncertainty, and repeat submission idempotency.
 
 ## Phase 3 — First Contact vertical slice
@@ -93,7 +93,7 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Add the sixth playable mission, Two-Source Comparison: paired A.E.G.I.S./ARCHIVE receipt datasets, list indexing, exact reference/time comparison output, both evidence attachments, and ordered completion.
 - [x] Add the seventh playable mission, Time Normalization: convert timestamp components with `int()`, calculate a signed delta, and require the verified `SIGNED_DELTA=4` result.
 - [x] Add the eighth playable mission, Delta Validation: calculate the absolute difference with `abs()`, require `ABSOLUTE_DELTA=4`, and separately submit the responsible-uncertainty objective.
-- [ ] Expand the full Evidence Graph investigation UI, authored debriefs, and campaign continuity beyond the technical mission submissions.
+- [ ] Expand the full Evidence Graph investigation UI, richer authored narrative debriefs, and campaign continuity beyond the technical mission submissions.
 - [x] Add the opening Freya notification interaction and unlock NEXUS only after the player taps its link.
 - [ ] Build the full Messenger inbox and conversation history; the current opening interaction is a focused vertical slice, not the complete Messenger app.
 - [ ] Add only the tools needed by each mission; no forced app-hopping.
@@ -145,7 +145,7 @@ Preserve all eight approved learning missions and their existing learning order.
 
 ## Current implementation boundary
 
-The Android app has a persisted campaign-opening sequence (official recruitment → mission activation → Freya → player-triggered NEXUS unlock), a canonical eight-mission catalog, and playable deterministic offline mission flows for Missions 01–08. The mission evidence and workspace seeds include read-only source records, while player scripts remain writable. Each mission uses Chaquopy Python execution, an operation-bound exact-source-hash RUN receipt, and a separate SUBMIT evaluation against its authored evidence and output criteria before ordered campaign completion is saved. The mission progress adapter migrates the previous Mission 01 boolean save format. Recruit rank is derived from completion of Missions 01 and 02 and displayed dynamically in the main menu. The Terminal is a bounded VFS-only interface; the Editor supports personal/mission workspaces, exact-buffer saves, and RUN. The Database route exposes discovered evidence with provenance and separately persisted private notes. The Evidence Graph relationship/claim domain and Room persistence exist, but the full graph/timeline/comparison UI, relationship editor, authored debriefs, and broader campaign continuity remain pending. Full Messenger/Intranet, security hardening, UI/instrumentation coverage, and physical-device testing also remain incomplete.
+The Android app has a persisted campaign-opening sequence (official recruitment → mission activation → Freya → player-triggered NEXUS unlock), a canonical eight-mission catalog, and playable deterministic offline mission flows for Missions 01–08. The mission evidence and workspace seeds include read-only source records, while player scripts remain writable. Each mission uses Chaquopy Python execution, an operation-bound exact-source-hash RUN receipt, and a separate SUBMIT evaluation against its authored evidence and output criteria before ordered campaign completion is saved. The mission progress adapter migrates the previous Mission 01 boolean save format. Recruit rank is derived from completion of Missions 01 and 02 and displayed dynamically in the main menu. The Terminal is a bounded VFS-only interface; the Editor supports personal/mission workspaces, exact-buffer saves, and RUN. The Database route exposes discovered evidence with provenance and separately persisted private notes. The Evidence Graph relationship/claim domain and Room persistence exist, but the full graph/timeline/comparison UI, relationship editor, richer narrative debriefs, and broader campaign continuity remain pending. All mission submissions now produce a criteria-based debrief grouped by active operational dimensions. Full Messenger/Intranet, security hardening, UI/instrumentation coverage, and physical-device testing also remain incomplete.
 
 ## Engineering rules
 
