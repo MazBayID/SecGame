@@ -100,7 +100,7 @@ A WebView must not expose a privileged JavaScript bridge to player-controlled co
 
 **Chaquopy / CPython**
 - Chaquopy 17.2 currently documents support for Python 3.10–3.15, AGP 7.3–9.5, and Android API 24+.
-- Its FAQ states that Python normally runs in the main app process. It mentions a separate process as an advanced option, but a separate process alone is not equivalent to Android's isolated-process security boundary.
+- Its FAQ states that Python normally runs in the main app process. It mentions a separate process as an advanced option. The public Chaquopy Jupyter example declares `android:process=":kernel"`, not `android:isolatedProcess="true"`; this demonstrates process separation, not the stronger isolated-process boundary required here. See the [example manifest](https://github.com/chaquo/chaquopy-jupyter/blob/7a0c20de40d69c8afe9b92a75f3fcd3612750302/app/src/main/AndroidManifest.xml).
 - Therefore, Chaquopy is a strong compatibility candidate for real CPython, but it is **not approved as the player-code sandbox**. The proof of concept must demonstrate initialization inside a genuinely isolated process and test filesystem, permission, and process boundaries.
 
 **Pyodide / WebAssembly**
