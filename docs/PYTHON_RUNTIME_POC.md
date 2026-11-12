@@ -39,7 +39,7 @@ Keep this as the comparison path if Pyodide cannot satisfy Python compatibility 
 - Use Binder messages containing only bounded source and game-owned identifiers.
 - Do not pass file descriptors, host paths, app context, credentials, or unrestricted network capabilities to player code.
 - Verify cancellation, service death/restart, output caps, and memory behavior.
-- Chaquopy compatibility must be demonstrated in this exact process model; support for Android by itself is not proof that it works in an isolated service.
+- Chaquopy compatibility must be demonstrated in this exact process model; support for Android by itself is not proof that it works in an isolated service. Chaquopy's FAQ recommends a separate service process for stronger isolation, but its linked Jupyter example uses `android:process=":kernel"`, not `android:isolatedProcess="true"`. That example therefore does not prove that Chaquopy can run under an isolated UID. See the [Chaquopy FAQ](https://www.chaquo.com/chaquopy/doc/current/faq.html) and [reference service manifest](https://github.com/chaquo/chaquopy-jupyter/blob/main/app/src/main/AndroidManifest.xml).
 
 ## WebView hardening checklist
 
