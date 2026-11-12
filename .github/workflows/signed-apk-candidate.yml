@@ -13,7 +13,6 @@ concurrency:
 jobs:
   candidate:
     name: Validate, build once, and smoke-test exact Release APK
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       AEGIS_RELEASE_STORE_FILE: ${{ runner.temp }}/aegis-release.jks
@@ -21,6 +20,13 @@ jobs:
       AEGIS_RELEASE_KEY_ALIAS: ${{ secrets.AEGIS_RELEASE_KEY_ALIAS }}
       AEGIS_RELEASE_KEY_PASSWORD: ${{ secrets.AEGIS_RELEASE_KEY_PASSWORD }}
     steps:
+      - name: Require main branch
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "Signed APK candidates may only be built from main."
+            exit 1
+          }
+
       - name: Checkout main candidate commit
         uses: actions/checkout@v4
 
