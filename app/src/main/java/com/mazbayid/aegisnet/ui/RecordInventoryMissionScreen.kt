@@ -41,6 +41,7 @@ private const val RECORD_INVENTORY_MISSION_ID = "fc_m04_record_inventory"
 @Composable
 fun RecordInventoryMissionScreen(
     onOpenEditor: () -> Unit,
+    onOpenMissionFive: () -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
