@@ -22,7 +22,7 @@ The working target is an Android phone application.
 |---|---|---|
 | Application language | Kotlin | Native Android integration |
 | UI | Jetpack Compose | Screen-based terminal, editor, panels, dialogue, and responsive layouts |
-| WebView support | AndroidX WebKit 1.18.0 | Debug-only worker lifecycle POC via `WebViewAssetLoader`; not yet used by the lesson UI |
+| WebView support | AndroidX WebKit 1.18.0 | Debug-only WebView/worker and Pyodide POC via `WebViewAssetLoader`; not used by the lesson UI |
 | Android Gradle Plugin | 9.4.0 | Current build configuration; CI build verified |
 | Gradle | 9.6.0 | Used by the CI workflow; CI build verified |
 | JDK | 17 | Used by the CI workflow |
@@ -33,7 +33,7 @@ The working target is an Android phone application.
 | minSdk | 26 | Initial baseline; may change after device testing |
 | Application ID | `com.mazbayid.cybertrace` | New identity for this project |
 | Local persistence | Not yet implemented | Room and DataStore remain candidates |
-| Python execution | Runtime contract only | No interpreter is integrated; execution must remain outside the main app process |
+| Python execution | Contract plus disposable debug POC | Pyodide can run in a debug-only worker when local core assets are prepared; no production engine adapter or security approval yet |
 
 The Android project scaffold and initial terminal screen compile successfully in GitHub Actions. The CI pipeline runs unit tests for relevant source/build changes. Debug APK assembly and artifact upload are a separate manual milestone action, so routine commits do not spend time packaging an APK. Physical-device installation and runtime behavior have not yet been verified.
 
@@ -56,7 +56,7 @@ The application should be separated into the following boundaries:
 
 The game domain must not directly access Android storage, network sockets, or the Python interpreter. Those capabilities must be provided through explicit interfaces.
 
-The first execution-boundary contract now exists at `execution/api/PythonExecutionContract.kt`. It defines bounded source requests, a game-owned workspace identifier, resource-limit fields, structured terminal statuses and diagnostics, and an asynchronous engine/cancellation interface. This is an API contract only: there is no Python interpreter implementation behind it yet. A debug-only WebView worker lifecycle harness now exists under `app/src/main/assets/runtime-poc/`; it verifies the local app-assets origin, module-worker startup, host-side termination, and recreation, but contains no Python interpreter and is not a player-code sandbox. The current limit values are conservative defaults and validation bounds, not proof that a runtime enforces CPU or memory limits.
+The first execution-boundary contract now exists at `execution/api/PythonExecutionContract.kt`. It defines bounded source requests, a game-owned workspace identifier, resource-limit fields, structured terminal statuses and diagnostics, and an asynchronous engine/cancellation interface. The contract is not yet connected to the lesson UI or production engine. A separate debug-only POC now exercises Pyodide in a Web Worker when its locally bundled core assets are prepared. A debug-only WebView worker lifecycle harness now exists under `app/src/main/assets/runtime-poc/`; it verifies the local app-assets origin, module-worker startup, host-side termination, and recreation, and can run a real Pyodide interpreter when the pinned core assets are present. It is still a disposable debug experiment, not a production adapter or approved player-code sandbox. The current limit values are conservative defaults and validation bounds, not proof that a runtime enforces CPU or memory limits.
 
 ## 4. Python runtime: critical proof of concept
 
