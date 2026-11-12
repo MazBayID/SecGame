@@ -21,7 +21,7 @@ The Evidence Graph is currently a domain foundation only. Evidence persistence, 
 
 ## Implementation plan
 
-See [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) for the phased delivery plan and completion criteria. The binding single-APK build/release rules are in section 14 of [GAME_CONCEPT.md](GAME_CONCEPT.md); there is no separate `peraturan.md` in the repository, to avoid maintaining duplicate rule sources.
+See [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) for the phased delivery plan and completion criteria. All Markdown files form one coordinated specification set; read the relevant documents together and apply the document roles and conflict hierarchy defined in section 15 of [GAME_CONCEPT.md](GAME_CONCEPT.md). The binding single-APK build/release rules are in section 14 of [GAME_CONCEPT.md](GAME_CONCEPT.md).
 
 ## Design references
 
@@ -29,6 +29,8 @@ See [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) for the phased delive
 - [GAMEPLAY_DESIGN.md](GAMEPLAY_DESIGN.md) — approved gameplay systems, Evidence Graph rules, multiple solution paths, risk, and evaluation.
 - [UI_ARCHITECTURE.md](UI_ARCHITECTURE.md) — Android interface and workstation architecture.
 - [Story_Line.md](Story_Line.md) — narrative content and continuity.
+
+`GAME_CONCEPT.md` is the product/technical canon; `GAMEPLAY_DESIGN.md` and `UI_ARCHITECTURE.md` define their specialist domains; `IMPLEMENTATION_ROADMAP.md` tracks delivery order and verified completion; this README summarizes the repository state. A summary or roadmap checkbox never overrides the detailed specification.
 
 Hacknet is a high-level UX/architecture reference only. Do not copy its decompiled code, assets, or distinctive layouts. The game is offline-first; UI placeholders must not pretend that unimplemented systems are functional. RUN and SUBMIT must remain separate when their real execution and evaluation systems are implemented.
 
@@ -38,7 +40,7 @@ Hacknet is a high-level UX/architecture reference only. Do not copy its decompil
 - JDK 17
 - Gradle 8.13-compatible environment
 
-Open the repository in Android Studio and run the `app` configuration on an Android device or emulator.
+Open the repository in Android Studio and run the `app` configuration on an Android device or emulator. Local/debug runs are development-only; they are not signed release candidates and must never be published as the project APK.
 
 ## Provisional technical identifier
 
