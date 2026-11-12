@@ -36,7 +36,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Unit tests
+    name: Unit tests and source validation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -47,6 +47,11 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -61,13 +66,40 @@ jobs:
           node --check --input-type=module < app/src/debug/assets/runtime-poc/host.js
           node --check --input-type=module < app/src/debug/assets/runtime-poc/worker.js
           node --check --input-type=module < app/src/debug/assets/runtime-poc/python-worker.js
+          node --check tools/test_pyodide_runtime.mjs
 
       - name: Run unit tests
         run: gradle --no-daemon testDebugUnitTest
 
+  runtime-smoke:
+    name: Real Pyodide runtime smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Prepare pinned Pyodide core assets
+        run: bash tools/prepare_pyodide_core.sh
+
+      - name: Execute real Python runtime tests
+        run: node tools/test_pyodide_runtime.mjs
+
+      - name: Upload verified Pyodide core assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyodide-core-assets
+          path: app/src/debug/assets/runtime-poc/pyodide/
+          if-no-files-found: error
+          retention-days: 1
+
   package:
     name: Build debug APK
-    needs: validate
+    needs: [validate, runtime-smoke]
     if: github.event_name == 'workflow_dispatch' && inputs.build_apk
     runs-on: ubuntu-latest
     steps:
@@ -85,8 +117,11 @@ jobs:
         with:
           gradle-version: "9.6.0"
 
-      - name: Prepare pinned Pyodide core assets
-        run: bash tools/prepare_pyodide_core.sh
+      - name: Download verified Pyodide core assets
+        uses: actions/download-artifact@v4
+        with:
+          name: pyodide-core-assets
+          path: app/src/debug/assets/runtime-poc/pyodide/
 
       - name: Assemble debug APK
         run: gradle --no-daemon assembleDebug
