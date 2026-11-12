@@ -50,6 +50,9 @@ function classifyError(error) {
 try {
   pyodide = await loadPyodide({
     indexURL: new URL("./pyodide/", import.meta.url).href,
+    // Never expose the real worker global scope through Python's built-in js module.
+    // Player code receives an empty, immutable JavaScript namespace instead.
+    jsglobals: Object.freeze(Object.create(null)),
   });
   pyodide.setStdin({ error: true });
   self.postMessage({ type: "ready", version: pyodide.version });
