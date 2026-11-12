@@ -143,7 +143,7 @@ The core archive is much smaller but does not contain the vendored wheel collect
 ## Current POC boundaries
 
 - The worker executes real Python through Pyodide 314.0.7 when debug assets are prepared; it is not a fake parser.
-- CI runs `tools/validate_runtime_poc.sh` to catch regressions in the multiprocess-renderer gate, no-network/no-bridge configuration, strict CSP, JS namespace restriction, worker termination, output caps, and diagnostic bounds. These are static source checks, not proof of runtime isolation.
+- CI runs `tools/validate_runtime_poc.sh` to catch regressions in the multiprocess-renderer gate, no-network/no-bridge configuration, strict CSP, JS namespace restriction, worker termination, output caps, diagnostic bounds, the isolated-service manifest/UID probe, and the visible no-memory-cap warning. These are static source checks, not proof of runtime isolation.
 - The Python panel is isolated from the main Compose lesson screen and is debug-only.
 - Each run uses a new worker, and the host terminates it after completion, error, or timeout.
 - The current POC does not enforce a configurable memory cap, does not provide real networking, and does not implement the game virtual filesystem. Python's `js` module is configured with an empty immutable namespace, startup probes both `js` and `pyodide_js` for browser globals, worker CSP disallows nested workers, and the activity requires a sandboxed multi-process WebView renderer; these controls still require physical-device validation. Pyodide 314.0.7 does not expose the later maxMemoryBytes loader option: that option appears in the 314.1.0 development changelog, not the pinned 314.0.7 release. Do not silently upgrade to a development build to claim memory enforcement. A Web Worker timeout and output cap do not prevent a memory-exhaustion attempt; renderer survival and recovery must be measured on target Android devices. Pyodide's `jsglobals` option is now configured as an empty immutable namespace and startup checks that common worker/browser globals are absent from Python's `js` module. This is a narrow exposure-reduction measure, not a substitute for WebView renderer isolation or on-device host-access testing. The correlation ID is not a security boundary.
@@ -152,7 +152,7 @@ The core archive is much smaller but does not contain the vendored wheel collect
 ## Implementation order after POC
 
 1. Test the existing Pyodide worker on physical Android hardware, including offline startup and low-memory behavior.
-2. Add tests for memory pressure, nested worker attempts, malformed messages, and repeated worker recreation.
+2. On the physical device, run the isolated-process POC and confirm that the service UID differs from the app UID; this checks the Android service boundary only and does not yet test Chaquopy. Add tests for memory pressure, nested worker attempts, malformed messages, and repeated worker recreation.
 3. Decide whether WebView worker termination and renderer behavior meet the project's isolation requirements; compare against CPython in an Android isolated-process service if not.
 4. Implement and enforce a real memory/resource boundary or document why the candidate cannot safely meet it.
 5. Implement the production adapter for `PythonExecutionEngine` only after the security decision gate passes.
