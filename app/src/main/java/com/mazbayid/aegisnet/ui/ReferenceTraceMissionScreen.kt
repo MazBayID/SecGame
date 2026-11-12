@@ -41,6 +41,7 @@ private const val REFERENCE_TRACE_MISSION_ID = "fc_m05_reference_trace"
 @Composable
 fun ReferenceTraceMissionScreen(
     onOpenEditor: () -> Unit,
+    onOpenMissionSix: () -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
