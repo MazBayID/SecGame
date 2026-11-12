@@ -18,7 +18,7 @@
 </head>
 <body>
   <h1>CYBER//TRACE / WORKER POC</h1>
-  <p class="warning"><strong>Worker lifecycle test only.</strong> This page does not contain Python or execute player code. It tests worker startup, message handling, hard termination, and recreation inside the Android WebView.</p>
+  <p class="warning"><strong>Disposable debug POC.</strong> The lifecycle controls test worker startup, hard termination, and recreation. The Python panel runs real Pyodide code only when the pinned local runtime assets are included in the debug APK. Neither test certifies a production sandbox.</p>
   <p id="status">Starting test harness…</p>
   <button id="ping">PING WORKER</button>
   <button id="hang" class="secondary">START NON-STOP TASK</button>
