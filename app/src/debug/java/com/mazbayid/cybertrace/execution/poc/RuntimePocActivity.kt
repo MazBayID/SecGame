@@ -86,7 +86,7 @@ class RuntimePocActivity : Activity() {
             !WebViewCompat.isMultiProcessEnabled()
         ) {
             setContentView(TextView(this).apply {
-                text = "RUNTIME BLOCKED\\n\\nThis device is not running WebView in a separate sandboxed renderer process. Python execution is disabled."
+                text = "RUNTIME BLOCKED\n\nThis device is not running WebView in a separate sandboxed renderer process. Python execution is disabled."
                 setTextColor(Color.WHITE)
                 setBackgroundColor(Color.rgb(7, 11, 18))
                 textSize = 16f
