@@ -8,6 +8,8 @@ ACTIVITY="${ROOT}/app/src/debug/java/com/mazbayid/cybertrace/execution/poc/Runti
 INDEX="${ROOT}/app/src/debug/assets/runtime-poc/index.html"
 HOST="${ROOT}/app/src/debug/assets/runtime-poc/host.js"
 PYTHON_WORKER="${ROOT}/app/src/debug/assets/runtime-poc/python-worker.js"
+ISOLATED_SERVICE="${ROOT}/app/src/debug/java/com/mazbayid/cybertrace/execution/poc/IsolatedPythonServiceProbe.kt"
+ISOLATED_ACTIVITY="${ROOT}/app/src/debug/java/com/mazbayid/cybertrace/execution/poc/IsolatedProcessPocActivity.kt"
 
 require_text() {
   local needle="$1"
@@ -33,6 +35,10 @@ require_text "WebViewFeature.MULTI_PROCESS" "$ACTIVITY"
 require_text "WebViewCompat.isMultiProcessEnabled()" "$ACTIVITY"
 reject_text "android.permission.INTERNET" "$MAIN_MANIFEST"
 reject_text "android.permission.INTERNET" "$DEBUG_MANIFEST"
+require_text 'android:isolatedProcess="true"' "$DEBUG_MANIFEST"
+require_text "Process.myUid()" "$ISOLATED_SERVICE"
+require_text "applicationInfo.uid" "$ISOLATED_ACTIVITY"
+require_text "serviceUid != appUid" "$ISOLATED_ACTIVITY"
 
 # Keep the WebView boundary narrow: no Java bridge, host file access, or
 # JavaScript eval escape in the document/worker CSP.
