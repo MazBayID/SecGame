@@ -50,6 +50,11 @@ fi
 # Keep Python's JS namespace empty and require the constructor-escape probe.
 require_text "jsglobals: Object.freeze(Object.create(null))" "$PYTHON_WORKER"
 require_text "pyodide_js.runPython.constructor" "$PYTHON_WORKER"
+require_text "import sqlite3" "$PYTHON_WORKER"
+require_text "CREATE TABLE runtime_probe" "$PYTHON_WORKER"
+require_text 'pythonVersion' "$PYTHON_WORKER"
+require_text '"sqlite3"' "$PYTHON_WORKER"
+require_text 'data.pythonVersion' "$HOST"
 require_text "finishedWorker?.terminate()" "$HOST"
 require_text "crypto.randomUUID()" "$HOST"
 require_text "sandboxed WebView renderer" "$HOST"
