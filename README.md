@@ -25,17 +25,28 @@ Game ini berpusat pada terminal interaktif, code editor, eksekusi Python sungguh
 
 ## Build Android
 
-Fondasi Android awal menggunakan Kotlin, Jetpack Compose, Android Gradle Plugin 9.4.0, Gradle 9.6.0, dan JDK 17.
+Fondasi Android menggunakan Kotlin, Jetpack Compose, Android Gradle Plugin 9.4.0, Gradle 9.6.0, dan JDK 17.
 
-Build debug secara lokal (dengan Android SDK Platform 37 dan Gradle 9.6.0 tersedia):
+Build debug secara lokal (dengan Android SDK dan Gradle yang sesuai tersedia):
 
 ```bash
 gradle --no-daemon assembleDebug
 ```
 
-GitHub Actions menjalankan unit-test task dan membuat debug APK pada push ke `main` maupun pull request. APK akan tersedia sebagai artifact bernama `cyber-trace-debug` jika workflow berhasil.
+GitHub Actions menjalankan unit test dan membuat debug APK pada push ke `main` maupun pull request. Jika workflow berhasil, APK tersedia sebagai artifact bernama `cyber-trace-debug`.
 
-**Status:** scaffold dan workflow sudah ditambahkan; hasil kompilasi pertama belum diverifikasi. Runtime Python belum diintegrasikan karena isolasinya harus dibuktikan terlebih dahulu.
+### Status verifikasi
+
+<badge color="success">CI berhasil</badge>
+
+- Android project berhasil dikompilasi pada GitHub Actions.
+- Tiga unit test untuk kebijakan pembukaan lesson berhasil dijalankan.
+- Debug APK berhasil dibuat dan diunggah sebagai artifact.
+- Workflow terbaru yang memverifikasi commit dokumentasi dan test: [GitHub Actions run #43259419839](https://github.com/MazBayID/SecGame/actions/runs/43259419839).
+- Instalasi, peluncuran, dan pengujian pada perangkat Android fisik **belum diverifikasi**.
+- Runtime Python **belum diintegrasikan**. Pemilihan runtime menunggu proof of concept yang membuktikan isolasi dan batas sumber daya.
+
+Hasil CI yang berhasil bukan bukti bahwa seluruh game telah selesai atau bahwa sandbox Python sudah aman. Status implementasi setiap fitur harus tetap dibedakan dari target desainnya.
 
 ## Prinsip Utama
 
@@ -45,4 +56,4 @@ Pemain datang karena tertarik pada dunia cyberpunk dan ceritanya, menjalankan mi
 
 ---
 
-*Dokumen konsep dan storyline merupakan fondasi desain awal. Detail implementasi dan produksi akan dikembangkan berdasarkan dokumen arsitektur dan hasil validasi teknis.*
+*Dokumen konsep dan storyline merupakan fondasi desain. Detail implementasi dan produksi dikembangkan berdasarkan dokumen arsitektur, pengujian, dan hasil validasi teknis.*
