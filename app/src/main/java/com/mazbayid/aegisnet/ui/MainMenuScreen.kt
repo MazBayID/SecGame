@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -68,7 +70,8 @@ fun AegisNetApp() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 18.dp),
+                .padding(horizontal = 20.dp, vertical = 18.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
             HeaderBar(
@@ -179,7 +182,7 @@ fun AegisNetApp() {
                     }
                 }
 
-                Spacer(Modifier.weight(1f))
+                Spacer(Modifier.height(8.dp))
                 Text(
                     "AEGIS-NET  //  BUILD 0.1.0  //  OFFLINE-FIRST",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
