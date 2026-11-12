@@ -3,8 +3,8 @@ package com.mazbayid.aegisnet.domain.evidence
 /**
  * Domain-only evidence model. It intentionally has no Android or Compose dependencies.
  *
- * Source evidence is immutable from the player's perspective. Player annotations and
- * relationships are stored separately so an investigation cannot silently rewrite a source.
+ * Evidence source records are immutable from the player's perspective. Player annotations
+ * and relationships are separate graph records so investigation never rewrites a source.
  */
 data class EvidenceRecord(
     val id: String,
@@ -20,42 +20,31 @@ data class EvidenceRecord(
     val access: EvidenceAccess = EvidenceAccess.UNCLASSIFIED,
     val origin: EvidenceOrigin = EvidenceOrigin.ORIGINAL,
     val operationId: String,
-    val annotations: List<String> = emptyList(),
     val isDiscovered: Boolean = false
 )
 
 enum class EvidenceType {
-    MESSAGE,
-    FILE,
-    SYSTEM_LOG,
-    DATABASE_RECORD,
-    TESTIMONY,
-    OBSERVATION,
-    DATASET,
-    REPORT
+    MESSAGE, FILE, SYSTEM_LOG, DATABASE_RECORD, TESTIMONY, OBSERVATION, DATASET, REPORT
 }
 
 enum class EvidenceIntegrity {
-    VERIFIED,
-    QUESTIONABLE,
-    COMPROMISED,
-    UNKNOWN
+    VERIFIED, QUESTIONABLE, COMPROMISED, UNKNOWN
 }
 
 enum class EvidenceAccess {
-    PUBLIC,
-    INTERNAL,
-    RESTRICTED,
-    CLASSIFIED,
-    UNCLASSIFIED
+    PUBLIC, INTERNAL, RESTRICTED, CLASSIFIED, UNCLASSIFIED
 }
 
 enum class EvidenceOrigin {
-    ORIGINAL,
-    DERIVED,
-    COPY,
-    PLAYER_AUTHORED
+    ORIGINAL, DERIVED, COPY, PLAYER_AUTHORED
 }
+
+data class EvidenceAnnotation(
+    val id: String,
+    val evidenceId: String,
+    val text: String,
+    val createdAtEpochMillis: Long? = null
+)
 
 enum class EvidenceRelationType {
     SUPPORTS,
@@ -70,16 +59,11 @@ enum class EvidenceRelationType {
 }
 
 enum class EvidenceLinkStatus {
-    CONFIRMED,
-    PLAYER_HYPOTHESIS,
-    UNRESOLVED
+    CONFIRMED, PLAYER_HYPOTHESIS, UNRESOLVED
 }
 
 enum class EvidenceConfidence {
-    LOW,
-    MEDIUM,
-    HIGH,
-    UNASSESSED
+    LOW, MEDIUM, HIGH, UNASSESSED
 }
 
 data class EvidenceRelationship(
@@ -93,10 +77,7 @@ data class EvidenceRelationship(
 )
 
 enum class ClaimStatus {
-    PROPOSED,
-    SUPPORTED,
-    DISPUTED,
-    INSUFFICIENT
+    PROPOSED, SUPPORTED, DISPUTED, INSUFFICIENT
 }
 
 data class EvidenceClaim(
@@ -111,6 +92,7 @@ data class EvidenceClaim(
 data class EvidenceGraph(
     val operationId: String,
     val evidence: List<EvidenceRecord> = emptyList(),
+    val annotations: List<EvidenceAnnotation> = emptyList(),
     val relationships: List<EvidenceRelationship> = emptyList(),
     val claims: List<EvidenceClaim> = emptyList()
 )
@@ -130,16 +112,15 @@ object EvidenceGraphValidator {
         val issues = mutableListOf<EvidenceGraphIssue>()
         val evidenceIds = graph.evidence.map { it.id }
         val knownEvidenceIds = evidenceIds.toSet()
-        val relationshipIds = graph.relationships.map { it.id }
-        val claimIds = graph.claims.map { it.id }
 
         if (graph.operationId.isBlank()) {
             issues += issue("blank_operation_id", "Operation ID must not be blank.")
         }
 
         addDuplicateIssues(evidenceIds, "duplicate_evidence_id", issues)
-        addDuplicateIssues(relationshipIds, "duplicate_relationship_id", issues)
-        addDuplicateIssues(claimIds, "duplicate_claim_id", issues)
+        addDuplicateIssues(graph.annotations.map { it.id }, "duplicate_annotation_id", issues)
+        addDuplicateIssues(graph.relationships.map { it.id }, "duplicate_relationship_id", issues)
+        addDuplicateIssues(graph.claims.map { it.id }, "duplicate_claim_id", issues)
 
         graph.evidence.forEach { record ->
             if (record.id.isBlank()) issues += issue("blank_evidence_id", "Evidence ID must not be blank.")
@@ -147,6 +128,14 @@ object EvidenceGraphValidator {
             if (record.sourceId.isBlank()) issues += issue("blank_source_id", "Source ID must not be blank: ${record.id}.")
             if (record.operationId != graph.operationId) {
                 issues += issue("operation_mismatch", "Evidence ${record.id} belongs to another operation.")
+            }
+        }
+
+        graph.annotations.forEach { annotation ->
+            if (annotation.id.isBlank()) issues += issue("blank_annotation_id", "Annotation ID must not be blank.")
+            if (annotation.text.isBlank()) issues += issue("blank_annotation_text", "Annotation text must not be blank: ${annotation.id}.")
+            if (annotation.evidenceId !in knownEvidenceIds) {
+                issues += issue("missing_annotation_evidence", "Annotation ${annotation.id} references missing evidence.")
             }
         }
 
