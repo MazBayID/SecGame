@@ -18,8 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  assemble-debug:
-    name: Assemble debug APK
+  verify:
+    name: Unit tests and debug APK
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,6 +40,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.13"
+
+      - name: Run JVM unit tests
+        run: gradle :app:testDebugUnitTest
 
       - name: Assemble debug APK
         run: gradle :app:assembleDebug
