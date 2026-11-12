@@ -4,7 +4,7 @@ Android-first adventure RPG and tactical intelligence simulator built with Kotli
 
 ## Current implementation
 
-The `feat/android-foundation` branch currently contains:
+The `main` branch currently contains:
 
 - Kotlin + Jetpack Compose application entry point and black-green A.E.G.I.S. theme
 - Main menu prototype, local secure-system status panel, and seven-tile App Hub prototype
