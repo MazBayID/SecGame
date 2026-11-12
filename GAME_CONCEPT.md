@@ -545,10 +545,10 @@ be deleted.
 
 ## 16. Current Project Status
 
-- AEGIS-Net is a new project in the empty `MazBayID/SecGame` repository.
-- No Android application code, playable foundation, or implemented game systems exist in this repository yet.
-- Earlier design and story material are reference material to be migrated and revised; historical implementation status must not be treated as the current AEGIS-Net build status.
-- Initial implementation, tests, and release pipeline have not started.
+- The `feat/android-foundation` branch contains an initial Android application shell built with Kotlin and Jetpack Compose: app entry point, semantic theme, Main Menu prototype, local system-status panel, campaign-entry placeholder, seven-tile App Hub prototype, tactical-grid background, and reusable panel primitive.
+- This is a UI foundation, not a playable game. Campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, Evidence Graph, mission evaluation, and persistent decision consequences are not yet implemented.
+- The approved gameplay systems are documented in `GAMEPLAY_DESIGN.md`; implementation must be delivered as verified vertical slices rather than empty screen placeholders.
+- Do not infer build, test, or release success from the presence of source files. Report only checks actually run against the relevant commit and APK.
 
 ## 17. Not Yet Decided [OPEN]
 
