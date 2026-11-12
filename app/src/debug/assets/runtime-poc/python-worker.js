@@ -111,7 +111,7 @@ with sqlite3.connect(":memory:") as database:
 
 sys.version.split()[0]
 `);
-  if (typeof pythonVersion !== "string" || !/^3\\.14\\./.test(pythonVersion)) {
+  if (typeof pythonVersion !== "string" || !/^3\.14\./.test(pythonVersion)) {
     throw new RuntimeError("Python interpreter smoke test returned an unexpected version");
   }
 
