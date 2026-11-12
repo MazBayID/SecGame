@@ -4,7 +4,7 @@
 > Platform: Android · Kotlin · Jetpack Compose  
 > Visual identity: Hacker Black & Green  
 > Reference: Hacknet interaction and system-boundary patterns, reinterpreted for Android  
-> This document defines how the in-game interface is organized. GAME_CONCEPT.md remains the product and canon source of truth. If a conflict appears, the owner's latest approved direction and GAME_CONCEPT.md take precedence.
+> This document defines interface responsibilities, state ownership, and interaction contracts. `GAME_CONCEPT.md` governs product canon and technical constraints; `GAMEPLAY_DESIGN.md` governs gameplay rules; `Story_Line.md` governs narrative continuity; `IMPLEMENTATION_ROADMAP.md` governs delivery order/status. Apply the decision hierarchy in `GAME_CONCEPT.md` and reconcile any affected documents when a conflict appears.
 
 ## 1. Purpose and design principles
 
@@ -179,7 +179,7 @@ These are fictional local routes, not internet URLs. The route resolver must all
 - Editor capabilities can grow progressively.
 - Valid code must not be blocked merely because advanced editor features are locked.
 - RUN and SUBMIT remain separate actions.
-- RUN sends the exact saved source/version to the execution layer.
+- RUN atomically persists an immutable snapshot of the exact current editor buffer (including unsaved edits) and sends that same snapshot/version/hash to the execution layer. The explicit Save control remains a separate manual-save action; RUN is not a substitute for SUBMIT.
 - The editor displays saved/unsaved state and the last saved time where appropriate.
 
 ### 4.8 Mission Control
@@ -208,7 +208,7 @@ The investigation UI must support the evidence and claim model defined in `GAMEP
 - When an operation offers a consequential choice, present the known context and relevant risk in plain language before confirmation when the operative could reasonably know it.
 - Do not expose hidden story facts merely to explain every uncertainty. The UI may communicate that an outcome is uncertain.
 - Mission Control must support submission of the required report, selected evidence, claims, and technical artifacts—not only a script execution result.
-- Debrief screens present the mission's relevant evaluation dimensions (Intelligence, Evidence, Technical, Stealth/Exposure, Judgment) and explain the outcome. Do not show irrelevant dimensions or a single opaque score as the whole evaluation.
+- Debrief screens present the mission's relevant evaluation dimensions (Intelligence, Evidence, Technical, Stealth / Exposure, Judgment) and explain the outcome. Do not show irrelevant dimensions or a single opaque score as the whole evaluation.
 - Separate recoverable technical errors from persistent story/operational consequences. Technical retry must preserve work and must not display as a punitive campaign failure.
 - Character responses and later opportunity changes are rendered from persisted authored campaign state; UI code does not invent relationship or consequence logic.
 
@@ -387,11 +387,11 @@ Dependency direction:
 
 RUN flow:
 
-1. Editor requests an explicit save of the current source.
-2. The execution coordinator receives the operation ID, script path, source version/hash, and permitted execution context.
-3. Python execution runs through the controlled runtime/VFS bridge.
+1. The RUN action asks the editor/persistence layer to atomically save an immutable snapshot of the current buffer, including unsaved edits.
+2. The execution coordinator receives the operation ID, script path, exact snapshot, source version/hash, and permitted execution context.
+3. Python execution runs that same snapshot through the controlled runtime/VFS bridge; the source must not change underneath the running job.
 4. A successful run creates an immutable execution record tied to that exact source version/hash and operation.
-5. Terminal displays the actual output or error.
+5. Terminal displays the actual output or error. The editor's explicit Save action remains independently available for manual saving without running code.
 
 SUBMIT flow:
 
