@@ -40,7 +40,9 @@ object FirstContactMissionCatalog {
             objectiveId = "report_identity_fields",
             objectiveDescription = "Simpan nilai pada variabel bernama dan tampilkan hasilnya.",
             approach = "python_named_variables",
-            outcome = "identity_fields_reported"
+            outcome = "identity_fields_reported",
+            requiredEvidence = setOf("identity_record"),
+            requiredOutput = setOf("RECRUIT-014", "FIRSTCONTACT")
         ),
         mission(
             number = 3,

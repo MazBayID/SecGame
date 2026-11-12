@@ -38,7 +38,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun FirstContactMissionScreen(onOpenEditor: () -> Unit, onBack: () -> Unit) {
+fun FirstContactMissionScreen(
+    onOpenEditor: () -> Unit,
+    onOpenMissionTwo: () -> Unit,
+    onBack: () -> Unit
+) {
     val context = LocalContext.current
     val vfsRepo = remember(context) { SharedPreferencesVfsRepository(context) }
     val evidenceRepo = remember(context) {
@@ -63,16 +67,19 @@ fun FirstContactMissionScreen(onOpenEditor: () -> Unit, onBack: () -> Unit) {
         try {
             graph = withContext(Dispatchers.IO) {
                 var loaded = evidenceRepo.load(FirstContactMissionCatalog.OPERATION_ID)
-                if (loaded.evidence.isEmpty()) {
-                    evidenceRepo.save(FirstContactMissionSeed.evidenceGraph())
+                val mergedGraph = FirstContactMissionSeed.mergeEvidenceGraph(loaded)
+                if (mergedGraph != loaded) {
+                    check(evidenceRepo.save(mergedGraph) is EvidenceGraphSaveResult.Saved) {
+                        "Mission evidence could not be initialized."
+                    }
                     loaded = evidenceRepo.load(FirstContactMissionCatalog.OPERATION_ID)
                 }
                 val savedWorkspace = vfsRepo.loadMission(FirstContactMissionCatalog.OPERATION_ID)
-                if (savedWorkspace.files.isEmpty()) {
-                    vfsRepo.saveMission(
-                        FirstContactMissionCatalog.OPERATION_ID,
-                        FirstContactMissionSeed.missionWorkspace()
-                    )
+                val mergedWorkspace = FirstContactMissionSeed.mergeMissionWorkspace(savedWorkspace)
+                if (mergedWorkspace != savedWorkspace) {
+                    check(vfsRepo.saveMission(FirstContactMissionCatalog.OPERATION_ID, mergedWorkspace)) {
+                        "Mission workspace could not be initialized."
+                    }
                 }
                 loaded
             }
@@ -215,7 +222,13 @@ fun FirstContactMissionScreen(onOpenEditor: () -> Unit, onBack: () -> Unit) {
                 Spacer(Modifier.height(8.dp))
                 Text(resultText, fontSize = 9.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
             }
-            if (completed) Text("MISSION COMPLETE", color = MaterialTheme.colorScheme.primary)
+            if (completed) {
+                Text("MISSION COMPLETE", color = MaterialTheme.colorScheme.primary)
+                Spacer(Modifier.height(8.dp))
+                Button(onClick = onOpenMissionTwo, modifier = Modifier.fillMaxWidth()) {
+                    Text("CONTINUE TO MISSION 02 / IDENTITY CHECK")
+                }
+            }
         }
         Spacer(Modifier.height(12.dp))
         Button(onClick = onBack, modifier = Modifier.fillMaxWidth()) { Text("BACK") }

@@ -177,7 +177,19 @@ fun AegisNetApp() {
                     } else if (selected == "OPERATIONS") {
                         FirstContactMissionScreen(
                             onOpenEditor = { selected = "MISSION_EDITOR" },
+                            onOpenMissionTwo = { selected = "MISSION_02" },
                             onBack = { selected = "MAIN MENU" }
+                        )
+                    } else if (selected == "MISSION_02") {
+                        IdentityCheckMissionScreen(
+                            onOpenEditor = { selected = "MISSION_02_EDITOR" },
+                            onBack = { selected = "OPERATIONS" }
+                        )
+                    } else if (selected == "MISSION_02_EDITOR") {
+                        EditorScreen(
+                            initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
+                            initialPath = "scripts/identity_check.py",
+                            onBack = { selected = "MISSION_02" }
                         )
                     } else if (selected == "MISSION_EDITOR") {
                         EditorScreen(

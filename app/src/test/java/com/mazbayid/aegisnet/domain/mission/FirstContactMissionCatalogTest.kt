@@ -74,4 +74,12 @@ class FirstContactMissionCatalogTest {
         assertEquals("Sinyal Pertama", first?.definition?.title)
         assertEquals(null, FirstContactMissionCatalog.find("unknown_mission"))
     }
+
+    @Test
+    fun identityCheckRequiresItsSourceRecordAndBothReportedFields() {
+        val objective = FirstContactMissionCatalog.missions[1].definition.objectives.single()
+        assertEquals(setOf("identity_record"), objective.requiredEvidenceIds)
+        assertEquals(setOf("RECRUIT-014", "FIRSTCONTACT"), objective.requiredOutputContains)
+        assertTrue(objective.requiresSuccessfulRun)
+    }
 }

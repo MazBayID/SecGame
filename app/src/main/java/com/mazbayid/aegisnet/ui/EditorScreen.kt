@@ -41,7 +41,8 @@ private const val EDITOR_OPERATION_ID = "first_contact_01"
 @Composable
 fun EditorScreen(
     onBack: () -> Unit,
-    initialWorkspace: VfsWorkspace = VfsWorkspace.PERSONAL
+    initialWorkspace: VfsWorkspace = VfsWorkspace.PERSONAL,
+    initialPath: String = "scripts/analysis.py"
 ) {
     val context = LocalContext.current
     val repository = remember(context) { SharedPreferencesVfsRepository(context) }
@@ -74,7 +75,7 @@ fun EditorScreen(
         restoreResult.getOrThrow().also { it.switchWorkspace(initialWorkspace) }
     }
     var workspace by remember { mutableStateOf(initialWorkspace) }
-    var path by remember { mutableStateOf("scripts/analysis.py") }
+    var path by remember { mutableStateOf(initialPath) }
     var document by remember { mutableStateOf<EditorDocument?>(null) }
     var status by remember { mutableStateOf("Open a writable script from the virtual workspace.") }
     var statusIsError by remember { mutableStateOf(false) }
