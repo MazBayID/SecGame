@@ -104,7 +104,8 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Add a Compose Editor screen with workspace switching, file opening, dirty-buffer editing, read-only source protection, SHA-256 display, and local save.
 - [ ] Add automated Compose UI tests, version history, and durable immutable RUN snapshot archive.
 - [ ] Integrate a controlled Python runtime only after operation and VFS boundaries are tested; current RUN preparation is not code execution.
-- [ ] Add RUN feedback and SUBMIT evaluation as separate flows.
+- [x] Add a runtime-agnostic RUN coordinator contract that saves the exact editor buffer, hashes the immutable snapshot, calls an injected engine, and issues operation-bound success/failure receipts.
+- [ ] Integrate a real controlled Python runtime and add RUN feedback and SUBMIT evaluation as separate player flows.
 - [ ] Enforce authorization and resource limits; document that in-process Python is not a hardened security sandbox.
 
 ## Phase 5 — Campaign continuity and expanded routes
