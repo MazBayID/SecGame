@@ -113,6 +113,10 @@ A separate debug-only **CYBER//TRACE Isolated Process POC** activity now binds t
 
 This harness uses AndroidX WebKit 1.18.0 and is an early platform experiment, not a sandbox certification. Before loading the page, the activity requires WebView multi-process mode and displays a blocking message if the renderer is not sandboxed separately from the app process. The worker itself is not a separate process; it runs inside that sandboxed renderer. This differs from an Android service explicitly declared with `android:isolatedProcess="true"`, and its guarantees must be evaluated separately. The WebView asset handler applies a restrictive CSP as an HTTP response header to every asset, including worker scripts (the HTML meta policy is retained as defense in depth); it also sets X-Content-Type-Options: nosniff and serves .wasm as application/wasm. The policy allows script/WASM execution and same-origin app-assets requests only. The app manifest does not request INTERNET. It still requires physical-device testing for module-worker support, offline Python initialization, hard-stop responsiveness, worker recreation, renderer recovery, and memory release. The 3-second deadline and output cap are host-enforced for this POC; there is no configurable memory cap yet.
 
+## Physical Android test procedure
+
+Use [`ANDROID_RUNTIME_TEST_CHECKLIST.md`](ANDROID_RUNTIME_TEST_CHECKLIST.md) for the exact APK workflow, offline-startup checks, Python presets, cancellation/recreation tests, safe host-boundary probes, isolated-process probe, and result-report format. The checklist deliberately excludes memory-exhaustion tests because the pinned 314.0.7 runtime has no verified per-instance heap cap.
+
 ## Manual smoke-test snippets
 
 Run each snippet separately in the debug Python panel:
