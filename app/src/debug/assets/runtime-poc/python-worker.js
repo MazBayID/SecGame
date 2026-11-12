@@ -81,7 +81,46 @@ else:
     raise RuntimeError("CSP allowed JavaScript Function constructor access")
 `);
 
-  self.postMessage({ type: "ready", version: pyodide.version });
+  // Smoke-test the exact standard-library features needed by later lessons.
+  // This is a real Python execution during initialization, not a text-based check.
+  const pythonVersion = pyodide.runPython(`
+import datetime
+import json
+import math
+import sqlite3
+import sys
+
+if sys.version_info[:2] != (3, 14):
+    raise RuntimeError("Unexpected Python version: " + sys.version)
+
+if not math.isclose(6 * 7, 42):
+    raise RuntimeError("Arithmetic smoke test failed")
+
+payload = {"city": "NEXUS", "year": 2089}
+if json.loads(json.dumps(payload)) != payload:
+    raise RuntimeError("JSON standard-library smoke test failed")
+
+if datetime.date(2089, 1, 1).isoformat() != "2089-01-01":
+    raise RuntimeError("Datetime standard-library smoke test failed")
+
+with sqlite3.connect(":memory:") as database:
+    database.execute("CREATE TABLE runtime_probe (value INTEGER)")
+    database.execute("INSERT INTO runtime_probe VALUES (42)")
+    if database.execute("SELECT value FROM runtime_probe").fetchone() != (42,):
+        raise RuntimeError("SQLite standard-library smoke test failed")
+
+sys.version.split()[0]
+`);
+  if (typeof pythonVersion !== "string" || !/^3\\.14\\./.test(pythonVersion)) {
+    throw new RuntimeError("Python interpreter smoke test returned an unexpected version");
+  }
+
+  self.postMessage({
+    type: "ready",
+    version: pyodide.version,
+    pythonVersion,
+    capabilities: ["arithmetic", "json", "datetime", "sqlite3"],
+  });
 } catch (error) {
   sendInitializationError(error);
 }
