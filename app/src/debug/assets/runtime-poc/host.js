@@ -141,15 +141,24 @@ pythonButton.addEventListener("click", () => {
   pythonButton.disabled = true;
   cancelPythonButton.disabled = false;
   pythonRunState = "initializing";
-  activeRunId = crypto.randomUUID();
   write("Starting a fresh Python worker…");
   setStatus("Loading local Pyodide runtime…");
 
-  const thisRunId = activeRunId;
-  const activeWorker = new Worker(new URL("./python-worker.js", import.meta.url), {
-    type: "module",
-  });
-  pythonWorker = activeWorker;
+  let thisRunId;
+  let activeWorker;
+  try {
+    thisRunId = crypto.randomUUID();
+    activeRunId = thisRunId;
+    activeWorker = new Worker(new URL("./python-worker.js", import.meta.url), {
+      type: "module",
+    });
+    pythonWorker = activeWorker;
+  } catch (error) {
+    finishPythonRun("Python worker could not start · worker discarded");
+    write("WORKER_CRASHED · " +
+      String(error?.message || error).slice(0, 1024));
+    return;
+  }
 
   pythonTimer = setTimeout(() => {
     if (pythonWorker !== activeWorker || activeRunId !== thisRunId) return;
@@ -170,11 +179,17 @@ pythonButton.addEventListener("click", () => {
         write("TIMEOUT · The host terminated the worker after 3 seconds.");
       }, 3000);
       setStatus("Python " + data.version + " ready · sandboxed WebView renderer");
-      activeWorker.postMessage({
-        type: "run",
-        runId: thisRunId,
-        source,
-      });
+      try {
+        activeWorker.postMessage({
+          type: "run",
+          runId: thisRunId,
+          source,
+        });
+      } catch (error) {
+        finishPythonRun("Python request could not be sent · worker discarded");
+        write("WORKER_CRASHED · " +
+          String(error?.message || error).slice(0, 1024));
+      }
       return;
     }
 
