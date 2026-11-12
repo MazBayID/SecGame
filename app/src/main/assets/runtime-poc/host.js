@@ -2,6 +2,7 @@ const statusNode = document.querySelector("#status");
 const outputNode = document.querySelector("#output");
 let worker = null;
 let sequence = 0;
+let workerGeneration = 0;
 
 function write(message) {
   outputNode.textContent = message;
@@ -13,7 +14,11 @@ function setStatus(message) {
 
 function createWorker() {
   worker?.terminate();
-  worker = new Worker(new URL("./worker.js", import.meta.url), { type: "module" });
+  const generation = ++workerGeneration;
+  worker = new Worker(
+    new URL("./worker.js?generation=" + generation, import.meta.url),
+    { type: "module" }
+  );
   worker.onmessage = ({ data }) => {
     if (data?.type === "ready") {
       setStatus("Worker ready · generation " + data.generation);
