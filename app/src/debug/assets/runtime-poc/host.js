@@ -188,15 +188,19 @@ pythonButton.addEventListener("click", () => {
   activeWorker.onmessage = ({ data }) => {
     if (pythonWorker !== activeWorker || activeRunId !== thisRunId) return;
 
+    const expectedCapabilities = new Set([
+      "arithmetic", "json", "datetime", "sqlite3",
+    ]);
+    const capabilitiesValid = Array.isArray(data?.capabilities) &&
+      data.capabilities.length === expectedCapabilities.size &&
+      new Set(data.capabilities).size === expectedCapabilities.size &&
+      data.capabilities.every((item) => expectedCapabilities.has(item));
+
     if (data?.type === "ready" && pythonRunState === "initializing" &&
-        typeof data.version === "string" && data.version.length <= 64 &&
+        data.version === "314.0.7" &&
         typeof data.pythonVersion === "string" &&
         /^3\.14\.\d+$/.test(data.pythonVersion) &&
-        Array.isArray(data.capabilities) &&
-        data.capabilities.length === 4 &&
-        data.capabilities.every((item) =>
-          ["arithmetic", "json", "datetime", "sqlite3"].includes(item)
-        )) {
+        capabilitiesValid) {
       clearTimeout(pythonTimer);
       pythonRunState = "running";
       pythonTimer = setTimeout(() => {
