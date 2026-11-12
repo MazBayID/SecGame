@@ -94,21 +94,25 @@ function formatDiagnostic(diagnostic) {
 }
 
 function capCombinedOutput(stdout, stderr) {
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder("utf-8");
   let remaining = 16 * 1024;
   let truncated = false;
 
   function take(value) {
-    const bytes = encoder.encode(value);
-    if (bytes.byteLength <= remaining) {
-      remaining -= bytes.byteLength;
-      return value;
+    const characters = [];
+    for (const character of value) {
+      const codePoint = character.codePointAt(0);
+      const byteLength = codePoint <= 0x7F ? 1
+        : codePoint <= 0x7FF ? 2
+        : codePoint <= 0xFFFF ? 3
+        : 4;
+      if (byteLength > remaining) {
+        truncated = true;
+        break;
+      }
+      characters.push(character);
+      remaining -= byteLength;
     }
-    truncated = true;
-    const clipped = bytes.slice(0, remaining);
-    remaining = 0;
-    return decoder.decode(clipped);
+    return characters.join("");
   }
 
   return {
@@ -156,7 +160,8 @@ pythonButton.addEventListener("click", () => {
   activeWorker.onmessage = ({ data }) => {
     if (pythonWorker !== activeWorker || activeRunId !== thisRunId) return;
 
-    if (data?.type === "ready" && pythonRunState === "initializing") {
+    if (data?.type === "ready" && pythonRunState === "initializing" &&
+        typeof data.version === "string" && data.version.length <= 64) {
       clearTimeout(pythonTimer);
       pythonRunState = "running";
       pythonTimer = setTimeout(() => {
@@ -176,21 +181,38 @@ pythonButton.addEventListener("click", () => {
     if (data?.type === "result" && pythonRunState === "running" &&
         data.runId === thisRunId) {
       const validStatuses = new Set([
-        "COMPLETED", "SYNTAX_ERROR", "RUNTIME_ERROR", "OUTPUT_LIMIT", "RESOURCE_LIMIT", "OUTPUT_LIMIT",
+        "COMPLETED", "SYNTAX_ERROR", "RUNTIME_ERROR", "OUTPUT_LIMIT", "RESOURCE_LIMIT",
       ]);
+      const diagnosticKinds = new Set(["SYNTAX", "RUNTIME", "RESOURCE"]);
+      const diagnosticValid = data.diagnostic === null ||
+        (data.diagnostic && typeof data.diagnostic === "object" &&
+          !Array.isArray(data.diagnostic) &&
+          diagnosticKinds.has(data.diagnostic.kind) &&
+          typeof data.diagnostic.exceptionType === "string" &&
+          data.diagnostic.exceptionType.length <= 128 &&
+          typeof data.diagnostic.message === "string" &&
+          data.diagnostic.message.length <= 1024 &&
+          new TextEncoder().encode(data.diagnostic.message).byteLength <= 4096 &&
+          (data.diagnostic.line === null ||
+            (Number.isInteger(data.diagnostic.line) && data.diagnostic.line > 0)));
       if (!validStatuses.has(data.status) ||
           typeof data.stdout !== "string" ||
           typeof data.stderr !== "string" ||
+          data.stdout.length > 16 * 1024 ||
+          data.stderr.length > 16 * 1024 ||
           typeof data.durationMs !== "number" ||
           !Number.isFinite(data.durationMs) ||
-          typeof data.outputTruncated !== "boolean") {
+          data.durationMs < 0 ||
+          typeof data.outputTruncated !== "boolean" ||
+          !diagnosticValid) {
         finishPythonRun("Invalid worker response · worker discarded");
-        write("WORKER_CRASHED · The runtime returned an invalid result.");
+        write("WORKER_CRASHED · The runtime returned an invalid or oversized result.");
         return;
       }
 
       const boundedOutput = capCombinedOutput(data.stdout, data.stderr);
-      const outputTruncated = data.outputTruncated || boundedOutput.truncated;
+      const outputTruncated = data.outputTruncated ||
+        boundedOutput.truncated || data.status === "OUTPUT_LIMIT";
       const displayStatus = boundedOutput.truncated && data.status === "COMPLETED"
         ? "OUTPUT_LIMIT"
         : data.status;
@@ -211,7 +233,8 @@ pythonButton.addEventListener("click", () => {
       return;
     }
 
-    if (data?.type === "initialization-error" && pythonRunState === "initializing") {
+    if (data?.type === "initialization-error" && pythonRunState === "initializing" &&
+        typeof data.message === "string" && data.message.length <= 4096) {
       finishPythonRun("Python runtime initialization failed · worker discarded");
       write(data.message || "Unknown runtime initialization error.");
       return;
