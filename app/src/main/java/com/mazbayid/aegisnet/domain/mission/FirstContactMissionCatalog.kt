@@ -28,7 +28,8 @@ object FirstContactMissionCatalog {
             objectiveDescription = "Simpan fragmen pesan dalam variabel dan tampilkan isinya.",
             approach = "python_variable_and_print",
             outcome = "message_fragment_reported",
-            requiredEvidence = setOf("message_fragment")
+            requiredEvidence = setOf("message_fragment"),
+            requiredOutput = setOf("ACCESS GRANTED")
         ),
         mission(
             number = 2,
@@ -131,6 +132,7 @@ object FirstContactMissionCatalog {
         approach: String,
         outcome: String,
         requiredEvidence: Set<String> = emptySet(),
+        requiredOutput: Set<String> = emptySet(),
         additionalObjectives: List<MissionObjective> = emptyList()
     ) = AuthoredMission(
         sequenceNumber = number,
@@ -148,6 +150,7 @@ object FirstContactMissionCatalog {
                     acceptedApproachIds = setOf(approach),
                     acceptedOutcomeIds = setOf(outcome),
                     requiredEvidenceIds = requiredEvidence,
+                    requiredOutputContains = requiredOutput,
                     requiresSuccessfulRun = true
                 )
             ) + additionalObjectives

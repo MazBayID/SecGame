@@ -73,7 +73,8 @@ class RunCoordinator(
                 receipt = MissionRunReceipt(
                     operationId = operationId,
                     sourceHash = snapshot.sourceHash,
-                    successful = execution.successful
+                    successful = execution.successful,
+                    stdout = execution.stdout
                 )
             )
         )

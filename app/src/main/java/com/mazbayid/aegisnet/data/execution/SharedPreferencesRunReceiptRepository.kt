@@ -22,7 +22,8 @@ class SharedPreferencesRunReceiptRepository(
             MissionRunReceipt(
                 operationId = json.getString("operationId"),
                 sourceHash = json.getString("sourceHash"),
-                successful = json.getBoolean("successful")
+                successful = json.getBoolean("successful"),
+                stdout = json.optString("stdout")
             ).also { receipt ->
                 require(receipt.operationId == operationId)
                 require(receipt.sourceHash.matches(SHA256_PATTERN))
@@ -44,6 +45,7 @@ class SharedPreferencesRunReceiptRepository(
             .put("operationId", receipt.operationId)
             .put("sourceHash", receipt.sourceHash)
             .put("successful", receipt.successful)
+            .put("stdout", receipt.stdout)
             .toString()
         return preferences.edit().putString(key, serialized).commit()
     }

@@ -3,7 +3,8 @@ package com.mazbayid.aegisnet.domain.mission
 data class MissionRunReceipt(
     val operationId: String,
     val sourceHash: String,
-    val successful: Boolean
+    val successful: Boolean,
+    val stdout: String = ""
 )
 
 data class MissionSubmission(
@@ -157,6 +158,20 @@ object MissionEvaluator {
                         "RUN record belongs to this operation."
                     } else {
                         "RUN record belongs to another operation or is missing."
+                    }
+                )
+
+                val missingOutput = objective.requiredOutputContains.filterNot { token ->
+                    receipt?.stdout?.contains(token) == true
+                }
+                results += criterion(
+                    objectiveId = objective.id,
+                    code = "required_run_output",
+                    passed = receipt != null && missingOutput.isEmpty(),
+                    message = if (receipt != null && missingOutput.isEmpty()) {
+                        "RUN output contains all authored required output."
+                    } else {
+                        "RUN output is missing required text: ${missingOutput.joinToString()}."
                     }
                 )
 

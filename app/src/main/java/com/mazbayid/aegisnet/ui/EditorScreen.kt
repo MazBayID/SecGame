@@ -311,7 +311,7 @@ fun EditorScreen(
             fontSize = 10.sp
         )
         Spacer(Modifier.height(10.dp))
-        Button(onClick = onBack, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = onBack, enabled = !isRunning, modifier = Modifier.fillMaxWidth()) {
             Text("RETURN TO APP HUB")
         }
     }

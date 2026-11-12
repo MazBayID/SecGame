@@ -174,7 +174,7 @@ fun AegisNetApp() {
                 ) {
                     if (selected == "CAMPAIGN OVERVIEW") {
                         CampaignOpeningScreen(onBack = { selected = "MAIN MENU" })
-                    } else if (selected == "MISSION CONTROL") {
+                    } else if (selected == "OPERATIONS") {
                         FirstContactMissionScreen(
                             onOpenEditor = { selected = "MISSION_EDITOR" },
                             onBack = { selected = "MAIN MENU" }
@@ -182,7 +182,7 @@ fun AegisNetApp() {
                     } else if (selected == "MISSION_EDITOR") {
                         EditorScreen(
                             initialWorkspace = com.mazbayid.aegisnet.domain.vfs.VfsWorkspace.MISSION,
-                            onBack = { selected = "MISSION CONTROL" }
+                            onBack = { selected = "OPERATIONS" }
                         )
                     } else if (selected == "TERMINAL") {
                         TerminalScreen(onBack = { selected = "MAIN MENU" })

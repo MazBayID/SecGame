@@ -10,6 +10,7 @@ data class MissionObjective(
     val acceptedApproachIds: Set<String>,
     val acceptedOutcomeIds: Set<String>,
     val requiredEvidenceIds: Set<String> = emptySet(),
+    val requiredOutputContains: Set<String> = emptySet(),
     val requiresSuccessfulRun: Boolean = false
 )
 
@@ -71,6 +72,9 @@ object MissionDefinitionValidator {
             }
             if (objective.requiredEvidenceIds.any { it.isBlank() }) {
                 issues += issue("blank_required_evidence_id", "Objective ${objective.id} contains a blank evidence ID.")
+            }
+            if (objective.requiredOutputContains.any { it.isBlank() }) {
+                issues += issue("blank_required_output", "Objective ${objective.id} contains a blank required output token.")
             }
         }
 
