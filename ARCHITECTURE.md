@@ -1,6 +1,6 @@
 # CYBER//TRACE — Architecture & Technical Direction
 
-> Status: Phase 0 assessment / proposed baseline  
+> Status: Phase 0 assessment / Phase 1 foundation started  
 > Decision state: Android direction accepted as the working target; Python sandbox implementation remains **unapproved until a proof of concept passes security and compatibility tests**.  
 > Scope: This document describes the new CYBER//TRACE implementation in this repository only.
 
@@ -15,18 +15,30 @@
 
 The working target is an Android phone application.
 
-### Proposed application stack
+### Application stack
 
-| Area | Proposed technology | Reason |
+| Area | Current foundation | Reason / status |
 |---|---|---|
-| Application language | Kotlin | Native Android integration and maintainable application logic |
+| Application language | Kotlin | Native Android integration |
 | UI | Jetpack Compose | Screen-based terminal, editor, panels, dialogue, and responsive layouts |
-| Application structure | Modular, layered architecture | Keep UI, game rules, learning content, persistence, and execution boundaries separate |
-| Local persistence | Room for structured game state; DataStore for small preferences | Save missions, progress, evidence, relationships, and settings without mixing them into UI code |
-| Learning content | Versioned data files plus Kotlin models | Allow missions and lessons to be tested independently from screens |
-| Python execution | Isolated runtime behind a narrow IPC interface | Player code must never execute with the main application's privileges |
+| Android Gradle Plugin | 9.4.0 | Current build configuration |
+| Gradle | 9.6.0 | Used by the CI workflow |
+| JDK | 17 | Used by the CI workflow |
+| Kotlin support | AGP built-in Kotlin | Avoids the obsolete separate Android Kotlin plugin |
+| Compose compiler plugin | 2.4.21 | Matches the selected Kotlin toolchain |
+| Compose BOM | 2026.09.00 | Aligns Compose library versions |
+| compileSdk / targetSdk | 37 / 37 | Current build configuration |
+| minSdk | 26 | Initial baseline; may change after device testing |
+| Application ID | `com.mazbayid.cybertrace` | New identity for this project |
+| Local persistence | Not yet implemented | Room and DataStore remain candidates |
+| Python execution | Not yet implemented | Must be isolated behind a narrow IPC interface |
 
-These are proposed choices, not claims about code already present in the repository.
+The Android project scaffold and initial terminal screen have been committed. Their successful compilation has **not yet been verified**. The GitHub Actions workflow is configured to run unit tests and assemble a debug APK.
+
+Version references:
+- [Android Gradle Plugin 9.4.0 release notes](https://developer.android.com/build/releases/agp-9-4-0-release-notes)
+- [Kotlin releases](https://kotlinlang.org/docs/releases.html)
+- [Jetpack Compose BOM](https://developer.android.com/develop/ui/compose/bom)
 
 ## 3. High-level architecture
 
@@ -123,7 +135,7 @@ The first implementation milestone should prove one complete experience rather t
 4. ARIA or NLAS explains what Python is and what the interpreter does.
 5. Player opens an editor and enters a short Python program.
 6. The real interpreter executes it and displays output.
-7. Player introduces a deliberate syntax or runtime error and receives understandable feedback.
+7. The player introduces a deliberate syntax or runtime error and receives understandable feedback.
 8. A first mission uses only concepts already introduced.
 9. Mission completion is checked using program behavior, not exact text matching alone.
 10. Story and learning progress can be saved and restored.
@@ -133,29 +145,27 @@ Do not expand the campaign until this vertical slice is reliable.
 
 ## 7. Initial implementation modules
 
-A possible source layout after the Android project is scaffolded:
+The repository now has the initial Android application scaffold. The following is the intended direction as the project grows:
 
 ```text
 app/
-  presentation/
-    navigation/
-    terminal/
-    editor/
-    dialogue/
-    mission/
-  domain/
-    game/
-    learning/
-    simulation/
-  data/
-    persistence/
-    content/
-  execution-api/
-  android-execution-host/
-core/
-  models/
-  mission-engine/
-  learning-engine/
+  src/main/java/com/mazbayid/cybertrace/
+    presentation/
+      navigation/
+      terminal/
+      editor/
+      dialogue/
+      mission/
+    domain/
+      game/
+      learning/
+      simulation/
+    data/
+      persistence/
+      content/
+    execution/
+      api/
+      android/
 content/
   story/
   missions/
@@ -164,25 +174,28 @@ docs/
   testing/
 ```
 
-This is a logical target layout, not a report of existing files.
+This is a target structure, not a claim that every listed module already exists.
 
-## 8. Phase 0 findings
+## 8. Phase 0 findings and current progress
 
-- The repository currently contains the CYBER//TRACE design documents and no verified Android application implementation.
+- The repository originally contained the CYBER//TRACE design documents and no verified Android application implementation.
 - The concept requires real Python execution and controlled fictional systems.
 - Android is the working platform direction.
-- The UI/application stack can proceed as a proposed native Kotlin architecture.
+- A native Kotlin/Compose application scaffold and an initial terminal-themed launch screen have been added.
+- A GitHub Actions workflow has been added to run unit tests and assemble a debug APK.
+- Build and test results remain **unverified** until the workflow completes successfully.
 - Python runtime isolation is the main technical risk and must be validated before it becomes a dependency of the game.
-- Build-tool versions, minimum Android API, supported CPU architectures, and device-performance budgets must be selected after the initial build environment and runtime proof of concept are established.
+- The first runtime proof of concept must compare Android isolated-service execution with a WebAssembly-based option before a final runtime decision.
 
 ## 9. References
 
 - [Android service manifest element — isolatedProcess](https://developer.android.com/guide/topics/manifest/service-element)
 - [Android security tips — application sandbox](https://developer.android.com/privacy-and-security/security-tips)
+- [Android built-in Kotlin support](https://developer.android.com/build/migrate-to-built-in-kotlin)
 - [Chaquopy — Python SDK for Android](https://chaquo.com/chaquopy/)
 - [Chaquopy version compatibility](https://chaquo.com/chaquopy/doc/current/versions.html)
 - [Python documentation — using Python on Android](https://docs.python.org/3/using/android.html)
 
 ---
 
-**Next engineering milestone:** scaffold the native Android application and build the Python-runtime isolation proof of concept as separate, testable work. Do not integrate player-code execution into the main game process.
+**Next engineering milestone:** verify the Android build, then build the Python-runtime isolation proof of concept as separate, testable work. Do not integrate player-code execution into the main game process.
