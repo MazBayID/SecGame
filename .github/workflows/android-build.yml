@@ -56,6 +56,8 @@ jobs:
       - name: Validate POC scripts
         run: |
           bash -n tools/prepare_pyodide_core.sh
+          bash -n tools/validate_runtime_poc.sh
+          bash tools/validate_runtime_poc.sh
           node --check --input-type=module < app/src/debug/assets/runtime-poc/host.js
           node --check --input-type=module < app/src/debug/assets/runtime-poc/worker.js
           node --check --input-type=module < app/src/debug/assets/runtime-poc/python-worker.js
