@@ -4,6 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+val releaseStoreFile = providers.environmentVariable("AEGIS_RELEASE_STORE_FILE").orNull
+val releaseStorePassword = providers.environmentVariable("AEGIS_RELEASE_STORE_PASSWORD").orNull
+val releaseKeyAlias = providers.environmentVariable("AEGIS_RELEASE_KEY_ALIAS").orNull
+val releaseKeyPassword = providers.environmentVariable("AEGIS_RELEASE_KEY_PASSWORD").orNull
+
 android {
     namespace = "com.mazbayid.aegisnet"
     compileSdk = 36
@@ -18,8 +23,18 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            if (releaseStoreFile != null) storeFile = file(releaseStoreFile)
+            if (releaseStorePassword != null) storePassword = releaseStorePassword
+            if (releaseKeyAlias != null) keyAlias = releaseKeyAlias
+            if (releaseKeyPassword != null) keyPassword = releaseKeyPassword
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
