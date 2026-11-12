@@ -4,17 +4,29 @@ Android-first adventure RPG and tactical intelligence simulator built with Kotli
 
 ## Current implementation
 
-The `feat/android-foundation` branch contains the first Android application shell:
+The `feat/android-foundation` branch currently contains:
 
-- Kotlin + Jetpack Compose entry point
-- Black-green A.E.G.I.S. semantic theme
-- Main menu prototype
-- Local secure-system status panel
-- Campaign entry placeholder
-- Seven-tile App Hub prototype
+- Kotlin + Jetpack Compose application entry point and black-green A.E.G.I.S. theme
+- Main menu prototype, local secure-system status panel, and seven-tile App Hub prototype
 - Code-drawn tactical grid background and reusable panel primitive
+- Initial Evidence Graph domain contract: typed evidence records, provenance metadata, relationship states, claims, and deterministic structural validation
+- JVM unit tests for core Evidence Graph validation cases
+- Android CI configured to run JVM unit tests and assemble a debug APK
 
-This is a UI foundation only. It does not yet implement campaign persistence, story progression, messenger, intranet routing, terminal execution, VFS, Python runtime, or mission evaluation.
+The Evidence Graph is currently a domain foundation only. Evidence persistence, repository operations, graph/timeline UI, mission integration, campaign persistence, story progression, Messenger, Intranet routing, functional Terminal, VFS, Python runtime, and mission evaluation are not implemented yet. The app is not a playable game.
+
+## Implementation plan
+
+See [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) for the phased delivery plan and completion criteria.
+
+## Design references
+
+- [GAME_CONCEPT.md](GAME_CONCEPT.md) — product identity, story canon, and technical constraints.
+- [GAMEPLAY_DESIGN.md](GAMEPLAY_DESIGN.md) — approved gameplay systems, Evidence Graph rules, multiple solution paths, risk, and evaluation.
+- [UI_ARCHITECTURE.md](UI_ARCHITECTURE.md) — Android interface and workstation architecture.
+- [Story_Line.md](Story_Line.md) — narrative content and continuity.
+
+Hacknet is a high-level UX/architecture reference only. Do not copy its decompiled code, assets, or distinctive layouts. The game is offline-first; UI placeholders must not pretend that unimplemented systems are functional. RUN and SUBMIT must remain separate when their real execution and evaluation systems are implemented.
 
 ## Requirements
 
@@ -23,16 +35,6 @@ This is a UI foundation only. It does not yet implement campaign persistence, st
 - Gradle 8.13-compatible environment
 
 Open the repository in Android Studio and run the `app` configuration on an Android device or emulator.
-
-## Important design constraints
-
-- `GAME_CONCEPT.md` is the product and technical source of truth.
-- `GAMEPLAY_DESIGN.md` defines the approved Intelligence Operations RPG gameplay systems and mission-design rules.
-- `UI_ARCHITECTURE.md` defines the UI implementation blueprint and must present those gameplay systems clearly.
-- `Story_Line.md` supplies narrative content; meaningful choices and continuity must follow the game concept and gameplay design.
-- Hacknet is a high-level UX/architecture reference only. Do not copy its decompiled code, assets, or distinctive layouts.
-- The game is offline-first. UI placeholders must not pretend that unimplemented systems are functional.
-- RUN and SUBMIT must remain separate when their real execution and evaluation systems are implemented.
 
 ## Provisional technical identifier
 
