@@ -40,10 +40,11 @@ GitHub Actions menjalankan unit test dan membuat debug APK pada push ke `main` m
 <badge color="success">CI berhasil</badge>
 
 - Android project berhasil dikompilasi pada GitHub Actions.
-- Tiga unit test untuk kebijakan pembukaan lesson berhasil dijalankan.
+- Tiga unit test kebijakan pembukaan lesson telah berhasil dijalankan pada baseline CI sebelumnya. Enam test tambahan untuk kontrak API eksekusi Python kini telah ditambahkan; hasil CI yang menjalankan seluruh sembilan test menunggu workflow commit terbaru.
 - Debug APK berhasil dibuat dan diunggah sebagai artifact.
 - Workflow terbaru yang memverifikasi commit dokumentasi dan test: [GitHub Actions run #43259419839](https://github.com/MazBayID/SecGame/actions/runs/43259419839).
 - Instalasi, peluncuran, dan pengujian pada perangkat Android fisik **belum diverifikasi**.
+- Kontrak API runtime Python kini tersedia, mencakup batas ukuran source, batas resource, workspace virtual, status eksekusi, diagnostik terstruktur, dan pembatalan asinkron. Ini **belum menjalankan Python** dan bukan sandbox.
 - Runtime Python **belum diintegrasikan**. Pemilihan runtime menunggu proof of concept yang membuktikan isolasi dan batas sumber daya.
 
 Hasil CI yang berhasil bukan bukti bahwa seluruh game telah selesai atau bahwa sandbox Python sudah aman. Status implementasi setiap fitur harus tetap dibedakan dari target desainnya.
