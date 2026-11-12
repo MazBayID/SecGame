@@ -54,7 +54,7 @@ require_text "finishedWorker?.terminate()" "$HOST"
 require_text "crypto.randomUUID()" "$HOST"
 require_text '"OUTPUT_LIMIT"' "$HOST"
 require_text "data.stdout.length <= 16 * 1024" "$HOST"
-require_text "Unexpected or out-of-order message" "$HOST"
+require_text "unexpected or out-of-order message" "$HOST"
 reject_text "loadPackagesFromImports" "$PYTHON_WORKER"
 reject_text "micropip.install" "$PYTHON_WORKER"
 
