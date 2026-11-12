@@ -39,6 +39,8 @@ require_text 'android:isolatedProcess="true"' "$DEBUG_MANIFEST"
 require_text "Process.myUid()" "$ISOLATED_SERVICE"
 require_text "applicationInfo.uid" "$ISOLATED_ACTIVITY"
 require_text "serviceUid != appUid" "$ISOLATED_ACTIVITY"
+require_text "assets.open(ASSET_NAME)" "$ISOLATED_SERVICE"
+require_text "KEY_ASSET_READABLE" "$ISOLATED_ACTIVITY"
 
 # Keep the WebView boundary narrow: no Java bridge, host file access, or
 # JavaScript eval escape in the document/worker CSP.
