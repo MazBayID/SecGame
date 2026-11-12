@@ -37,7 +37,7 @@ sealed interface RunCoordinatorResult {
 
 /**
  * Coordinates exact-buffer save -> immutable source snapshot -> runtime call.
- * This is orchestration only; a real Python engine must be supplied separately.
+ * The coordinator stays runtime-agnostic; the app supplies its embedded Python engine.
  */
 class RunCoordinator(
     private val operationId: String,

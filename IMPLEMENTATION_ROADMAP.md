@@ -106,7 +106,8 @@ Preserve all eight approved learning missions and their existing learning order.
 - [x] Add a Compose Editor screen with workspace switching, file opening, dirty-buffer editing, read-only source protection, SHA-256 display, and local save.
 - [ ] Add automated Compose UI tests, version history, and durable immutable RUN snapshot archive.
 - [x] Integrate the Chaquopy 17.2.0 Python 3.13 runtime with a restricted teaching-language surface, bounded source/output/collection/step budgets, and VFS-only bridge calls.
-- [ ] Add on-device runtime tests, stronger process/resource isolation, and end-to-end RUN feedback; the in-process runtime is not a hardened security sandbox.
+- [x] Connect the Editor RUN action to Chaquopy, persist the latest receipt per operation, and display the exact executed source hash and output.
+- [ ] Add on-device runtime tests and stronger process/resource isolation; the in-process runtime is not a hardened security sandbox.
 - [x] Add a runtime-agnostic RUN coordinator contract that saves the exact editor buffer, hashes the immutable snapshot, calls an injected engine, and issues operation-bound success/failure receipts.
 - [ ] Integrate a real controlled Python runtime and add RUN feedback and SUBMIT evaluation as separate player flows.
 - [ ] Enforce authorization and resource limits; document that in-process Python is not a hardened security sandbox.
