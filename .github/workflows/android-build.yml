@@ -53,6 +53,13 @@ jobs:
         with:
           gradle-version: "9.6.0"
 
+      - name: Validate POC scripts
+        run: |
+          bash -n tools/prepare_pyodide_core.sh
+          node --check --input-type=module < app/src/main/assets/runtime-poc/host.js
+          node --check --input-type=module < app/src/main/assets/runtime-poc/worker.js
+          node --check --input-type=module < app/src/main/assets/runtime-poc/python-worker.js
+
       - name: Run unit tests
         run: gradle --no-daemon testDebugUnitTest
 
