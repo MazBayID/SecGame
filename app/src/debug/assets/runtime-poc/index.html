@@ -19,6 +19,7 @@
 <body>
   <h1>CYBER//TRACE / WORKER POC</h1>
   <p class="warning"><strong>Disposable debug POC.</strong> The lifecycle controls test worker startup, hard termination, and recreation. The Python panel runs real Pyodide code only when the pinned local runtime assets are included in the debug APK. Neither test certifies a production sandbox.</p>
+  <p class="warning"><strong>Memory safety warning.</strong> Source, output, and execution time are capped in this POC, but Python memory allocation is not. Do not run large memory-allocation tests on a device containing unsaved work. A renderer crash or device slowdown is possible.</p>
   <p id="status">Starting test harness…</p>
   <button id="ping">PING WORKER</button>
   <button id="hang" class="secondary">START NON-STOP TASK</button>
