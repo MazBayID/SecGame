@@ -14,7 +14,7 @@ The POC is disposable: its code and assets must not become the production runtim
 
 ### Candidate A — Pyodide in a Web Worker hosted by Android WebView
 
-This is the first implementation experiment because a dedicated worker can keep synchronous Python execution away from the UI thread and can be terminated as a whole when a deadline expires.
+This is the first implementation experiment because a dedicated worker can keep synchronous Python execution away from the UI thread and can be terminated as a whole when a deadline expires. The official Pyodide worker guide requires a module-type worker. The current official download guide lists the v314.0.0 release and says the full distribution is over 200 MB; therefore, the POC must measure the smaller core distribution plus only the offline packages the curriculum actually needs, rather than bundling the full distribution by default.
 
 Proposed shape:
 
@@ -23,12 +23,12 @@ Proposed shape:
 3. Create a module-type dedicated Web Worker. Initialize Pyodide only inside that worker.
 4. Send a small, versioned JSON message containing an execution ID, source, workspace ID, and validated limits.
 5. Capture stdout/stderr inside Python using a bounded writer. Return only structured results and capped output.
-6. On timeout or cancellation, call `Worker.terminate()`, discard the worker instance, and create a fresh worker for the next run. Do not depend on cooperative Python cancellation to stop an infinite loop.
+6. On timeout or cancellation, call `Worker.terminate()`, discard the worker instance, and create a fresh worker for the next run. Do not depend on cooperative Python cancellation to stop an infinite loop. Pyodide's cooperative interrupt mechanism requires a Web Worker plus `SharedArrayBuffer` and the associated cross-origin isolation headers; the initial POC should test hard worker termination first so it does not depend on those headers.
 7. Keep the Pyodide virtual filesystem in memory and seed it only with mission-owned files.
 8. Do not expose `addJavascriptInterface`, privileged JavaScript bridges, Android objects, host paths, app secrets, or arbitrary host callbacks to the page or worker.
 9. Do not grant direct network access to the runtime. Networking lessons use explicit game-owned simulation messages, never real sockets.
 
-Web Worker termination is a hard stop for that worker, but it is not proof of memory isolation or a separate OS process. Verify WebView renderer behavior and recovery on real Android devices. A worker shares the WebView renderer's security context; this POC must not claim stronger isolation than the platform actually provides.
+Web Worker termination is a hard stop for that worker, but it is not proof of memory isolation or a separate OS process. Verify WebView renderer behavior and recovery on real Android devices. The host-side `Worker.terminate()` operation is specified to stop the worker immediately; test that the WebView releases the worker's WASM memory sufficiently after repeated termination and recreation. A worker shares the WebView renderer's security context; this POC must not claim stronger isolation than the platform actually provides.
 
 ### Candidate B — CPython in an Android isolated-process service
 
@@ -43,7 +43,9 @@ Keep this as the comparison path if Pyodide cannot satisfy Python compatibility 
 
 ## WebView hardening checklist
 
+- [ ] Pin the initial candidate to the documented Pyodide v314.0.0 release for reproducibility; record the exact archive checksum in the POC results.
 - [ ] Use a pinned, APK-bundled runtime and local assets only.
+- [ ] Measure core distribution and selected offline wheels before choosing whether they fit the APK budget; the full distribution is documented as 200+ MB.
 - [ ] Use `WebViewAssetLoader`; do not load the POC from `file://`.
 - [ ] Enable JavaScript only because Pyodide requires it.
 - [ ] Do not register JavaScript interfaces or expose Kotlin/Java objects.
@@ -54,6 +56,7 @@ Keep this as the comparison path if Pyodide cannot satisfy Python compatibility 
 - [ ] Do not grant the app `INTERNET` permission for the POC.
 - [ ] Do not load remote scripts, packages, Python wheels, or source code at runtime.
 - [ ] Ensure worker messages are schema-validated and size-limited on both sides.
+- [ ] Confirm that the worker does not fetch missing packages from a CDN; every required module must already be bundled or unavailable.
 
 ## Required test matrix
 
@@ -103,3 +106,12 @@ If neither candidate passes, do not enable Run. Rework the architecture or narro
 5. Implement the production adapter for `PythonExecutionEngine`.
 6. Connect the editor Run/Stop controls only after the security gate passes.
 7. Build the first mission around concepts already taught in Lesson 00.01.
+
+
+## Source notes
+
+- [Pyodide v314.0.0 — Web Worker guide](https://pyodide.org/en/314.0.0/usage/webworker.html): Pyodide uses a module-type worker and documents message-based execution outside the UI thread.
+- [Pyodide v314.0.0 — downloading and deploying](https://pyodide.org/en/314.0.0/usage/downloading-and-deploying.html): the full distribution is documented as 200+ MB; the core archive contains the runtime loader, WASM binary, Python standard library, and lockfile.
+- [Pyodide — interrupting execution](https://pyodide.org/en/stable/usage/keyboard-interrupts.html): cooperative interruption requires a Web Worker, SharedArrayBuffer, and appropriate cross-origin isolation headers.
+- [MDN — Worker.terminate()](https://developer.mozilla.org/en-US/docs/Web/API/Worker/terminate): termination immediately stops a worker without waiting for its code to finish.
+- [Android — security tips](https://developer.android.com/privacy-and-security/security-tips): Android recommends minimizing permissions and protecting app-private data and IPC boundaries.
