@@ -62,10 +62,8 @@ class TerminalDispatcherTest {
     @Test
     fun readsMissionEvidenceButCannotOverwriteIt() {
         val terminal = terminal()
-        assertEquals(
-            "RX-14 online",
-            terminal.execute("cat /personal/../mission/first_contact_01/logs/system.log").text.let { it }
-        )
+        assertTrue(terminal.execute("workspace mission").text.contains("/mission/first_contact_01"))
+        assertEquals("RX-14 online", terminal.execute("cat logs/system.log").text)
     }
 
     @Test
