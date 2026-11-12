@@ -130,4 +130,14 @@ class FirstContactMissionCatalogTest {
         assertEquals(setOf("ABSOLUTE_DELTA=4"), mission.objectives.first().requiredOutputContains)
         assertTrue(mission.objectives.any { it.id == "report_unresolved_cause" })
     }
+
+    @Test
+    fun timeNormalizationAndDeltaValidationUseTheSameAuthoredReceiptEvidence() {
+        val timeMission = FirstContactMissionCatalog.missions[6].definition.objectives.single()
+        val deltaMission = FirstContactMissionCatalog.missions[7].definition.objectives
+        assertEquals(setOf("aegis_receipts", "archive_receipts"), timeMission.requiredEvidenceIds)
+        assertEquals(setOf("SIGNED_DELTA=4"), timeMission.requiredOutputContains)
+        assertEquals(setOf("aegis_receipts", "archive_receipts"), deltaMission.first().requiredEvidenceIds)
+        assertEquals(setOf("ABSOLUTE_DELTA=4"), deltaMission.first().requiredOutputContains)
+    }
 }
