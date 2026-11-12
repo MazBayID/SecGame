@@ -1,6 +1,6 @@
 # AEGIS-NET — GAME CONCEPT
 
-> Primary design reference for AEGIS-Net. Migrated and revised from the earlier Cyber Protocol concept · Prepared: November 12, 2026.  
+> Primary design reference for AEGIS-Net. Migrated and revised from the earlier project concept · Prepared: November 12, 2026.  
 > The narrative outline lives in [Story_Line.md](Story_Line.md). This file is the single source of truth for product and technical decisions. Owner's latest approved direction overrides conflicting older rules.  
 > **[OPEN]** = not yet decided, not canon. In-game strings that are canon in Indonesian are kept in Indonesian with an English gloss.
 
@@ -285,8 +285,8 @@ Research references: [OpenHacknet decompiled source](https://github.com/cbluoss/
   mobile titles), adapted to modern touch. This applies to the menu
   only, not to every screen.
 - Background: a cinematic view of the A.E.G.I.S. headquarters as a
-  closed, mysterious complex (not an office tower). Provisional
-  color: dark cyan / dark blue. The player is not the focus. The
+  closed, mysterious complex (not an office tower). Use the approved
+  black-green hacker identity. The player is not the focus. The
   menu must stay readable. Architecture, camera, animation [OPEN].
 
 App Hub: a small button in the upper-right corner opens a
@@ -439,7 +439,7 @@ The English must read naturally and preserve Freya's voice.
   systems. Teach defensive, analytical, authorized skills.
 - Early "decryption" is only a transparent toy transformation; never
   imply a beginner is breaking modern cryptography.
-- Code execution is isolated with validation and resource limits.
+- Code execution uses validation and resource limits. Chaquopy runs in the application process; these controls are defense-in-depth, not hardened process isolation.
 
 ## 14. Build and Release (Single APK)
 
@@ -490,7 +490,7 @@ be deleted.
 
 - AEGIS-Net is a new project in the empty `MazBayID/SecGame` repository.
 - No Android application code, playable foundation, or implemented game systems exist in this repository yet.
-- The earlier Cyber Protocol design and story are reference material to be migrated and revised; their historical implementation status must not be treated as the current AEGIS-Net build status.
+- Earlier design and story material are reference material to be migrated and revised; historical implementation status must not be treated as the current AEGIS-Net build status.
 - Initial implementation, tests, and release pipeline have not started.
 
 ## 17. Not Yet Decided [OPEN]
