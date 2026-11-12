@@ -170,7 +170,14 @@ pythonButton.addEventListener("click", () => {
     if (pythonWorker !== activeWorker || activeRunId !== thisRunId) return;
 
     if (data?.type === "ready" && pythonRunState === "initializing" &&
-        typeof data.version === "string" && data.version.length <= 64) {
+        typeof data.version === "string" && data.version.length <= 64 &&
+        typeof data.pythonVersion === "string" &&
+        /^3\\.14\\.\\d+$/.test(data.pythonVersion) &&
+        Array.isArray(data.capabilities) &&
+        data.capabilities.length === 4 &&
+        data.capabilities.every((item) =>
+          ["arithmetic", "json", "datetime", "sqlite3"].includes(item)
+        )) {
       clearTimeout(pythonTimer);
       pythonRunState = "running";
       pythonTimer = setTimeout(() => {
@@ -178,7 +185,10 @@ pythonButton.addEventListener("click", () => {
         finishPythonRun("Execution deadline reached · worker terminated.");
         write("TIMEOUT · The host terminated the worker after 3 seconds.");
       }, 3000);
-      setStatus("Python " + data.version + " ready · sandboxed WebView renderer");
+      setStatus(
+        "Python " + data.pythonVersion + " · Pyodide " + data.version +
+        " · arithmetic / JSON / datetime / SQLite passed · sandboxed WebView renderer"
+      );
       try {
         activeWorker.postMessage({
           type: "run",
