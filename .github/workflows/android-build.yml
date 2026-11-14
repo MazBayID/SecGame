@@ -23,8 +23,8 @@ on:
     inputs:
       build_apk:
         description: "Build and upload a debug APK after tests pass"
-        required: false
-        default: false
+        required: true
+        default: true
         type: boolean
 
 permissions:
